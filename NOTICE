@@ -1,0 +1,18 @@
+This product includes software developed by Tim Moore and contributors.
+
+Third-party components bundled with the source distribution:
+
+• Apple Speech framework (link-time only, macOS system framework) – used by the
+  native addon `src/speech_recognizer.mm`.  Covered by Apple’s system-library
+  exception.
+
+• Tesseract OCR English language data file (`eng.traineddata`).  Copyright ©
+  Google Inc.  Licensed under the Apache License, Version 2.0.  **Note:** the
+  file is no longer distributed in the public repository; a build script
+  downloads it automatically if required.
+
+• Icons / graphics located in `public/` originate from the Feather Icons
+  project (MIT) and from the Noun Project (CC-BY 3.0).  See individual SVG
+  files for attribution.
+
+The full Apache 2.0 license text is included in the file named `LICENSE`.

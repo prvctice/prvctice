@@ -1,0 +1,32 @@
+/**
+ * Universal Magnetic System Styles
+ * Simplified for reliable behavior
+ */
+
+/* Attached state - element is magnetically connected */
+.magnet-attached {
+  z-index: 2001 !important;
+}
+
+/* Don't override position for fixed elements like the model container */
+.model-container.magnet-attached {
+  position: fixed;
+}
+
+/* Edge indicators - only for skill pills (see skills.css) */
+
+/* During drag - shows when snapped to a target (glow only for skills) */
+.magnetic-snapped {
+  /* No generic glow - see skills.css for pill-specific glow */
+}
+
+/* Target zone glow - shows on InputBar when pill is near */
+.magnetic-target-glow {
+  box-shadow: 0 0 15px 3px var(--color-magnet-glow-soft, rgb(100 200 255 / 30%)) !important;
+}
+
+/* Reset state - for cleaning up */
+.magnetic-reset {
+  box-shadow: none !important;
+  animation: none !important;
+}

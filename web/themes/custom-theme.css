@@ -1,0 +1,128 @@
+/*
+  Theme: Custom
+  File: custom-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.custom-theme {
+  /* == Variables & Base == */
+  /* transparent allows z-index:-2 image to show; .theme-bg-image has its own fallback */
+  background: transparent !important;
+  color: #ffffff;
+  --color-text: #ffffff;
+  --color-text-strong: #ffffff;
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: rgb(0 197 255 / 68%);
+  --skill-power-color-shadow: rgb(0 197 255 / 68%);
+  --link-color: #4fd8ff;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 197 255 / 20%) 0%,
+    rgb(91 255 114 / 8%) 34%,
+    transparent 74%
+  );
+  --bar-background: rgb(11 26 42 / 55%);
+  --menu-background: rgb(11 26 42 / 70%);
+  --tool-tip-color: #ffffff;
+  --utility-button-color: #ffffff;
+  /* No shimmer for custom theme */
+  --shimmer-gradient: none;
+  --shimmer-opacity: 0;
+}
+
+/* == Global Overlay == */
+html.custom-theme::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 15%);
+  transition: background 500ms ease-in-out;
+  pointer-events: none !important;
+  z-index: -1;
+}
+
+html.custom-theme.custom-overlay-dark::before {
+  background: rgb(0 0 0 / 72%);
+}
+
+/* == Background Image == */
+.theme-bg-image {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+  background: #0b1a2a; /* fallback while image loads */
+}
+
+body.custom-theme .theme-bg-image {
+  display: block;
+}
+
+/* Hide dotmatrix canvas and glass overlay */
+body.custom-theme #canvas-container,
+body.custom-theme #glass-overlay {
+  display: none !important;
+}
+
+/* == Bar == */
+body.custom-theme #bar {
+  background-color: rgb(0 0 0 / 5%);
+  border: 1px solid rgb(255 255 255 / 8%);
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  backdrop-filter: saturate(120%) blur(10px);
+  -webkit-backdrop-filter: saturate(120%) blur(10px);
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 30%),
+    0 6px 16px -8px rgb(0 0 0 / 18%),
+    0 0 0 0.5px rgb(255 255 255 / 10%) inset;
+  position: relative;
+}
+
+body.custom-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 35%),
+    0 8px 20px -8px rgb(0 0 0 / 20%),
+    0 0 0 0.5px rgb(0 197 255 / 15%) inset,
+    0 0 24px -4px rgb(0 197 255 / 10%);
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  background-color: rgb(0 0 0 / 65%);
+}
+
+/* == Buttons == */
+body.custom-theme .skills-toggle {
+  background: var(--color-text);
+  color: #121212;
+  -webkit-text-fill-color: #121212 !important;
+}
+
+body.custom-theme .skill-pill {
+  background: #0b1a2a66;
+}
+
+body.custom-theme #upload-button:hover,
+body.custom-theme #upload-button.file-attached,
+body.custom-theme #voice-input-button:hover,
+body.custom-theme #voice-input-button.listening,
+body.custom-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Header & Controls == */
+body.custom-theme header .title {
+  color: #ffffff;
+}
+
+body.custom-theme .prompt-link {
+  color: #ffffff !important;
+}
+
+body.custom-theme .credit {
+  color: #ffffff !important;
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Voice Recorder</title>
+  </head>
+  <body class="p-stack pad-3 full gap-2">
+    <div id="recorder"></div>
+
+    <div id="player" style="display: none"></div>
+
+    <div class="p-list p-scroll flex-1" id="recordings">
+      <div class="p-empty p-empty-sm" id="empty">
+        <div class="p-empty-message">NO RECORDINGS</div>
+      </div>
+    </div>
+
+    <div class="p-split text-xs font-mono" style="flex-shrink: 0">
+      <span class="text-muted">MODE</span>
+      <span id="status">STANDBY</span>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var statusEl = document.getElementById('status');
+        var listEl = document.getElementById('recordings');
+        var emptyEl = document.getElementById('empty');
+        var recordings = [];
+
+        var recorder = prvctice.ui.audioRecorder(document.getElementById('recorder'), {
+          waveform: true,
+          onRecordingComplete: function (result) {
+            statusEl.textContent = 'COMPLETE';
+
+            recordings.push({
+              audio: result.audio,
+              mimeType: result.mimeType,
+              date: new Date().toLocaleTimeString(),
+              duration: Math.round(result.duration) + 's',
+            });
+            updateList();
+
+            document.getElementById('player').style.display = 'block';
+            var blob = prvctice.ui.base64ToBlob(result.audio, result.mimeType);
+            var url = URL.createObjectURL(blob);
+            prvctice.ui.mediaPlayer(document.getElementById('player'), { src: url, type: 'audio' });
+          },
+        });
+
+        function updateList() {
+          emptyEl.style.display = recordings.length === 0 ? '' : 'none';
+          var existing = listEl.querySelectorAll('.p-list-item');
+          for (var i = 0; i < existing.length; i++) listEl.removeChild(existing[i]);
+
+          recordings.forEach(function (rec, idx) {
+            var el = document.createElement('div');
+            el.className = 'p-list-item';
+            el.innerHTML =
+              '<div class="p-list-item-content">' +
+              '<div class="p-list-item-title font-mono text-sm">REC ' +
+              (idx + 1) +
+              '</div>' +
+              '<div class="p-list-item-subtitle text-muted text-xs">' +
+              rec.date +
+              ' \u2022 ' +
+              rec.duration +
+              '</div>' +
+              '</div>';
+            listEl.appendChild(el);
+          });
+        }
+
+        updateList();
+      });
+    </script>
+  </body>
+</html>

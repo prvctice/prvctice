@@ -1,0 +1,572 @@
+/*
+  Global design tokens shared across UI styles. Themes may override these
+  values by redefining the same custom properties on the `body` element or
+  finer-grained scopes. Keep the defaults aligned with the current look so
+  existing pages render identically.
+*/
+:root {
+  /* Color tokens */
+  --color-text-strong: #121212;
+  --color-text: #121212;
+  --color-focus-ring: rgb(0 125 200 / 60%);
+  --focus-ring: 0 0 0 2px var(--color-focus-ring);
+  --color-icon-on-dark: #fff;
+  --color-icon-upload: #fff;
+  --color-voice-active: #049835;
+  --color-voice-muted: #000;
+  --color-bar-text: #eee;
+  --color-bar-icon: #eee;
+  --color-glass-light: rgb(255 255 255 / 0%);
+  --color-glass-dark: rgb(18 18 18 / 45%);
+
+  /* Semantic text colors */
+  --color-text-primary: rgb(255 255 255 / 95%);
+  --color-text-secondary: rgb(255 255 255 / 70%);
+  --color-text-muted: rgb(255 255 255 / 50%);
+  --color-text-hint: rgb(255 255 255 / 40%);
+  --color-text-on-accent: #071028;
+
+  /* Button tokens */
+  --color-btn-primary-bg: #fff;
+  --color-btn-primary-bg-hover: #f0f4ff;
+  --color-btn-primary-text: var(--color-text-on-accent);
+  --color-btn-primary-border: rgb(255 255 255 / 40%);
+  --color-btn-secondary-text: rgb(255 255 255 / 92%);
+  --color-btn-secondary-border: rgb(255 255 255 / 35%);
+  --color-btn-secondary-bg-hover: rgb(255 255 255 / 8%);
+  --color-btn-ghost-text: rgb(255 255 255 / 80%);
+  --color-btn-ghost-bg-hover: rgb(255 255 255 / 10%);
+  --color-btn-danger-bg: #dc2626;
+  --color-btn-danger-bg-hover: #b91c1c;
+  --color-btn-danger-text: #fff;
+
+  /* Form/Input tokens */
+  --color-input-bg: rgb(255 255 255 / 6%);
+  --color-input-bg-focus: rgb(255 255 255 / 8%);
+  --color-input-border: rgb(255 255 255 / 12%);
+  --color-input-border-focus: rgb(84 114 255 / 60%);
+  --color-input-border-error: #f87171;
+  --color-input-text: rgb(255 255 255 / 95%);
+  --color-input-placeholder: rgb(255 255 255 / 40%);
+  --color-input-label: rgb(255 255 255 / 90%);
+
+  /* Status colors */
+  --color-status-success: #22c55e;
+  --color-status-warning: #f59e0b;
+  --color-status-error: #ef4444;
+  --color-status-info: rgb(84 114 255 / 100%);
+
+  /* Surface tokens */
+  --color-surface-elevated: rgb(7 16 40 / 95%);
+  --color-surface-overlay: rgb(25 25 25 / 85%);
+  --color-surface-secondary: rgb(100 180 200 / 60%);
+  --color-backdrop: rgb(4 7 18 / 85%);
+  --color-backdrop-heavy: rgb(0 0 0 / 75%);
+
+  /* Toggle tokens */
+  --color-toggle-bg-off: rgb(255 255 255 / 15%);
+  --color-toggle-bg-on: #3b82f6;
+  --color-toggle-thumb: #fff;
+
+  /* Typography Scale */
+  --font-family-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-serif: 'Crimson Pro', serif;
+  --font-family-mono: 'IBM Plex Mono', monospace;
+  --font-family-display: 'Gothic A1', sans-serif;
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-md: 1.125rem; /* 18px */
+  --font-size-lg: 1.25rem; /* 20px */
+  --font-size-xl: 1.5rem; /* 24px */
+  --font-size-2xl: 2rem; /* 32px */
+  /* @deprecated Use --font-size-xs instead */
+  --font-size-body: 12px;
+  --line-height-body: 1.4;
+  --line-height-tight: 1.2;
+  --line-height-relaxed: 1.6;
+
+  /* Surface & border tokens */
+  --surface-glass-strong: rgb(255 255 255 / 18%);
+  --surface-menu-button: radial-gradient(#727d91 0%, #557a8d 60%, #4d7784 80%, #466d7a 100%);
+  --border-glass-strong: rgb(255 255 255 / 35%);
+  --shadow-glass-inset: inset 0 0 12px rgb(38 37 37 / 61%);
+  --shadow-glass-surface:
+    0 4px 24px rgb(0 0 0 / 12%), 0 1px 3px rgb(0 0 0 / 8%), inset 0 1px 0 rgb(255 255 255 / 6%),
+    inset 0 0 12px rgb(0 0 0 / 8%);
+  --shadow-glass-surface-hover:
+    0 8px 32px rgb(0 0 0 / 18%), 0 2px 6px rgb(0 0 0 / 10%), 0 0 0 1px rgb(255 255 255 / 4%),
+    inset 0 1px 0 rgb(255 255 255 / 10%), inset 0 0 16px rgb(0 0 0 / 6%);
+  --shadow-glass-glow: 0 0 40px rgb(120 200 255 / 8%), 0 0 80px rgb(120 200 255 / 4%);
+
+  /* Italian frosted glass tokens (luxury boutique aesthetic) */
+  --glass-surface-gradient: linear-gradient(165deg, rgb(255 255 255 / 4%) 0%, rgb(0 0 0 / 6%) 100%);
+  --glass-border-subtle: rgb(255 255 255 / 5%);
+  --glass-shadow-idle: 0 16px 40px -16px rgb(0 0 0 / 22%), 0 6px 16px -8px rgb(0 0 0 / 12%);
+  --glass-shadow-active: 0 20px 50px -14px rgb(0 0 0 / 28%), 0 8px 20px -8px rgb(0 0 0 / 15%);
+  --shadow-skill-pill: rgb(20 20 20 / 18%) 1px 2px 2px 0px;
+  --shadow-skill-inset: inset 0px 0px 0px 1.5px rgb(246 242 242 / 25%);
+  --skill-power-color: rgb(66 253 213 / 79%);
+  --skill-power-color-shadow: rgb(0 172 210 / 77%);
+
+  /* Skill pill tokens - clean minimal dark theme */
+  --color-pill-bg: #1a1a24;
+  --color-pill-bg-hover: #252530;
+  --color-pill-border: rgb(255 255 255 / 10%);
+  --color-pill-border-hover: rgb(255 255 255 / 18%);
+  --color-pill-icon: rgb(255 255 255 / 85%);
+  --color-pill-separator: rgb(255 255 255 / 40%);
+  --color-pill-more-text: rgb(255 255 255 / 50%);
+  --color-pill-more-bg: rgb(255 255 255 / 10%);
+  --color-pill-title: rgb(255 255 255 / 92%);
+  --color-pill-badge: rgb(255 255 255 / 90%);
+  --color-pill-mode: rgb(255 255 255 / 50%);
+  --color-pill-divider: rgb(255 255 255 / 10%);
+  --color-step-bg: rgb(255 255 255 / 5%);
+  --color-step-number: rgb(255 255 255 / 40%);
+  --color-step-icon: rgb(255 255 255 / 70%);
+  --color-step-title: rgb(255 255 255 / 80%);
+  --color-step-type: rgb(255 255 255 / 40%);
+  --color-uncombine-bg: rgb(255 100 100 / 90%);
+  --color-uncombine-bg-hover: rgb(255 50 50 / 100%);
+
+  /* Skill chain mode colors */
+  --color-chain-accent: #64c8ff;
+  --color-pipe-accent: #c864ff;
+  --color-modify-accent: #64ff96;
+
+  /* Magnet lock glow - themeable */
+  --color-magnet-glow: var(--color-chain-accent);
+  --color-magnet-glow-soft: rgb(100 200 255 / 25%);
+  --color-magnet-glow-diffuse: rgb(100 200 255 / 15%);
+
+  /* Skill color dot palette - 12 distinct colors */
+  --skill-dot-1: #ef4444; /* Red */
+  --skill-dot-2: #f97316; /* Orange */
+  --skill-dot-3: #eab308; /* Yellow */
+  --skill-dot-4: #22c55e; /* Green */
+  --skill-dot-5: #14b8a6; /* Teal */
+  --skill-dot-6: #06b6d4; /* Cyan */
+  --skill-dot-7: #3b82f6; /* Blue */
+  --skill-dot-8: #8b5cf6; /* Purple */
+  --skill-dot-9: #d946ef; /* Magenta */
+  --skill-dot-10: #ec4899; /* Pink */
+  --skill-dot-11: #78716c; /* Stone */
+  --skill-dot-12: #64748b; /* Slate */
+
+  /* Merge preview tokens */
+  --color-merge-pill-bg: rgb(30 30 40 / 95%);
+  --color-merge-pill-border: rgb(255 255 255 / 20%);
+  --color-merge-pill-glow: rgb(100 200 255 / 20%);
+  --color-merge-ready-border: rgb(100 255 150 / 60%);
+  --color-merge-ready-glow: rgb(100 255 150 / 30%);
+  --color-merge-icon: rgb(255 255 255 / 90%);
+  --color-merge-source: #64c8ff;
+  --color-merge-target: #64ff96;
+  --color-merge-separator: rgb(255 255 255 / 60%);
+  --color-merge-title: rgb(255 255 255 / 90%);
+  --color-merge-mode: rgb(255 255 255 / 50%);
+  --color-merge-progress-bg: rgb(255 255 255 / 10%);
+  --color-merge-progress-fill: rgb(100 255 150 / 80%);
+
+  /* Zone highlight tokens */
+  --color-zone-border: rgb(255 255 255 / 30%);
+  --color-zone-bg: rgb(255 255 255 / 5%);
+  --color-zone-near-border: rgb(100 200 255 / 50%);
+  --color-zone-near-bg: rgb(100 200 255 / 8%);
+  --color-zone-active-border: rgb(100 255 150 / 80%);
+  --color-zone-active-bg: rgb(100 255 150 / 12%);
+  --color-zone-active-glow: rgb(100 255 150 / 30%);
+  --color-zone-incompatible-border: rgb(255 100 100 / 40%);
+  --color-zone-incompatible-bg: rgb(255 100 100 / 5%);
+  --color-zone-label-bg: rgb(0 0 0 / 70%);
+  --color-zone-label-text: rgb(255 255 255 / 90%);
+  --color-zone-ring-start: rgb(100 200 255 / 60%);
+  --color-zone-ring-end: rgb(100 255 150 / 60%);
+
+  /* Message editing tokens */
+  --color-edit-textarea-border: rgb(128 128 128 / 30%);
+  --color-edit-textarea-bg: rgb(255 255 255 / 5%);
+  --color-edit-textarea-focus: rgb(100 150 255 / 50%);
+  --color-edit-btn-bg-hover: rgb(128 128 128 / 20%);
+  --color-edit-save-bg: rgb(100 150 255 / 80%);
+  --color-edit-save-bg-hover: rgb(100 150 255 / 100%);
+  --color-edit-cancel-bg: rgb(128 128 128 / 30%);
+  --color-edit-cancel-bg-hover: rgb(128 128 128 / 50%);
+
+  /* YouTube player tokens */
+  --color-yt-backdrop: rgb(0 0 0 / 75%);
+  --color-yt-card-border: rgb(255 255 255 / 6%);
+  --color-yt-card-border-attached: rgb(255 255 255 / 12%);
+  --color-yt-header-text: rgb(255 255 255 / 70%);
+  --color-yt-title: rgb(255 255 255 / 60%);
+  --color-yt-btn: rgb(255 255 255 / 50%);
+  --color-yt-btn-hover: rgb(255 255 255 / 85%);
+  --color-yt-frame-bg: #000;
+
+  /* Weather widget tokens */
+  --color-widget-day-surface: linear-gradient(
+    165deg,
+    rgba(200, 210, 220, 0.7) 0%,
+    rgba(170, 185, 200, 0.6) 100%
+  );
+  --color-widget-day-border: rgba(255, 255, 255, 0.35);
+  --color-widget-day-overlay: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 3%) 0%,
+    rgb(0 0 0 / 8%) 100%
+  );
+  --color-widget-day-glow-active: 0 24px 48px -12px rgb(0 0 0 / 40%);
+  --color-widget-day-glow-idle: 0 16px 32px -16px rgb(0 0 0 / 25%);
+  --color-widget-day-tint: rgb(0 0 0 / 25%);
+  --color-widget-night-surface: linear-gradient(
+    165deg,
+    rgba(120, 125, 140, 0.7) 0%,
+    rgba(80, 85, 100, 0.6) 100%
+  );
+  --color-widget-night-border: rgba(255, 255, 255, 0.15);
+  --color-widget-night-overlay: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 2%) 0%,
+    rgb(0 0 0 / 12%) 100%
+  );
+  --color-widget-night-glow-active: 0 24px 48px -12px rgb(0 0 0 / 50%);
+  --color-widget-night-glow-idle: 0 16px 32px -16px rgb(0 0 0 / 35%);
+  --color-widget-night-tint: rgb(0 0 0 / 35%);
+  --color-widget-text: rgb(255 255 255 / 92%);
+  --color-widget-header: rgb(255 255 255 / 50%);
+  --color-widget-title: rgb(255 255 255 / 60%);
+  --color-widget-btn: rgb(255 255 255 / 50%);
+  --color-widget-resizer-border: rgb(255 255 255 / 20%);
+  --color-widget-content-bg: #1e1e1e;
+
+  /* Floating Notes Widget tokens (default: dark frame, light content) */
+  --notes-widget-frame-bg: #1a1a1a;
+  --notes-widget-border: rgb(255 255 255 / 8%);
+  --notes-widget-header-bg: #1a1a1a;
+  --notes-widget-header-border: rgb(255 255 255 / 6%);
+  --notes-widget-header-icon: rgb(255 255 255 / 50%);
+  --notes-widget-header-btn: rgb(255 255 255 / 70%);
+  --notes-widget-btn-hover-bg: rgb(255 255 255 / 10%);
+  --notes-widget-btn-hover-color: #fff;
+  --notes-widget-content-bg: #fff;
+  --notes-widget-tabs-bg: transparent;
+  --notes-widget-tabs-border: rgb(0 0 0 / 8%);
+  --notes-widget-tab-bg: rgb(0 0 0 / 6%);
+  --notes-widget-tab-text: #666;
+  --notes-widget-tab-hover-bg: rgb(0 0 0 / 10%);
+  --notes-widget-tab-hover-text: #333;
+  --notes-widget-tab-active-bg: rgb(0 0 0 / 15%);
+  --notes-widget-tab-active-text: #333;
+  --notes-widget-tab-close: #888;
+  --notes-widget-tab-close-hover-bg: rgb(0 0 0 / 10%);
+  --notes-widget-tab-add: #999;
+  --notes-widget-input-border: #ccc;
+  --notes-widget-input-bg: #fff;
+  --notes-widget-bubble-bg: #1a1a1a;
+  --notes-widget-bubble-btn: #fff;
+  --notes-widget-bubble-btn-hover: rgb(255 255 255 / 15%);
+  --notes-widget-bubble-btn-active: rgb(255 255 255 / 25%);
+  --notes-widget-bubble-divider: rgb(255 255 255 / 20%);
+  --notes-widget-text: #333;
+  --notes-widget-placeholder: #aaa;
+  --notes-widget-checkbox-border: #888;
+  --notes-widget-checkbox-checked-bg: #1a1a1a;
+  --notes-widget-checkbox-checked-border: #1a1a1a;
+  --notes-widget-checkbox-check: #fff;
+  --notes-widget-scrollbar: rgb(0 0 0 / 10%);
+  --notes-widget-resizer: #ccc;
+  --notes-widget-resizer-hover: #999;
+
+  /* Spacing scale */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 12px;
+  --space-6: 16px;
+  --space-7: 20px;
+  --space-8: 24px;
+  --space-10: 32px;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* Motion tokens */
+  --easing-snap: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-short: 0.2s;
+  --duration-medium: 0.25s;
+  --duration-long: 0.6s;
+  --motion-duration-fade: 0.35s;
+  --motion-duration-shimmer: 8s;
+  --motion-duration-shimmer-fast: 5s;
+  --motion-duration-shimmer-slow: 12s;
+  --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-emphasis: cubic-bezier(0.33, 1, 0.68, 1);
+  --motion-ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Effect tokens - tunable by quality tier */
+  --effect-blur-light: 8px;
+  --effect-blur-medium: 16px;
+  --effect-blur-heavy: 24px;
+  --effect-backdrop-blur: 12px;
+  --effect-shadow-blur: 20px;
+  --effect-transition-duration: 0.25s;
+
+  /* Z-index helpers */
+  --z-modal: 10000;
+  --z-floating-ui: 9999;
+  --z-input-bar: 900;
+
+  /* Layout helpers */
+  --layout-edge-gutter: 24px;
+  --layout-footer-gap: 12px;
+  --layout-modal-width: min(440px, 92vw);
+
+  /* Breakpoints (for reference - use in @media queries) */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 768px;
+  --breakpoint-md: 1024px;
+  --breakpoint-lg: 1280px;
+  --breakpoint-xl: 1440px;
+
+  /* Notes pane layout helpers */
+  --notes-pane-top-offset: clamp(68px, 10vh, 96px);
+  --notes-pane-bottom-offset: clamp(136px, 18vh, 200px);
+  --notes-pane-horizontal-gap: clamp(28px, 6vw, 88px);
+  --notes-pane-row-gap: clamp(14px, 2vh, 28px);
+  --notes-toolbar-width: 52px;
+  --notes-toolbar-gap: 14px;
+
+  /* Chat layout tokens */
+  --chat-window-max-width: 720px;
+  --chat-window-min-width: 310px;
+  --chat-content-max-width: 680px;
+  --chat-content-optimal-measure: 68ch;
+  --chat-window-padding-x: 10%;
+  --chat-window-padding-top: 70px;
+  --chat-input-offset: 90px;
+
+  /* Mobile-specific tokens */
+  --font-size-user-message-mobile: clamp(34px, 7vw, 48px);
+  --bar-offset-adjustment: 8px;
+}
+
+/* Light theme overrides for skill/widget tokens */
+body.light-theme,
+body.vitti-theme,
+body.share-bear-theme,
+body.fragile-theme,
+body.eva-theme,
+body.high-contrast-theme {
+  /* Semantic text colors - light theme */
+  --color-text-primary: rgb(0 0 0 / 90%);
+  --color-text-secondary: rgb(0 0 0 / 65%);
+  --color-text-muted: rgb(0 0 0 / 45%);
+  --color-text-hint: rgb(0 0 0 / 35%);
+
+  /* Button tokens - light theme */
+  --color-btn-secondary-text: rgb(0 0 0 / 85%);
+  --color-btn-secondary-border: rgb(0 0 0 / 25%);
+  --color-btn-secondary-bg-hover: rgb(0 0 0 / 6%);
+  --color-btn-ghost-text: rgb(0 0 0 / 70%);
+  --color-btn-ghost-bg-hover: rgb(0 0 0 / 8%);
+
+  /* Form/Input tokens - light theme */
+  --color-input-bg: rgb(0 0 0 / 4%);
+  --color-input-bg-focus: rgb(0 0 0 / 6%);
+  --color-input-border: rgb(0 0 0 / 12%);
+  --color-input-text: rgb(0 0 0 / 90%);
+  --color-input-placeholder: rgb(0 0 0 / 40%);
+  --color-input-label: rgb(0 0 0 / 80%);
+
+  /* Toggle tokens - light theme */
+  --color-toggle-bg-off: rgb(0 0 0 / 12%);
+
+  /* Surface & border tokens - light theme */
+  --surface-glass-strong: rgb(0 0 0 / 8%);
+  --border-glass-strong: rgb(0 0 0 / 20%);
+
+  /* Skill pill tokens - dark pills with light text for light themes */
+  /* Inherits dark pill values from :root */
+
+  /* Merge preview tokens - light theme */
+  --color-merge-pill-bg: rgb(255 255 255 / 95%);
+  --color-merge-pill-border: rgb(0 0 0 / 15%);
+  --color-merge-icon: rgb(0 0 0 / 80%);
+  --color-merge-title: rgb(0 0 0 / 85%);
+  --color-merge-mode: rgb(0 0 0 / 50%);
+  --color-merge-separator: rgb(0 0 0 / 40%);
+  --color-merge-progress-bg: rgb(0 0 0 / 8%);
+  --color-merge-source: #08c;
+  --color-merge-target: #0a6;
+
+  /* Zone highlight tokens - light theme */
+  --color-zone-border: rgb(0 0 0 / 20%);
+  --color-zone-bg: rgb(0 0 0 / 3%);
+  --color-zone-near-border: rgb(0 100 200 / 50%);
+  --color-zone-near-bg: rgb(0 100 200 / 8%);
+  --color-zone-active-border: rgb(0 150 100 / 80%);
+  --color-zone-active-bg: rgb(0 150 100 / 12%);
+  --color-zone-active-glow: rgb(0 150 100 / 20%);
+  --color-zone-label-bg: rgb(255 255 255 / 90%);
+  --color-zone-label-text: rgb(0 0 0 / 80%);
+
+  /* Widget tokens - light theme: widgets stay dark regardless of theme */
+  --color-widget-text: rgb(255 255 255 / 92%);
+  --color-widget-header: rgb(255 255 255 / 50%);
+  --color-widget-title: rgb(255 255 255 / 60%);
+  --color-widget-btn: rgb(255 255 255 / 50%);
+  --color-widget-resizer-border: rgb(255 255 255 / 20%);
+  --color-widget-content-bg: #1e1e1e;
+
+  /* YouTube player tokens - light theme */
+  --color-yt-header-text: rgb(0 0 0 / 70%);
+  --color-yt-title: rgb(0 0 0 / 60%);
+  --color-yt-btn: rgb(0 0 0 / 50%);
+  --color-yt-btn-hover: rgb(0 0 0 / 85%);
+
+  /* Floating Notes Widget - light theme (light frame, light content) */
+  --notes-widget-frame-bg: #f5f5f5;
+  --notes-widget-border: rgb(0 0 0 / 10%);
+  --notes-widget-header-bg: #f5f5f5;
+  --notes-widget-header-border: rgb(0 0 0 / 8%);
+  --notes-widget-header-icon: rgb(0 0 0 / 40%);
+  --notes-widget-header-btn: rgb(0 0 0 / 60%);
+  --notes-widget-btn-hover-bg: rgb(0 0 0 / 8%);
+  --notes-widget-btn-hover-color: #000;
+  --notes-widget-checkbox-checked-bg: #333;
+  --notes-widget-checkbox-checked-border: #333;
+}
+
+/* Dark theme pill overrides - light pills with dark text */
+body.night-theme,
+body.vera-baxter-theme {
+  /* Skill pill tokens - light pills with dark text */
+  --color-pill-bg: #f5f0e8;
+  --color-pill-bg-hover: #ebe6de;
+  --color-pill-border: rgb(0 0 0 / 8%);
+  --color-pill-border-hover: rgb(0 0 0 / 15%);
+  --color-pill-icon: rgb(0 0 0 / 70%);
+  --color-pill-separator: rgb(0 0 0 / 30%);
+  --color-pill-more-text: rgb(0 0 0 / 50%);
+  --color-pill-more-bg: rgb(0 0 0 / 8%);
+  --color-pill-title: rgb(0 0 0 / 88%);
+  --color-pill-badge: rgb(0 0 0 / 85%);
+  --color-pill-mode: rgb(0 0 0 / 50%);
+  --color-pill-divider: rgb(0 0 0 / 10%);
+  --color-step-bg: rgb(0 0 0 / 4%);
+  --color-step-number: rgb(0 0 0 / 40%);
+  --color-step-icon: rgb(0 0 0 / 60%);
+  --color-step-title: rgb(0 0 0 / 75%);
+  --color-step-type: rgb(0 0 0 / 40%);
+
+  /* Floating Notes Widget - dark theme (light frame, dark content for contrast) */
+  --notes-widget-frame-bg: #f5f0e8;
+  --notes-widget-border: rgb(0 0 0 / 10%);
+  --notes-widget-header-bg: #f5f0e8;
+  --notes-widget-header-border: rgb(0 0 0 / 8%);
+  --notes-widget-header-icon: rgb(0 0 0 / 40%);
+  --notes-widget-header-btn: rgb(0 0 0 / 60%);
+  --notes-widget-btn-hover-bg: rgb(0 0 0 / 8%);
+  --notes-widget-btn-hover-color: #000;
+  --notes-widget-content-bg: #fffef8;
+  --notes-widget-tabs-border: rgb(0 0 0 / 10%);
+  --notes-widget-bubble-bg: #333;
+  --notes-widget-checkbox-checked-bg: #333;
+  --notes-widget-checkbox-checked-border: #333;
+}
+
+/* ============================================
+   Universal Magnetic System
+   Classes for magnetic snap behavior
+   ============================================ */
+
+.magnetic-dragging {
+  z-index: 1000;
+  cursor: grabbing;
+}
+
+.magnetic-target-glow {
+  box-shadow: 0 0 20px var(--color-skill-attached-glow, rgb(59 130 246 / 50%));
+  transition: box-shadow 200ms ease-out;
+}
+
+.magnetic-attached {
+  /* Base attached state - visual indicator that element is snapped */
+  /* Intentionally empty - serves as selector hook for JS */
+  outline: none;
+}
+
+.magnetic-attached-top {
+  /* Attached to another element's top edge */
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.magnetic-attached-bottom {
+  /* Attached to another element's bottom edge */
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.magnetic-attached-left {
+  /* Attached to another element's left edge */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.magnetic-attached-right {
+  /* Attached to another element's right edge */
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Respect user motion preferences - disable animations completely */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility: visually hidden but screen reader accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================
+   Lite mode - reduced effects for performance
+   Applied when graphics quality is medium/low
+   ============================================ */
+body.lite-mode {
+  --effect-blur-light: 0px;
+  --effect-blur-medium: 4px;
+  --effect-blur-heavy: 8px;
+  --effect-backdrop-blur: 8px; /* Keep some blur on mobile - looks better */
+  --effect-shadow-blur: 8px;
+  --effect-transition-duration: 0.1s;
+}
+
+/* Reduce backdrop blur in lite mode */
+body.lite-mode .glass-surface,
+body.lite-mode [class*='backdrop-blur'] {
+  backdrop-filter: blur(var(--effect-backdrop-blur));
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur));
+}

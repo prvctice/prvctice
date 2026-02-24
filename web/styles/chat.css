@@ -1,0 +1,685 @@
+/* --------------------------------------------------
+   Chat Window & Message Styles
+   Core chat display and message formatting
+   -------------------------------------------------- */
+
+.chat-container {
+  width: 100%;
+  margin: 0 auto;
+  border-radius: var(--radius-sm);
+
+  /* Prevent horizontal overflow but allow vertical to avoid clipping UI elements */
+  overflow: hidden visible;
+  z-index: 200;
+  position: relative;
+}
+
+/* --------------------------------------------------
+   Chat Window
+   -------------------------------------------------- */
+#chat-window {
+  /* Full viewport - starts at top, spans entire width */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  max-width: none !important;
+
+  /* Full viewport height minus input bar */
+  height: calc(100dvh - var(--chat-input-offset));
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+
+  /* No top padding - content scrolls to top of viewport */
+  padding-top: 0;
+
+  /* Bottom padding ensures content isn't hidden behind the input bar */
+  padding-bottom: 100px;
+
+  /* Hide scrollbars for clean aesthetic */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#chat-window::-webkit-scrollbar {
+  display: none;
+}
+
+/* Virtual scroller centering - target the library's internal classes */
+#chat-window .vue-recycle-scroller__item-wrapper {
+  max-width: var(--chat-window-max-width) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--chat-window-padding-x) !important;
+  padding-right: var(--chat-window-padding-x) !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure scroller itself is full width */
+#chat-window .vue-recycle-scroller {
+  width: 100% !important;
+}
+
+/* --------------------------------------------------
+   Message Base Styles
+   -------------------------------------------------- */
+.user {
+  text-align: right;
+  z-index: 20;
+}
+
+.assistant {
+  text-align: left;
+  z-index: 20;
+}
+
+.message {
+  margin-bottom: 0;
+  z-index: 20;
+
+  /* Center messages within full-width viewport */
+  max-width: var(--chat-window-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--chat-window-padding-x);
+  padding-right: var(--chat-window-padding-x);
+}
+
+.message-content {
+  display: inline-block;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration-short, 0.2s) ease-in-out;
+  z-index: 20;
+}
+
+.message-content img {
+  max-width: 40dvw;
+  max-height: 40dvh;
+  display: flex;
+  align-self: flex-end;
+}
+
+/* Ensure links wrap properly */
+.message-content a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* --------------------------------------------------
+   Assistant Message Styles
+   -------------------------------------------------- */
+.assistant .message-content {
+  color: var(--color-text, #121212);
+  padding: 1px 20px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 0;
+  font-family: var(--font-family-display, 'Gothic A1', sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--font-size-base);
+  line-height: 1.55;
+  max-width: min(var(--chat-content-optimal-measure), var(--chat-content-max-width));
+  letter-spacing: -0.015em;
+  text-align: left;
+  padding-block: 0 28px;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  padding-left: 40px;
+  overflow-wrap: anywhere;
+  hyphens: none;
+  text-wrap: pretty;
+}
+
+.assistant .message-content p {
+  margin: 0 0 10px;
+}
+
+/* Headings */
+.assistant .message-content h1 {
+  font-family: var(--font-family-display, 'Gothic A1');
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -0.3px;
+  margin: 22px 0 8px;
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
+  text-wrap: balance;
+}
+
+.assistant .message-content h2,
+.assistant .message-content h3,
+.assistant .message-content h4 {
+  font-family: var(--font-family-display, 'Gothic A1');
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -0.2px;
+  margin: 18px 0 6px;
+  font-size: var(--font-size-md);
+  text-wrap: balance;
+}
+
+.assistant .message-content strong {
+  font-family: var(--font-family-display, 'Gothic A1');
+  font-weight: 600;
+  font-style: normal;
+  font-size: inherit;
+  letter-spacing: -0.2px;
+}
+
+/* Lists */
+.assistant .message-content ul,
+.assistant .message-content ol {
+  margin: 6px 0 12px;
+  padding-left: 1.25em;
+}
+
+.assistant .message-content li + li {
+  margin-top: 4px;
+}
+
+/* Links */
+.assistant .message-content a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+
+/* Citations */
+.assistant .message-content sup {
+  font-size: 0.75em;
+  opacity: 0.75;
+  margin-left: 2px;
+}
+
+/* Code */
+.assistant .message-content code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  background: rgb(0 0 0 / 6%);
+  padding: 0 0.3em;
+  border-radius: var(--radius-sm);
+}
+
+.assistant .message-content pre {
+  background: rgb(0 0 0 / 6%);
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  overflow: auto;
+  margin: 8px 0 12px;
+}
+
+.assistant .message-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+/* Blockquotes */
+.assistant .message-content blockquote {
+  margin: 10px 0 12px;
+  padding: 6px 12px;
+  border-left: 3px solid rgb(0 0 0 / 20%);
+  background: rgb(0 0 0 / 4%);
+  border-radius: var(--radius-sm);
+}
+
+/* Message tools row (TTS, copy, etc.) */
+.assistant .message-content .message-tools {
+  display: inline-flex;
+  gap: var(--space-3, 6px);
+  align-self: flex-end;
+  margin-top: var(--space-3, 6px);
+}
+
+/* Dark theme adjustments */
+body.night-theme .assistant .message-content code {
+  background: rgb(255 255 255 / 8%);
+}
+
+body.night-theme .assistant .message-content pre {
+  background: rgb(255 255 255 / 6%);
+}
+
+body.night-theme .assistant .message-content blockquote {
+  border-left-color: rgb(255 255 255 / 25%);
+  background: rgb(255 255 255 / 4%);
+}
+
+/* --------------------------------------------------
+   User Message Styles
+   -------------------------------------------------- */
+.user .message-content {
+  color: var(--color-text, #121212);
+  padding: 1px 20px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 0;
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: normal;
+
+  /* Display typography: large user prompts for visual emphasis */
+  font-size: clamp(3.75rem, 5.25vw, 4.4rem);
+  line-height: 0.9;
+  max-width: var(--chat-content-max-width);
+  letter-spacing: -0.02em;
+  text-align: left;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+  padding-block: 0 20px;
+}
+
+.user .message-content p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent overflow of long URLs/tokens */
+.user .message-content,
+.user .message-content a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* --------------------------------------------------
+   User Prompt Block (expand/collapse)
+   -------------------------------------------------- */
+.user-prompt-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 8px);
+}
+
+.user-prompt-block__content {
+  transition: max-height var(--duration-medium, 0.25s) var(--easing-snap);
+}
+
+.user-prompt-block.is-clamped .user-prompt-block__content {
+  max-height: var(--user-prompt-collapsed-height, 240px);
+  overflow: hidden;
+}
+
+.user-prompt-block.is-clamped:not(.is-expanded) .user-prompt-block__content {
+  mask-image: linear-gradient(180deg, #000 65%, transparent);
+  mask-image: linear-gradient(180deg, #000 65%, transparent);
+}
+
+.user-prompt-block.is-expanded .user-prompt-block__content,
+.user-prompt-block:not(.is-clamped) .user-prompt-block__content {
+  max-height: none;
+  overflow: visible;
+  mask-image: none;
+  mask-image: none;
+}
+
+.user-prompt-block__controls {
+  display: flex;
+  align-items: center;
+}
+
+.user-prompt-block__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3, 6px);
+  font-family: var(--font-family-sans, system-ui);
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill, 999px);
+  background-color: var(--user-prompt-toggle-bg, rgb(255 255 255 / 40%));
+  color: var(--user-prompt-toggle-color, #121212);
+  border: 1px solid var(--user-prompt-toggle-border, rgb(18 18 18 / 12%));
+  box-shadow:
+    0 8px 16px rgb(15 15 15 / 8%),
+    inset 0 0 0 1px rgb(255 255 255 / 30%);
+  cursor: pointer;
+  transition:
+    color var(--duration-short, 0.2s) ease,
+    background-color var(--duration-short, 0.2s) ease,
+    border-color var(--duration-short, 0.2s) ease,
+    box-shadow var(--duration-short, 0.2s) ease;
+}
+
+.user-prompt-block__toggle:hover {
+  box-shadow:
+    0 10px 18px rgb(15 15 15 / 12%),
+    inset 0 0 0 1px rgb(255 255 255 / 45%);
+}
+
+.user-prompt-block__toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+.user-prompt-block__icon {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--duration-short, 0.2s) var(--easing-snap);
+}
+
+.user-prompt-block.is-expanded .user-prompt-block__icon {
+  transform: rotate(180deg);
+}
+
+/* --------------------------------------------------
+   Typing Indicator
+   -------------------------------------------------- */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1px;
+  font-size: 1.5em;
+  letter-spacing: -0.2em;
+  padding-left: 12px;
+  color: var(--color-text);
+  opacity: 1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.dot {
+  opacity: 0;
+  display: inline-block;
+  animation: blink 1.4s infinite both;
+  font-size: 1.2em;
+  margin: 0;
+  border-radius: 50%;
+}
+
+.dot1 {
+  animation-delay: 0s;
+}
+
+.dot2 {
+  animation-delay: 0.2s;
+}
+
+.dot3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+body.light-theme .typing-indicator {
+  color: #fff;
+}
+
+/* --------------------------------------------------
+   Tool Activity Overlay
+   -------------------------------------------------- */
+#tool-activity {
+  position: fixed;
+  top: var(--tool-activity-top, 60px);
+  left: var(--tool-activity-left, 24px);
+  z-index: var(--z-floating-ui, 9998);
+  max-width: 70%;
+  pointer-events: none;
+}
+
+#tool-activity .tool-activity-card {
+  font-family: var(--font-family-mono, 'IBM Plex Mono', monospace);
+  font-size: var(--tool-activity-font-size, var(--font-size-xs));
+  line-height: 1.3;
+  color: var(--tool-tip-color);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  letter-spacing: var(--tool-activity-letter-spacing, 0.01em);
+}
+
+#tool-activity .tool-activity-title {
+  font-weight: 600;
+  opacity: var(--tool-activity-title-opacity, 0.75);
+  margin-bottom: 4px;
+  text-transform: var(--tool-activity-title-transform, uppercase);
+  letter-spacing: var(--tool-activity-title-letter-spacing, 0.06em);
+}
+
+#tool-activity ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+#tool-activity li {
+  margin: 2px 0;
+  opacity: var(--tool-activity-item-opacity, 0.9);
+}
+
+#tool-activity.fade-in {
+  animation: fadeIn 0.25s forwards;
+}
+
+#tool-activity.fade-out {
+  animation: fadeOut 0.35s forwards;
+}
+
+.tool-activity {
+  margin-bottom: 40px !important;
+  opacity: 0.85;
+  font-size: 0.5em !important;
+  margin-left: -10px !important;
+  color: var(--tool-tip-color);
+}
+
+li {
+  margin-left: 10px;
+}
+
+/* --------------------------------------------------
+   Video Modal
+   -------------------------------------------------- */
+#video-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0 0 0 / 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#video-modal iframe {
+  width: 800px;
+  height: 450px;
+}
+
+@media (width <= 800px) {
+  #video-modal iframe {
+    width: 90%;
+    height: calc(90% * (9 / 16));
+  }
+}
+
+/* --------------------------------------------------
+   Split-Mode Desktop Layout
+   -------------------------------------------------- */
+@media (width >= 769px) {
+  #chat-container.split-mode {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  #chat-container.split-mode .help-container,
+  #chat-container.split-mode .notes-container {
+    flex: 1 1 30%; /* Notes gets ~30% by default */
+  }
+
+  #chat-container.split-mode .chat-window {
+    flex: 2 1 70%; /* Chat gets ~70% by default */
+  }
+
+  #chat-container.split-mode .notes-container,
+  #chat-container.split-mode .chat-window {
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+  }
+
+  #chat-container.split-mode .help-container {
+    overflow: hidden;
+  }
+
+  #chat-container.split-mode .help-container,
+  #chat-container.split-mode .notes-container {
+    min-width: 280px;
+    max-width: min(40%, calc(100vw - 500px)); /* Cap at 40%, can't squeeze chat below 500px */
+    flex-shrink: 1;
+  }
+
+  #chat-container.split-mode .chat-window {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    width: auto;
+    min-width: 500px; /* Ensure readable content width */
+    flex-shrink: 0; /* Don't let chat shrink below min-width */
+  }
+
+  /* In split-mode, align chat content to left edge (closer to Notes) */
+  #chat-container.split-mode .message {
+    max-width: 100%;
+    margin-left: 0; /* Don't center - align left */
+    margin-right: auto;
+    padding-left: 24px; /* Smaller left padding */
+    padding-right: 24px;
+  }
+
+  #chat-container.split-mode .message-content {
+    max-width: 100%;
+  }
+
+  #chat-container.split-mode .assistant .message-content {
+    padding-left: 0; /* Remove extra left padding in split-mode */
+  }
+
+  /* Override virtual scroller centering in split-mode */
+  #chat-container.split-mode #chat-window .vue-recycle-scroller__item-wrapper {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  /* Draggable splitter */
+  #splitter {
+    width: 6px;
+    cursor: ew-resize;
+    position: relative;
+    background: transparent;
+    color: inherit;
+  }
+
+  #splitter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: currentcolor;
+    opacity: 0.25;
+    z-index: 5;
+    transform: translateX(-50%);
+  }
+
+  #splitter.hidden {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------
+   Notes Fullscreen Mode
+   -------------------------------------------------- */
+#chat-container.notes-fullscreen .chat-window,
+#chat-container.notes-fullscreen #splitter,
+#chat-container.notes-fullscreen .splitter,
+#chat-container.notes-fullscreen .help-container {
+  display: none !important;
+}
+
+#chat-container.notes-fullscreen .notes-container {
+  flex: 1 1 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: 100dvh;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(16px, 2vw, 40px);
+  padding: clamp(16px, 4vh, 32px) clamp(16px, 5vw, 48px) clamp(24px, 6vh, 48px);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+#chat-container.notes-fullscreen .notes-pane-wrapper {
+  display: contents;
+}
+
+#chat-container.notes-fullscreen .notes-tabs {
+  order: 0;
+  flex: 0 0 100%;
+  max-width: min(100%, var(--chat-window-max-width));
+  margin: 0 auto clamp(12px, 3vh, 28px);
+  padding-left: clamp(24px, 3vw, 48px);
+  padding-right: clamp(24px, 3vw, 48px);
+  margin-top: 0;
+}
+
+#chat-container.notes-fullscreen .notes-toolbar {
+  order: 2;
+  position: sticky;
+  inset: clamp(96px, 12vh, 140px) auto auto;
+  height: auto;
+  justify-content: flex-start;
+  padding: clamp(8px, 1.5vh, 16px) 0;
+  flex: 0 0 auto;
+  align-self: flex-start;
+}
+
+#chat-container.notes-fullscreen .notes-editor {
+  order: 1;
+  flex: 1 1 640px;
+  max-width: min(100%, var(--chat-window-max-width));
+  margin: 0;
+  padding-left: clamp(24px, 3vw, 40px);
+  padding-right: clamp(24px, 3vw, 40px);
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#chat-container.notes-fullscreen .notes-editor .ProseMirror {
+  min-height: calc(100dvh - 240px);
+  flex: 1;
+}

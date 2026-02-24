@@ -1,0 +1,109 @@
+/*
+  Theme: Night
+  File: night-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.night-theme {
+  /* == Variables & Base == */
+  --linen-opacity: 0.045;
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background-color: #0e0f09 !important;
+  --color-text: #ccc;
+  --color-text-strong: #f5f5f5;
+  color: var(--color-text);
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: rgb(195 255 0 / 48%);
+  --skill-power-color-shadow: rgb(195 255 0 / 30%);
+  --link-color: #d3b33a;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(195 255 0 / 18%) 0%,
+    rgb(91 255 114 / 4%) 34%,
+    transparent 74%
+  );
+  --bar-background: rgb(21 22 7 / 72%);
+  --menu-background: rgb(21 22 7 / 72%);
+  --tool-tip-color: #d3b33a;
+  --theme-bar-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --utility-button-color: #cccccc;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #0a090000 0%,
+    rgb(69 34 1 / 41%) 10%,
+    rgb(50 172 212 / 30%) 30%,
+    rgb(137 155 24 / 30%) 65%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.2;
+  --shimmer-blend: color;
+}
+
+/* == Bar == */
+body.night-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(171 231 39 / 8%);
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 30%),
+    0 6px 16px -8px rgb(0 0 0 / 18%),
+    0 0 0 0.5px rgb(171 231 39 / 12%) inset;
+  -webkit-text-fill-color: rgb(255 255 255) !important;
+  color: #ffffff;
+  position: relative;
+}
+
+body.night-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 35%),
+    0 8px 20px -8px rgb(0 0 0 / 20%),
+    0 0 0 0.5px rgb(171 231 39 / 18%) inset,
+    0 0 24px -4px rgb(171 231 39 / 15%);
+}
+
+/* == Buttons == */
+body.night-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+body.night-theme #upload-button:hover,
+body.night-theme #upload-button.file-attached,
+body.night-theme #voice-input-button:hover,
+body.night-theme #voice-input-button.listening,
+body.night-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Pills == */
+body.night-theme .skill-pill {
+  /* Uses light pill tokens (light bg, dark text) */
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+}
+
+/* == Header & Controls == */
+body.night-theme header .title {
+  color: var(--color-text);
+}
+
+body.night-theme #save-pdf-button,
+body.night-theme #save-chat-option {
+  color: var(--color-text);
+  background-color: transparent;
+}
+
+body.night-theme #menu-button {
+  color: var(--color-text-strong);
+  background-color: transparent;
+}
+
+body.night-theme .prompt-link {
+  color: var(--color-text);
+}
+
+body.night-theme .credit {
+  color: var(--color-text);
+}

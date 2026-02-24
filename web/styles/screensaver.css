@@ -1,0 +1,36 @@
+/* Screen Saver Styles (Legacy) */
+
+/* Note: The circle-based audio visualization has been replaced by the
+   holographic shimmer effect in shimmer.js. This file is kept for
+   backward compatibility but the #screen-saver element is hidden. */
+
+#screen-saver {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(0 0 0 / 0%);
+  z-index: 90;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

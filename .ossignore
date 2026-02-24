@@ -1,0 +1,82 @@
+# Files and patterns to exclude when publishing to the public OSS repo.
+# Used by scripts/publish-oss.sh
+
+# Secrets and credentials
+.env
+.env.*
+*.pem
+
+# Personal curated lists
+canon.json
+banned.json
+
+# Dev cache
+.localstorage.json
+
+# Git history (public repo starts fresh)
+.git/
+
+# Build artifacts and generated files
+node_modules/
+dist/
+out/
+build/
+blobs/
+uploads/
+coverage/
+logs/
+docs/
+
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Claude Code local config (rules/ agents/ commands/ skills/ stay)
+.claude/settings.json
+.claude/settings.local.json
+.claude/projects/
+.claude/*.jsonl
+.claude/worktrees/
+
+# Deployment (private infra details)
+config/deployment/
+scripts/deploy-spa.sh
+app-update.yml
+
+# Dead code and compiled binaries
+archive/
+bin/
+
+# GSD planning state
+.planning/
+
+# Landing page (separate concern)
+landing-page/
+
+# Dev scratch files
+open-in-codepen.html
+
+# Archives and binaries
+*.zip
+*.tar.gz
+*.dmg
+
+# Editor swap/backup files
+*.swp
+*~
+
+# Dev scratch notes
+blog-post-open-source-release.md
+server-refactor.txt
+mcp-instructions.md
+notesReview.txt
+SETTINGS_PANEL_SETUP.txt

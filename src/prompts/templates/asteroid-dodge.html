@@ -1,0 +1,397 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Asteroid Dodge</title>
+  </head>
+  <body class="p-stack pad-2 full gap-2" style="background: transparent">
+    <div class="p-split" style="flex-shrink: 0">
+      <div class="p-label-tech">ASTEROID DODGE</div>
+      <div class="p-row gap-2">
+        <span class="font-mono text-sm" id="score">0</span>
+        <span class="p-badge p-badge-primary font-mono" id="highBadge" style="display: none"
+          >HI: 0</span
+        >
+      </div>
+    </div>
+
+    <div id="gameCanvas" class="flex-1" style="min-height: 0"></div>
+
+    <div class="p-row justify-center gap-3" style="flex-shrink: 0">
+      <button class="p-btn p-btn-primary p-btn-lg" id="startBtn">START</button>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var scoreEl = document.getElementById('score');
+        var highBadgeEl = document.getElementById('highBadge');
+        var startBtn = document.getElementById('startBtn');
+
+        // ===== GAME STATE =====
+        var state = 'menu'; // menu | playing | gameover
+        var score = 0;
+        var highScore = 0;
+        var ship = { x: 0, y: 0, w: 30, h: 20 };
+        var asteroids = [];
+        var stars = [];
+        var particles = [];
+        var frameId = null;
+        var spawnTimer = 0;
+        var starTimer = 0;
+        var speedMultiplier = 1;
+        var elapsed = 0;
+
+        // ===== CANVAS =====
+        var canvasObj = prvctice.ui.canvas(document.getElementById('gameCanvas'), {
+          width: 400,
+          height: 500,
+          onResize: function (w, h) {
+            ship.x = w / 2;
+            ship.y = h - 50;
+          },
+        });
+        var canvas = canvasObj.canvas;
+        var ctx = canvasObj.ctx;
+
+        // ===== LOAD HIGH SCORE =====
+        prvctice.storage.get('asteroid-high').then(function (val) {
+          if (val) {
+            highScore = val;
+            highBadgeEl.textContent = 'HI: ' + highScore;
+            highBadgeEl.style.display = '';
+          }
+        });
+
+        // ===== INPUT =====
+        canvas.addEventListener('click', function (e) {
+          if (state === 'menu' || state === 'gameover') {
+            startGame();
+            return;
+          }
+          var rect = canvas.getBoundingClientRect();
+          var clickX = e.clientX - rect.left;
+          var mid = rect.width / 2;
+          if (clickX < mid) {
+            ship.x = Math.max(ship.w / 2, ship.x - 40);
+          } else {
+            ship.x = Math.min(canvas.width - ship.w / 2, ship.x + 40);
+          }
+        });
+
+        canvas.addEventListener('touchstart', function (e) {
+          e.preventDefault();
+          if (state === 'menu' || state === 'gameover') {
+            startGame();
+            return;
+          }
+          var rect = canvas.getBoundingClientRect();
+          var touchX = e.touches[0].clientX - rect.left;
+          var mid = rect.width / 2;
+          if (touchX < mid) {
+            ship.x = Math.max(ship.w / 2, ship.x - 40);
+          } else {
+            ship.x = Math.min(canvas.width - ship.w / 2, ship.x + 40);
+          }
+        });
+
+        // ===== GAME LOGIC =====
+        function startGame() {
+          state = 'playing';
+          score = 0;
+          speedMultiplier = 1;
+          elapsed = 0;
+          asteroids = [];
+          stars = [];
+          particles = [];
+          ship.x = canvas.width / 2;
+          ship.y = canvas.height - 50;
+          scoreEl.textContent = '0';
+          startBtn.style.display = 'none';
+
+          prvctice.animate(
+            startBtn,
+            { opacity: 0, transform: 'scale(0.8)' },
+            { spring: 'xsnappy' }
+          );
+          prvctice.audio.tone(880, 100, { type: 'square', volume: 0.15 });
+
+          if (!frameId) gameLoop();
+        }
+
+        function spawnAsteroid() {
+          asteroids.push({
+            x: Math.random() * (canvas.width - 30) + 15,
+            y: -20,
+            r: 8 + Math.random() * 12,
+            speed: (1.5 + Math.random() * 2) * speedMultiplier,
+            rotation: Math.random() * Math.PI * 2,
+          });
+        }
+
+        function spawnStar() {
+          stars.push({
+            x: Math.random() * (canvas.width - 20) + 10,
+            y: -15,
+            speed: 1 + Math.random() * 1.5,
+            pulse: 0,
+          });
+        }
+
+        function spawnExplosion(x, y) {
+          for (var i = 0; i < 10; i++) {
+            var angle = ((Math.PI * 2) / 10) * i + Math.random() * 0.5;
+            particles.push({
+              x: x,
+              y: y,
+              vx: Math.cos(angle) * (2 + Math.random() * 3),
+              vy: Math.sin(angle) * (2 + Math.random() * 3),
+              life: 1,
+              color: i % 2 === 0 ? '#ef4444' : '#f59e0b',
+            });
+          }
+        }
+
+        function checkCollision(a, b, ar, bw, bh) {
+          var dx = a.x - b.x;
+          var dy = a.y - b.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          return dist < ar + Math.max(bw, bh) / 2;
+        }
+
+        function gameOver() {
+          state = 'gameover';
+          spawnExplosion(ship.x, ship.y);
+
+          prvctice.audio.tone(200, 400, { type: 'sawtooth', volume: 0.2, release: 200 });
+
+          var msg = 'Game Over! Score: ' + score;
+          if (score > highScore) {
+            highScore = score;
+            prvctice.storage.set('asteroid-high', highScore);
+            highBadgeEl.textContent = 'HI: ' + highScore;
+            highBadgeEl.style.display = '';
+            msg = 'New High Score: ' + score + '!';
+            prvctice.ui.toast({ message: msg, type: 'success', duration: 3000 });
+          } else {
+            prvctice.ui.toast({ message: msg, type: 'info', duration: 2000 });
+          }
+
+          startBtn.textContent = 'RETRY';
+          startBtn.style.display = '';
+          startBtn.style.opacity = '1';
+          prvctice.animate(startBtn, { opacity: 1, transform: 'scale(1)' }, { spring: 'bouncy' });
+        }
+
+        // ===== RENDER =====
+        function drawShip() {
+          ctx.save();
+          ctx.translate(ship.x, ship.y);
+          ctx.fillStyle =
+            getComputedStyle(document.body).getPropertyValue('--p-primary').trim() || '#4F46E5';
+          ctx.beginPath();
+          ctx.moveTo(0, -ship.h / 2);
+          ctx.lineTo(-ship.w / 2, ship.h / 2);
+          ctx.lineTo(ship.w / 2, ship.h / 2);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function drawAsteroids() {
+          ctx.fillStyle =
+            getComputedStyle(document.body).getPropertyValue('--p-text-secondary').trim() || '#999';
+          for (var i = 0; i < asteroids.length; i++) {
+            var a = asteroids[i];
+            ctx.save();
+            ctx.translate(a.x, a.y);
+            ctx.rotate(a.rotation);
+            ctx.beginPath();
+            for (var j = 0; j < 6; j++) {
+              var angle = ((Math.PI * 2) / 6) * j;
+              var r = a.r * (0.8 + Math.random() * 0.05);
+              if (j === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+              else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+
+        function drawStars() {
+          ctx.fillStyle = '#f59e0b';
+          for (var i = 0; i < stars.length; i++) {
+            var s = stars[i];
+            var size = 6 + Math.sin(s.pulse) * 2;
+            ctx.save();
+            ctx.translate(s.x, s.y);
+            ctx.beginPath();
+            for (var j = 0; j < 5; j++) {
+              var outer = ((Math.PI * 2) / 5) * j - Math.PI / 2;
+              var inner = outer + Math.PI / 5;
+              if (j === 0) ctx.moveTo(Math.cos(outer) * size, Math.sin(outer) * size);
+              else ctx.lineTo(Math.cos(outer) * size, Math.sin(outer) * size);
+              ctx.lineTo(Math.cos(inner) * size * 0.4, Math.sin(inner) * size * 0.4);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+
+        function drawParticles() {
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        function drawMenu() {
+          ctx.fillStyle =
+            getComputedStyle(document.body).getPropertyValue('--p-text').trim() || '#e0e0e0';
+          ctx.font = '24px "Gothic A1", system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('ASTEROID DODGE', canvas.width / 2, canvas.height / 2 - 30);
+          ctx.font = '14px "Gothic A1", system-ui, sans-serif';
+          ctx.globalAlpha = 0.6;
+          ctx.fillText('Tap left/right to dodge', canvas.width / 2, canvas.height / 2 + 10);
+          ctx.globalAlpha = 1;
+        }
+
+        // ===== GAME LOOP =====
+        var lastTime = 0;
+
+        function gameLoop(timestamp) {
+          if (!timestamp) timestamp = 0;
+          var dt = lastTime ? (timestamp - lastTime) / 16.67 : 1;
+          lastTime = timestamp;
+
+          // Clear
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (state === 'menu') {
+            drawMenu();
+            drawParticles();
+            frameId = requestAnimationFrame(gameLoop);
+            return;
+          }
+
+          if (state === 'playing') {
+            elapsed += dt;
+
+            // Speed increases every ~600 frames (~10 sec at 60fps)
+            speedMultiplier = 1 + Math.floor(elapsed / 600) * 0.15;
+
+            // Spawn asteroids
+            spawnTimer += dt;
+            if (spawnTimer > 30 / speedMultiplier) {
+              spawnAsteroid();
+              spawnTimer = 0;
+            }
+
+            // Spawn bonus stars
+            starTimer += dt;
+            if (starTimer > 180) {
+              spawnStar();
+              starTimer = 0;
+            }
+
+            // Update asteroids
+            for (var i = asteroids.length - 1; i >= 0; i--) {
+              asteroids[i].y += asteroids[i].speed * dt;
+              asteroids[i].rotation += 0.02 * dt;
+              if (asteroids[i].y > canvas.height + 30) {
+                asteroids.splice(i, 1);
+                score++;
+                scoreEl.textContent = score;
+              } else if (checkCollision(asteroids[i], ship, asteroids[i].r, ship.w, ship.h)) {
+                gameOver();
+              }
+            }
+
+            // Update stars (bonus)
+            for (var j = stars.length - 1; j >= 0; j--) {
+              stars[j].y += stars[j].speed * dt;
+              stars[j].pulse += 0.1 * dt;
+              if (stars[j].y > canvas.height + 20) {
+                stars.splice(j, 1);
+              } else if (checkCollision(stars[j], ship, 8, ship.w, ship.h)) {
+                score += 5;
+                scoreEl.textContent = score;
+                stars.splice(j, 1);
+                prvctice.audio.tone(660, 80, { type: 'sine', volume: 0.15 });
+                prvctice.ui.toast({ message: '+5 bonus!', type: 'success', duration: 1000 });
+              }
+            }
+          }
+
+          // Update particles (both playing and gameover)
+          for (var k = particles.length - 1; k >= 0; k--) {
+            var p = particles[k];
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= 0.02 * dt;
+            if (p.life <= 0) particles.splice(k, 1);
+          }
+
+          // Draw
+          if (state === 'playing') drawShip();
+          drawAsteroids();
+          drawStars();
+          drawParticles();
+
+          if (state === 'gameover') {
+            ctx.fillStyle =
+              getComputedStyle(document.body).getPropertyValue('--p-text').trim() || '#e0e0e0';
+            ctx.font = '20px "Gothic A1", system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 10);
+            ctx.font = '14px "IBM Plex Mono", monospace';
+            ctx.fillText('Score: ' + score, canvas.width / 2, canvas.height / 2 + 20);
+          }
+
+          frameId = requestAnimationFrame(gameLoop);
+        }
+
+        // ===== INIT =====
+        ship.x = canvas.width / 2;
+        ship.y = canvas.height - 50;
+        startBtn.textContent = 'START';
+
+        // Title entrance animation
+        prvctice.animate(
+          startBtn,
+          {
+            opacity: 1,
+            transform: 'scale(1)',
+          },
+          { spring: 'bouncy' }
+        );
+
+        // Score counter animation helper
+        var displayedScore = 0;
+        function animateScore(target) {
+          prvctice.animateValue(scoreEl, displayedScore, target, {
+            spring: 'snappy',
+            onUpdate: function (v) {
+              displayedScore = Math.round(v);
+              scoreEl.textContent = displayedScore;
+            },
+          });
+        }
+
+        // Start render loop for menu
+        gameLoop();
+
+        // ===== CLEANUP =====
+        prvctice.onDispose(function () {
+          if (frameId) cancelAnimationFrame(frameId);
+          frameId = null;
+        });
+      });
+    </script>
+  </body>
+</html>

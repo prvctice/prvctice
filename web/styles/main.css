@@ -1,0 +1,176 @@
+@layer fonts, tokens, base, layout, components, utilities, themes;
+
+/* --------------------------------------------------
+   Self-hosted Fonts (@font-face declarations)
+   -------------------------------------------------- */
+@import './fonts.css' layer(fonts);
+
+/* --------------------------------------------------
+   Design Tokens
+   -------------------------------------------------- */
+@import './tokens.css' layer(tokens);
+
+/* --------------------------------------------------
+   Layout Modules
+   -------------------------------------------------- */
+@import './header.css' layer(layout);
+@import './chat.css' layer(layout);
+@import './chat-attachments.css' layer(layout);
+@import './notes-editor.css' layer(layout);
+@import './notes-tabs.css' layer(layout);
+@import './side-panel.css' layer(layout);
+@import './mobile.css' layer(layout);
+@import './side-menu.css' layer(layout);
+
+/* --------------------------------------------------
+   Component Modules
+   -------------------------------------------------- */
+@import './input.css' layer(components);
+@import './menus.css' layer(components);
+@import './games.css' layer(components);
+@import './carousel.css' layer(components);
+@import './components.css' layer(components);
+@import './components/index.css' layer(components);
+@import './settings-modal.css' layer(components);
+
+/* --------------------------------------------------
+   Utility Modules
+   -------------------------------------------------- */
+@import './motion.css' layer(utilities);
+@import './screensaver.css' layer(utilities);
+@import './notifs.css' layer(utilities);
+@import './desktop-polish.css' layer(utilities);
+@import './linen.css' layer(utilities);
+
+/* --------------------------------------------------
+   Themes
+   -------------------------------------------------- */
+@import './theme-base.css' layer(themes);
+@import '../themes/vera-baxter-theme.css' layer(themes);
+@import '../themes/night-theme.css' layer(themes);
+@import '../themes/fragile-theme.css' layer(themes);
+@import '../themes/light-theme.css' layer(themes);
+@import '../themes/vitti-theme.css' layer(themes);
+@import '../themes/share-bear-theme.css' layer(themes);
+@import '../themes/eva-theme.css' layer(themes);
+@import '../themes/high-contrast-theme.css' layer(themes);
+@import '../themes/custom-theme.css' layer(themes);
+
+/* --------------------------------------------------
+   Base Styles
+   Global resets and element defaults
+   -------------------------------------------------- */
+@layer base {
+  html {
+    overscroll-behavior: none;
+    height: 100dvh;
+
+    /* Hide scrollbars globally */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    /* Base background on html as ultimate fallback - themes override on body */
+    background-color: var(--color-background-fallback, #121212);
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    font-family: var(--font-family-sans);
+    color: var(--color-text);
+
+    /* Use CSS variable for background with dark fallback
+       Themes set --color-background or override background directly */
+    background: var(--color-background, #121212);
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    position: relative;
+    height: 100dvh;
+    overflow: hidden;
+
+    /* Hide scrollbars */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------
+   Element Defaults
+   -------------------------------------------------- */
+iconify-icon {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 16pt;
+  color: currentcolor;
+}
+
+hr {
+  border: 0.5pt solid;
+}
+
+p {
+  margin: 0;
+}
+
+ul {
+  padding-left: 10px;
+}
+
+ol {
+  padding-left: 28px;
+}
+
+/* --------------------------------------------------
+   Canvas & Overlay Containers
+   -------------------------------------------------- */
+#canvas-container {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+
+body.dotmatrix-prechat #chat-window {
+  display: none;
+}
+
+#glass-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgb(255 255 255 / 0%);
+  z-index: 100;
+}
+
+#glass-overlay.visible {
+  opacity: 1;
+  backdrop-filter: saturate(110%) blur(var(--effect-backdrop-blur, 4px));
+  -webkit-backdrop-filter: saturate(110%) blur(var(--effect-backdrop-blur, 4px));
+}
+
+/* --------------------------------------------------
+   Global Utilities
+   -------------------------------------------------- */
+
+/* Hide fullscreen button on mobile screens */
+@media (width <= 768px) {
+  button[aria-label='Fullscreen'],
+  button.fullscreen,
+  #notes-header-toolbar button[data-action='fullscreen'] {
+    display: none !important;
+  }
+}

@@ -1,0 +1,62 @@
+/* --------------------------------------------------
+   Chat Attachments
+   Image uploads and AI-generated images in messages
+   -------------------------------------------------- */
+
+.attachment-container {
+  display: inline-block;
+  margin: var(--space-3, 6px) 0;
+  cursor: pointer;
+  transition:
+    transform var(--duration-short, 0.15s) ease,
+    box-shadow var(--duration-short, 0.2s) ease;
+  overflow: hidden;
+}
+
+.attachment-container:hover {
+  transform: translateY(-1px);
+}
+
+.attachment-image {
+  display: block;
+  max-width: 200px;
+  max-height: 200px;
+  width: auto;
+  height: auto;
+  background: rgb(0 0 0 / 3%);
+}
+
+/* --------------------------------------------------
+   Image Strip (compact grid inside messages)
+   -------------------------------------------------- */
+.image-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: var(--space-3, 6px);
+  max-width: var(--chat-content-max-width);
+}
+
+.image-strip .attachment-container {
+  display: block;
+  margin: 0;
+}
+
+.image-strip img.attachment-image {
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: var(--radius-md, 12px);
+}
+
+/* Mobile: 2-column grid */
+@media (width <= 768px) {
+  .image-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .image-strip img.attachment-image {
+    max-height: 200px;
+  }
+}

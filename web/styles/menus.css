@@ -1,0 +1,612 @@
+/* CSS: Sliding menu styles - updated to match theme modal design */
+.sliding-menu {
+  box-sizing: border-box;
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  transform: none;
+  opacity: 0;
+  visibility: hidden;
+  width: clamp(220px, 65vw, 515px);
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: linear-gradient(
+    to bottom,
+    rgb(36 36 29 / 76%) 0%,
+    rgb(24 25 20 / 89%) 0.5%,
+    rgb(24 25 20 / 89%) 61%,
+    rgb(55 85 119 / 35%) 100%
+  );
+  box-shadow: 0 4px 24px rgb(0 0 0 / 25%);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  transition: opacity 0.3s ease-in-out;
+  color: #c7c7c7 !important;
+  z-index: 9999;
+  border: 1px #728487 solid;
+  border-radius: var(--radius-lg);
+  cursor: move;
+  backdrop-filter: saturate(180%) blur(var(--effect-backdrop-blur, 8px));
+  -webkit-backdrop-filter: saturate(180%) blur(var(--effect-backdrop-blur, 8px));
+}
+
+.sliding-menu::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   Video + Buttons layout inside sliding menu
+---------------------------------------------------------- */
+.menu-main {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+}
+
+#settings-menu button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#settings-menu button i {
+  margin-right: 6px;
+  pointer-events: none;
+}
+
+/* Video default order below buttons on mobile */
+.menu-video {
+  order: 1;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 4/3;
+  max-height: 200px;
+  border-radius: var(--radius-sm);
+  display: block;
+  object-fit: cover;
+  background: #000; /* fallback until first frame */
+
+  /* Ensure video does not block button taps on touch devices */
+  pointer-events: none;
+}
+
+/* Horizontal layout on medium+ screens */
+@media (width >= 800px) {
+  .menu-main {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .menu-video {
+    width: auto;
+    order: 0;
+    flex: 0 0 auto;
+    max-width: 55%;
+    max-height: 180px;
+    margin-right: 0;
+  }
+
+  .menu-main > ul {
+    flex: 1 1 0;
+  }
+}
+
+@media (width <= 480px) {
+  #settings-menu button {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  #settings-menu button i {
+    margin-right: 0;
+    margin-bottom: 2px;
+    font-size: 24px;
+  }
+}
+
+@media (width <= 600px) {
+  .sliding-menu {
+    top: 12px;
+    right: 12px;
+    width: min(320px, 92vw);
+    max-height: 78vh;
+    padding: 12px;
+    border-radius: var(--radius-xl);
+  }
+
+  .sliding-menu ul {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 46px;
+    gap: var(--space-3);
+  }
+
+  .sliding-menu button,
+  .sliding-menu a:not(.api-link) {
+    font-size: var(--font-size-xs);
+    gap: 2px;
+  }
+
+  .sliding-menu .drag-bar {
+    height: 20px;
+  }
+}
+
+/* ensure menu and its contents use border-box sizing to fit within 90px */
+.sliding-menu *,
+.sliding-menu *::before,
+.sliding-menu *::after {
+  box-sizing: inherit;
+}
+
+/* ---------------------- */
+
+/*  Visible drag bar      */
+
+/* ---------------------- */
+
+.sliding-menu .drag-bar {
+  height: 24px;
+  width: 100%;
+  background: #e5e5e5;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  margin-bottom: 12px;
+  user-select: none;
+}
+
+.sliding-menu .drag-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.4px;
+  color: #555;
+  pointer-events: none;
+}
+
+.sliding-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  /* Reduce button height */
+  grid-auto-rows: 39px;
+  gap: var(--space-4);
+}
+
+/* Header title styling for sliding menu, matches theme-modal h3 */
+.sliding-menu h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+/* Grid span utilities */
+.sliding-menu .span-1 {
+  grid-column: span 1;
+}
+
+.sliding-menu .span-2 {
+  grid-column: span 2;
+}
+
+.sliding-menu .span-3 {
+  grid-column: span 3;
+}
+
+/* new full-width utility */
+.sliding-menu .span-4 {
+  grid-column: span 4;
+}
+
+.sliding-menu .row-2 {
+  grid-row: span 2;
+}
+
+.sliding-menu li {
+  margin: 0;
+}
+
+.sliding-menu button,
+.sliding-menu a:not(.api-link) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: var(--space-5) var(--space-2);
+  font-family: var(--font-family-sans);
+  font-weight: 500;
+  font-size: var(--font-size-xs);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: inherit;
+  border: 1px solid rgb(255 255 255 / 6%);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  text-decoration: none;
+  box-shadow: var(--shadow-glass-inset);
+  background: var(--surface-menu-button);
+}
+
+/* Text styling inside buttons */
+.sliding-menu .btn-label {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-transform: lowercase;
+}
+
+/* Settings panel tweaks */
+#settings-section {
+  text-align: center;
+}
+
+#settings-section .settings-label {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+#settings-section .settings-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 6px 8px;
+
+  /* Match the frosted-glass aesthetic used for buttons so inputs blend
+       seamlessly with each theme, instead of glaring white boxes. */
+  background: var(--surface-glass-strong);
+  color: inherit;
+  border: 1px solid var(--border-glass-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+
+  /* Allow the gradient behind to peek through a bit */
+  backdrop-filter: blur(var(--effect-backdrop-blur, 4px)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 4px)) saturate(160%);
+}
+
+/* Improve focus visibility */
+#settings-section .settings-input:focus {
+  outline: none;
+  border-color: rgb(255 255 255 / 65%);
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 35%);
+}
+
+/* Placeholder style for better legibility */
+#settings-section .settings-input::placeholder {
+  color: rgb(255 255 255 / 70%);
+}
+
+body.light-theme #settings-section .settings-input::placeholder,
+body.share-bear-theme #settings-section .settings-input::placeholder,
+body.fragile-theme #settings-section .settings-input::placeholder {
+  color: rgb(0 0 0 / 50%);
+}
+
+/* Remove default white background from selects in Safari/iOS */
+#settings-section select.settings-input {
+  appearance: none;
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 24 16' fill='none' stroke='%23FFFFFF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='4 4 12 12 20 4' /%3E%3C/svg%3E");
+}
+
+/* Dark themes already use light text; for light themes ensure chevron is darker */
+body.light-theme #settings-section select.settings-input,
+body.share-bear-theme #settings-section select.settings-input,
+body.fragile-theme #settings-section select.settings-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 24 16' fill='none' stroke='%23000000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='4 4 12 12 20 4' /%3E%3C/svg%3E");
+}
+
+#settings-section .api-link {
+  display: inline;
+  margin-top: 4px;
+  font-size: var(--font-size-xs);
+  color: var(--color-link, #06c);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+#settings-section .api-link:hover {
+  text-decoration: none;
+}
+
+.sliding-menu button:hover,
+.sliding-menu a:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 16px rgb(109 254 253 / 54%);
+  text-decoration: none;
+}
+
+.sliding-menu.hidden {
+  /* hidden state: fade out */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.sliding-menu.visible {
+  /* visible state: fade in */
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Hide icons – mock-up shows text-only buttons */
+.sliding-menu button i,
+.sliding-menu button img,
+.sliding-menu button iconify-icon {
+  display: none !important;
+}
+
+/* Icon sizing for image icons in sliding menu */
+.sliding-menu button img {
+  width: 24px;
+  height: auto;
+  pointer-events: none;
+}
+
+/* Expanded state for submenu content */
+.sliding-menu.expanded {
+  width: 200px; /* expanded width to fit submenu content */
+}
+
+.sliding-menu.dragging {
+  transition: none !important;
+}
+
+/* -------------------------------------------------------------
+   Mobile / small-screen layout
+   The sliding menu should act as a full-screen overlay and not
+   as a draggable window.  We override the positional and sizing
+   properties here and also reset the cursor so the "grab" hint
+   disappears.
+-------------------------------------------------------------- */
+
+@media (width <= 799px) {
+  .sliding-menu {
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    cursor: default !important;
+
+    /* Ensure content scrolls when taller than viewport */
+    overflow-y: auto !important;
+  }
+}
+
+/*
+#new-chat-button {
+    font-family: "IBM Plex Mono", monospace;
+    cursor: pointer;
+    padding: 0;
+    background: transparent;
+    border: none;
+    transition: color 0.3s;
+}
+*/
+
+/* Close button – inherit same style as other buttons but span full row */
+#close-menu-button {
+  /* ensure it uses the shared .sliding-menu button styles */
+
+  color: inherit;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-transform: lowercase;
+  width: 100%;
+}
+
+#close-menu-button:hover {
+  background: rgb(255 255 255 / 25%);
+  box-shadow: inset 0 0 16px rgb(255 60 0 / 68.5%);
+}
+
+#themes-button {
+  border: none;
+  background: transparent;
+  font-family: var(--font-family-mono);
+  font-weight: 500;
+  color: #121212;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+}
+
+.menu-header {
+  font-family: var(--font-family-mono);
+  font-weight: 500;
+  font-size: var(--font-size-xs);
+  color: #fff !important;
+}
+
+#sentiment-canvas {
+  width: 100%;
+  height: auto;
+  background: rgb(0 0 0 / 10%);
+}
+
+/* Menu Widgets Styles */
+.menu-widgets {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.widget {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2em;
+  color: #fff;
+  width: 100%;
+}
+
+/* ---------------------------------- */
+
+/* New merged theme section           */
+
+/* ---------------------------------- */
+
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--layout-footer-gap);
+
+  /* Ensure submenu content sits at the top of the sliding menu and not
+     below the version footer which owns the margin-top:auto space. By
+     assigning a negative flex order the submenu is placed before
+     .menu-version regardless of DOM order. */
+  order: -1;
+}
+
+/* In the sliding menu, force theme options into a single column to prevent overflow */
+.sliding-menu .theme-options {
+  grid-template-columns: 1fr !important;
+}
+
+/* App footer (name + version) */
+.menu-version {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.5px;
+  text-align: left;
+  color: var(--color-text);
+  margin-top: auto;
+  padding-top: 4px;
+  align-self: flex-start;
+  opacity: 0.7;
+}
+
+/* Hide video when submenu is open */
+.sliding-menu.submenu-open .menu-video {
+  display: none !important;
+}
+
+.menu-section.hidden {
+  display: none;
+}
+
+/* Confirm buttons container: full width, vertical stack */
+.confirm-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-footer-gap);
+  width: 100%;
+}
+
+.menu-subtitle {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--layout-footer-gap);
+  width: 100%;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: var(--color-glass-light);
+}
+
+/* Active state for menu toggle button */
+.sliding-menu button.active {
+  background: none !important;
+}
+
+/* Grid overlay */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgb(128 128 128 / 20%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(128 128 128 / 20%) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 50; /* Behind dotmatrix (60) by default */
+}
+
+/* Promote grid above blur layer (100) when chat is active */
+body:has(#glass-overlay.visible) .grid-overlay {
+  z-index: 110;
+}
+
+.grid-overlay.hidden {
+  display: none;
+}
+
+/* Ruler tick marks on menu edge when grid active */
+.sliding-menu.grid-active::before,
+.sliding-menu.grid-active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 39px,
+    rgb(255 255 255 / 40%) 39px,
+    rgb(255 255 255 / 40%) 40px
+  );
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.sliding-menu.grid-active::before {
+  left: 0;
+}
+
+.sliding-menu.grid-active::after {
+  right: 0;
+}

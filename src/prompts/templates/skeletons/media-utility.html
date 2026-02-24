@@ -1,0 +1,396 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      /* ── Media Utility Skeleton ──
+ * Pattern: Header + tabs + dropzone + settings + queue + footer
+ * Examples: Media Converter, File Inspector, Batch Processor
+ */
+
+      /* Layout */
+      .mu-wrap {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        gap: 0;
+        font-family: var(--p-font-mono);
+        color: var(--p-text);
+      }
+
+      /* Header */
+      .mu-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: var(--p-surface);
+        border-bottom: 1px solid var(--p-border);
+        flex-shrink: 0;
+      }
+      .mu-title {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .mu-header-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 4px;
+      }
+
+      /* Buttons */
+      .mu-btn {
+        all: unset;
+        cursor: pointer;
+        padding: 4px 10px;
+        font-size: 9px;
+        font-family: var(--p-font-mono);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--p-text-muted);
+        border: 1px solid var(--p-border);
+        border-radius: var(--p-radius-pill);
+        transition: all 100ms ease;
+      }
+      .mu-btn:hover {
+        color: var(--p-text);
+        background: var(--p-surface-raised);
+      }
+      .mu-btn.primary {
+        color: var(--p-accent-blue);
+        border-color: var(--p-accent-blue);
+      }
+      .mu-btn.primary:hover {
+        background: rgba(68, 136, 255, 0.08);
+      }
+      .mu-btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      /* Drop zone */
+      .mu-dropzone {
+        margin: 10px;
+        padding: 30px 20px;
+        text-align: center;
+        border: 2px dashed var(--p-border);
+        border-radius: var(--p-radius-lg);
+        cursor: pointer;
+        transition: all 150ms ease;
+        color: var(--p-text-muted);
+        font-size: 11px;
+      }
+      .mu-dropzone:hover,
+      .mu-dropzone.dragover {
+        border-color: var(--p-accent-blue);
+        background: rgba(68, 136, 255, 0.04);
+      }
+      .mu-dropzone-title {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--p-text);
+      }
+
+      /* Settings panel */
+      .mu-settings {
+        padding: 8px 10px;
+        background: var(--p-surface);
+        border-bottom: 1px solid var(--p-border);
+        flex-shrink: 0;
+      }
+      .mu-setting-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .mu-setting-label {
+        font-size: 9px;
+        color: var(--p-text-muted);
+        width: 70px;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .mu-select {
+        flex: 1;
+        padding: 3px 6px;
+        font-size: 10px;
+        font-family: var(--p-font-mono);
+        background: var(--p-surface);
+        color: var(--p-text);
+        border: 1px solid var(--p-border);
+        border-radius: var(--p-radius-sm);
+        outline: none;
+      }
+      .mu-select:focus {
+        border-color: var(--p-accent-blue);
+      }
+
+      /* Queue item */
+      .mu-queue-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--p-border-subtle);
+        font-size: 10px;
+      }
+      .mu-queue-item:last-child {
+        border-bottom: none;
+      }
+      .mu-queue-name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .mu-queue-status {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--p-text-muted);
+      }
+      .mu-queue-status.done {
+        color: var(--p-accent-green);
+      }
+      .mu-queue-status.error {
+        color: var(--p-danger);
+      }
+
+      /* Progress bar */
+      .mu-progress {
+        height: 3px;
+        background: var(--p-surface-sunken);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .mu-progress-fill {
+        height: 100%;
+        background: var(--p-accent-blue);
+        border-radius: 2px;
+        transition: width 200ms ease;
+        width: 0%;
+      }
+
+      /* Tab bar */
+      .mu-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--p-border);
+        flex-shrink: 0;
+      }
+      .mu-tab {
+        all: unset;
+        cursor: pointer;
+        padding: 6px 14px;
+        font-size: 9px;
+        font-family: var(--p-font-mono);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--p-text-muted);
+        transition: all 100ms ease;
+        border-bottom: 2px solid transparent;
+      }
+      .mu-tab:hover {
+        color: var(--p-text);
+      }
+      .mu-tab.active {
+        color: var(--p-accent-blue);
+        border-bottom-color: var(--p-accent-blue);
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; height: 100vh; overflow: hidden">
+    <div class="mu-wrap">
+      <!-- Header -->
+      <div class="mu-header">
+        <span class="mu-title"><!-- TODO: UTILITY NAME --></span>
+        <div class="mu-header-actions">
+          <button class="mu-btn" id="clearBtn">CLEAR</button>
+          <button class="mu-btn primary" id="processBtn" disabled>CONVERT</button>
+        </div>
+      </div>
+
+      <!-- Tabs (for multi-format tools) -->
+      <div class="mu-tabs" id="tabs">
+        <button class="mu-tab active" data-tab="image">IMAGE</button>
+        <button class="mu-tab" data-tab="audio">AUDIO</button>
+        <button class="mu-tab" data-tab="video">VIDEO</button>
+      </div>
+
+      <!-- Drop zone -->
+      <div class="mu-dropzone" id="dropZone">
+        <div class="mu-dropzone-title">DROP FILES HERE</div>
+        <div style="font-size: 9px; margin-top: 4px">Accepts image, audio, and video files</div>
+      </div>
+
+      <!-- Settings (shown after file loaded) -->
+      <div class="mu-settings" id="settings" style="display: none">
+        <div class="mu-setting-row">
+          <span class="mu-setting-label">FORMAT</span>
+          <select class="mu-select" id="formatSelect">
+            <!-- TODO: Populate based on active tab -->
+          </select>
+        </div>
+        <div class="mu-setting-row">
+          <span class="mu-setting-label">QUALITY</span>
+          <input
+            type="range"
+            class="p-slider"
+            id="qualitySlider"
+            min="1"
+            max="100"
+            value="85"
+            style="flex: 1"
+          />
+          <span
+            style="font-size: 9px; color: var(--p-text-muted); width: 24px; text-align: right"
+            id="qualityVal"
+            >85</span
+          >
+        </div>
+      </div>
+
+      <!-- Queue -->
+      <div style="flex: 1; min-height: 0; overflow-y: auto" id="queueWrap">
+        <div id="queue">
+          <!-- Queue items rendered here -->
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="
+          padding: 4px 10px;
+          border-top: 1px solid var(--p-border);
+          flex-shrink: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <span
+          style="font-size: 9px; color: var(--p-text-muted); font-family: var(--p-font-mono)"
+          id="footerStatus"
+          >READY</span
+        >
+        <span
+          style="font-size: 9px; color: var(--p-text-muted); font-family: var(--p-font-mono)"
+          id="footerCount"
+          >0 FILES</span
+        >
+      </div>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var activeTab = 'image';
+        var queue = [];
+
+        // ── Tabs ──
+        document.getElementById('tabs').addEventListener('click', function (e) {
+          var tab = e.target.closest('[data-tab]');
+          if (!tab) return;
+          activeTab = tab.dataset.tab;
+          var all = document.querySelectorAll('.mu-tab');
+          for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+          tab.classList.add('active');
+          // TODO: Update format options based on active tab
+        });
+
+        // ── Drop Zone ──
+        var dropZone = document.getElementById('dropZone');
+        dropZone.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          dropZone.classList.add('dragover');
+        });
+        dropZone.addEventListener('dragleave', function () {
+          dropZone.classList.remove('dragover');
+        });
+        dropZone.addEventListener('drop', function (e) {
+          e.preventDefault();
+          dropZone.classList.remove('dragover');
+          var files = e.dataTransfer.files;
+          for (var i = 0; i < files.length; i++) addToQueue(files[i]);
+        });
+
+        function addToQueue(file) {
+          queue.push({
+            id: Date.now() + '_' + Math.random(),
+            file: file,
+            name: file.name,
+            size: file.size,
+            status: 'pending',
+          });
+          document.getElementById('settings').style.display = '';
+          document.getElementById('processBtn').disabled = false;
+          renderQueue();
+        }
+
+        function renderQueue() {
+          var el = document.getElementById('queue');
+          el.innerHTML = '';
+          for (var i = 0; i < queue.length; i++) {
+            var item = queue[i];
+            var row = document.createElement('div');
+            row.className = 'mu-queue-item';
+            row.innerHTML =
+              '<span class="mu-queue-name">' +
+              item.name +
+              '</span>' +
+              '<span class="mu-queue-status ' +
+              item.status +
+              '">' +
+              item.status.toUpperCase() +
+              '</span>';
+            if (item.status === 'processing') {
+              var bar = document.createElement('div');
+              bar.className = 'mu-progress';
+              bar.innerHTML =
+                '<div class="mu-progress-fill" style="width:' + (item.progress || 0) + '%"></div>';
+              row.appendChild(bar);
+            }
+            el.appendChild(row);
+          }
+          document.getElementById('footerCount').textContent =
+            queue.length + ' FILE' + (queue.length !== 1 ? 'S' : '');
+        }
+
+        // ── Process ──
+        document.getElementById('processBtn').addEventListener('click', function () {
+          // TODO: Process each queued file
+          // For images: use prvctice.image.* pipeline
+          // For audio/video: use prvctice.mediaTools.convert()
+          // Update status and progress during processing
+          document.getElementById('footerStatus').textContent = 'PROCESSING...';
+        });
+
+        // ── Quality slider ──
+        document.getElementById('qualitySlider').addEventListener('input', function () {
+          document.getElementById('qualityVal').textContent = this.value;
+        });
+
+        // ── Clear ──
+        document.getElementById('clearBtn').addEventListener('click', function () {
+          queue = [];
+          renderQueue();
+          document.getElementById('settings').style.display = 'none';
+          document.getElementById('processBtn').disabled = true;
+          document.getElementById('footerStatus').textContent = 'READY';
+        });
+
+        // ── Cleanup ──
+        prvctice.onDispose(function () {
+          queue = [];
+        });
+      });
+    </script>
+  </body>
+</html>

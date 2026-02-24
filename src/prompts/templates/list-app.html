@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Bookmarks</title>
+  </head>
+  <body class="p-stack pad-3 full gap-2">
+    <div class="p-split text-xs font-mono" style="flex-shrink: 0">
+      <span class="text-muted">BOOKMARKS</span>
+      <span id="count">0</span>
+    </div>
+
+    <div class="p-row gap-2" style="flex-shrink: 0">
+      <div class="p-input-group flex-1">
+        <input class="p-input" id="input" type="text" placeholder="Add a bookmark..." />
+      </div>
+      <button class="p-btn p-btn-primary" id="addBtn">Add</button>
+    </div>
+
+    <div class="p-list p-scroll flex-1" id="list">
+      <div class="p-empty" id="empty">
+        <div class="p-empty-message">NO BOOKMARKS</div>
+      </div>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var items = [];
+        var listEl = document.getElementById('list');
+        var inputEl = document.getElementById('input');
+        var emptyEl = document.getElementById('empty');
+        var countEl = document.getElementById('count');
+
+        function render() {
+          countEl.textContent = items.length;
+          emptyEl.style.display = items.length === 0 ? '' : 'none';
+
+          var existing = listEl.querySelectorAll('.p-list-item');
+          for (var i = 0; i < existing.length; i++) {
+            listEl.removeChild(existing[i]);
+          }
+
+          items.forEach(function (item, idx) {
+            var el = document.createElement('div');
+            el.className = 'p-list-item';
+            el.innerHTML =
+              '<div class="p-list-item-content">' +
+              '<div class="p-list-item-title">' +
+              escapeHtml(item.title) +
+              '</div>' +
+              '<div class="p-list-item-subtitle text-muted">' +
+              escapeHtml(item.date) +
+              '</div>' +
+              '</div>' +
+              '<div class="p-list-item-action">' +
+              '<button class="p-btn p-btn-ghost p-btn-sm" data-idx="' +
+              idx +
+              '">Remove</button>' +
+              '</div>';
+            listEl.appendChild(el);
+          });
+        }
+
+        function escapeHtml(str) {
+          var div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        }
+
+        function addItem() {
+          var val = inputEl.value.trim();
+          if (!val) return;
+          items = [{ title: val, date: new Date().toLocaleDateString() }].concat(items);
+          inputEl.value = '';
+          save();
+          render();
+        }
+
+        function save() {
+          prvctice.storage.set('bookmarks', items);
+        }
+
+        document.getElementById('addBtn').addEventListener('click', addItem);
+        inputEl.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') addItem();
+        });
+
+        listEl.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-idx]');
+          if (!btn) return;
+          var idx = parseInt(btn.getAttribute('data-idx'), 10);
+          items = items.filter(function (_, i) {
+            return i !== idx;
+          });
+          save();
+          render();
+        });
+
+        prvctice.storage.get('bookmarks').then(function (saved) {
+          if (Array.isArray(saved)) items = saved;
+          render();
+        });
+      });
+    </script>
+  </body>
+</html>

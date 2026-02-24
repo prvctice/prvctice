@@ -1,0 +1,73 @@
+/*
+  Theme Base Styles
+  File: theme-base.css
+
+  Common patterns shared across all themes. Themes override these by setting
+  CSS custom properties. This file should be imported in the themes layer
+  before individual theme files.
+*/
+
+/* ------------------------------------------------------------------
+   Bar Shimmer Overlay (disabled)
+   ------------------------------------------------------------------ */
+#bar::before {
+  display: none;
+}
+
+/* ------------------------------------------------------------------
+   Bar Content Layering
+   Ensures bar children sit above the shimmer overlay
+   ------------------------------------------------------------------ */
+#bar > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------
+   Utility Buttons (listen, copy, like)
+   Themes set: --utility-button-color
+   ------------------------------------------------------------------ */
+.listen-button {
+  border: 1px solid var(--utility-button-color, var(--color-text));
+}
+
+.listen-button i,
+.listen-button iconify-icon,
+.copy-button i,
+.copy-button iconify-icon,
+.like-button i,
+.like-button iconify-icon {
+  font-size: var(--font-size-lg);
+  color: var(--utility-button-color, var(--color-text));
+}
+
+/* ------------------------------------------------------------------
+   Message Content
+   Base styling for chat messages
+   ------------------------------------------------------------------ */
+.assistant .message-content,
+.user .message-content {
+  background-color: transparent;
+  color: var(--color-text);
+}
+
+/* ------------------------------------------------------------------
+   Link Styling
+   Themes set: --link-color
+   ------------------------------------------------------------------ */
+.assistant .message-content a,
+.user .message-content a,
+.notes-editor a {
+  color: var(--link-color, inherit);
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------
+   Reduced Motion
+   Disable shimmer animations for users who prefer reduced motion
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  #bar::before {
+    animation: none;
+  }
+}

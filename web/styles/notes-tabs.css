@@ -1,0 +1,105 @@
+/* --------------------------------------------------
+   Notes Tabs (multi-document tab bar)
+   -------------------------------------------------- */
+
+.notes-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 6px);
+  padding: var(--space-3, 6px) 16px;
+  border-bottom: 1px solid var(--divider-color, rgb(0 0 0 / 8%));
+  background: transparent;
+  position: relative;
+  z-index: 2;
+  min-height: 36px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.notes-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3, 6px);
+  max-width: 220px;
+  padding: var(--space-2, 4px) var(--space-4, 8px);
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+  color: var(--color-text, currentColor);
+  background: transparent;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.notes-tab.active {
+  background: rgb(0 0 0 / 6%);
+  border-color: rgb(0 0 0 / 8%);
+}
+
+.notes-tab-title {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notes-tab-new {
+  margin-left: var(--space-2, 4px);
+  appearance: none;
+  border: 1px dashed rgb(0 0 0 / 25%);
+  background: transparent;
+  color: inherit;
+  padding: 2px var(--space-4, 8px);
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+}
+
+.notes-tab-new:hover {
+  background: rgb(0 0 0 / 5%);
+}
+
+/* Inline tab rename input */
+.notes-tab-edit {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-text, currentColor);
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  padding: 0;
+  margin: 0;
+  width: 100px;
+  outline: none;
+}
+
+.notes-tab-edit:focus {
+  border-bottom-color: var(--color-accent, #06c);
+}
+
+/* Tab close button refinement */
+.notes-tab-close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  transition:
+    opacity 0.1s,
+    background 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notes-tab:hover .notes-tab-close {
+  opacity: 0.5;
+}
+
+.notes-tab-close:hover {
+  opacity: 1 !important;
+  background: rgb(0 0 0 / 8%);
+}

@@ -1,0 +1,790 @@
+/* --------------------------------------------------
+   Side Panel - Unified styles for Help, About, Voice Commands
+   Split-view layout for side panels
+   -------------------------------------------------- */
+
+/* --------------------------------------------------
+   Split-view Chat Layout
+   -------------------------------------------------- */
+#chat-container {
+  display: block; /* default single column */
+  width: 100%;
+}
+
+#chat-container.split-mode {
+  display: flex;
+  flex-direction: row;
+}
+
+.chat-window {
+  flex: 1 1 50%;
+  overflow-y: auto;
+}
+
+#chat-container.split-mode .chat-window {
+  flex: 1 1 auto;
+}
+
+/* --------------------------------------------------
+   Side Panel Container (shared)
+   -------------------------------------------------- */
+.side-panel-container,
+.help-container,
+.about-container,
+.voice-commands-container {
+  display: none;
+  flex: 1 1 50%;
+  max-width: 50%;
+  min-height: 0;
+
+  /* Critical: constrain height to viewport minus input bar offset */
+  height: calc(100dvh - var(--chat-input-offset, 80px));
+  max-height: calc(100dvh - var(--chat-input-offset, 80px));
+  position: relative;
+  pointer-events: auto;
+  z-index: 50;
+}
+
+#chat-container.split-mode .side-panel-container,
+#chat-container.split-mode .help-container,
+#chat-container.split-mode .about-container,
+#chat-container.split-mode .voice-commands-container {
+  display: flex;
+  flex-direction: column;
+
+  /* Clip to bounds, content area handles scrolling */
+  overflow: hidden;
+  pointer-events: auto !important;
+}
+
+/* --------------------------------------------------
+   Side Panel Shell (shared)
+   -------------------------------------------------- */
+.side-panel-shell,
+.help-pane-shell,
+.about-pane-shell,
+.voice-commands-pane-shell {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  pointer-events: auto !important;
+  z-index: 1;
+
+  /* Surface color tokens scoped to panel */
+  --panel-surface-divider: color-mix(in srgb, currentcolor 18%, transparent);
+  --panel-surface-hover: color-mix(in srgb, currentcolor 10%, transparent);
+  --panel-surface-focus: color-mix(in srgb, currentcolor 14%, transparent);
+  --panel-surface-highlight: color-mix(in srgb, currentcolor 24%, transparent);
+  --panel-surface-badge: color-mix(in srgb, currentcolor 12%, transparent);
+  --panel-surface-chip: color-mix(in srgb, currentcolor 10%, transparent);
+  --panel-surface-chip-active: color-mix(in srgb, currentcolor 18%, transparent);
+  --panel-surface-scrollbar: color-mix(in srgb, currentcolor 18%, transparent);
+}
+
+/* Legacy token aliases for existing components */
+.help-pane-shell {
+  --help-surface-divider: var(--panel-surface-divider);
+  --help-surface-hover: var(--panel-surface-hover);
+  --help-surface-focus: var(--panel-surface-focus);
+  --help-surface-highlight: var(--panel-surface-highlight);
+  --help-surface-badge: var(--panel-surface-badge);
+  --help-surface-chip: var(--panel-surface-chip);
+  --help-surface-chip-active: var(--panel-surface-chip-active);
+  --help-surface-scrollbar: var(--panel-surface-scrollbar);
+}
+
+.about-pane-shell {
+  --about-surface-divider: var(--panel-surface-divider);
+  --about-surface-hover: var(--panel-surface-hover);
+  --about-surface-link: color-mix(in srgb, currentcolor 80%, transparent);
+  --about-surface-scrollbar: var(--panel-surface-scrollbar);
+}
+
+.voice-commands-pane-shell {
+  --vc-surface-divider: var(--panel-surface-divider);
+  --vc-surface-hover: var(--panel-surface-hover);
+  --vc-surface-scrollbar: var(--panel-surface-scrollbar);
+}
+
+/* --------------------------------------------------
+   Side Panel Header (shared)
+   -------------------------------------------------- */
+.side-panel-header,
+.help-pane-header,
+.about-pane-header,
+.voice-commands-pane-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+/* Help pane header is column layout */
+.help-pane-header {
+  flex-direction: column;
+}
+
+.about-pane-header,
+.voice-commands-pane-header {
+  margin-bottom: 24px;
+}
+
+.side-panel-titles,
+.help-pane-titles,
+.about-pane-titles,
+.voice-commands-pane-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.side-panel-title,
+.help-pane-title,
+.about-pane-title,
+.voice-commands-pane-title {
+  margin: 0;
+  font-size: clamp(var(--font-size-lg), var(--font-size-xl), 30px);
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+
+.side-panel-subtitle,
+.help-pane-subtitle,
+.about-pane-subtitle,
+.voice-commands-pane-subtitle {
+  margin: 0;
+  font-size: var(--font-size-base);
+  opacity: 0.76;
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+/* --------------------------------------------------
+   Side Panel Close Button (shared)
+   -------------------------------------------------- */
+.side-panel-close-btn,
+.about-close-btn,
+.voice-commands-close-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  background: var(--panel-surface-hover);
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition:
+    background var(--duration-short, 0.18s) ease,
+    opacity var(--duration-short, 0.18s) ease;
+}
+
+.side-panel-close-btn:hover,
+.about-close-btn:hover,
+.voice-commands-close-btn:hover {
+  background: var(--panel-surface-divider);
+  opacity: 1;
+}
+
+.side-panel-close-btn iconify-icon,
+.about-close-btn iconify-icon,
+.voice-commands-close-btn iconify-icon {
+  font-size: 16px;
+}
+
+/* --------------------------------------------------
+   Side Panel Content Area (shared)
+   -------------------------------------------------- */
+.side-panel-content,
+.help-pane-content,
+.about-pane-content,
+.voice-commands-pane-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden scroll;
+  padding: var(--chat-window-padding-top, 70px) clamp(20px, 4vw, 40px) clamp(32px, 4vw, 48px)
+    clamp(12px, 3vw, 28px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-surface-scrollbar) transparent;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1;
+  -webkit-overflow-scrolling: touch;
+}
+
+.side-panel-content::-webkit-scrollbar,
+.help-pane-content::-webkit-scrollbar,
+.about-pane-content::-webkit-scrollbar,
+.voice-commands-pane-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.side-panel-content::-webkit-scrollbar-thumb,
+.help-pane-content::-webkit-scrollbar-thumb,
+.about-pane-content::-webkit-scrollbar-thumb,
+.voice-commands-pane-content::-webkit-scrollbar-thumb {
+  background: var(--panel-surface-scrollbar);
+  border-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------
+   Splitter (resizable divider between panes)
+   -------------------------------------------------- */
+.splitter {
+  position: relative;
+  width: 12px; /* clickable area */
+  cursor: ew-resize;
+  background: transparent; /* divider drawn with ::before */
+  display: none;
+}
+
+.splitter::before {
+  /* thin line that spans full height */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--divider-color, currentColor);
+  opacity: 0.25;
+}
+
+.splitter::after {
+  /* grab handle */
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 60px;
+  background: var(--divider-color, currentColor);
+  border-radius: var(--radius-sm);
+  opacity: 0.6;
+  transition: opacity var(--duration-short, 0.2s);
+}
+
+.splitter:hover::after {
+  opacity: 1;
+}
+
+#chat-container.split-mode .splitter {
+  display: block;
+}
+
+/* --------------------------------------------------
+   Header Help Controls (toggle button)
+   -------------------------------------------------- */
+.help-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#help-toggle-button {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  padding-right: 10px;
+  transition: opacity var(--duration-short, 0.2s);
+  color: var(--color-text, currentColor);
+}
+
+#help-toggle-button i {
+  font-size: 18px;
+  color: inherit;
+}
+
+#help-toggle-button:hover {
+  opacity: 0.7;
+}
+
+/* ==================================================
+   HELP PANE SPECIFIC STYLES
+   ================================================== */
+
+/* --------------------------------------------------
+   Help Pane Toolbar & Filter Chips
+   -------------------------------------------------- */
+.help-pane-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.help-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.help-chip {
+  border: none;
+  border-radius: var(--radius-pill, 999px);
+  padding: 6px 12px;
+  background: var(--panel-surface-chip);
+  color: inherit;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    background var(--duration-short, 0.18s) ease,
+    transform var(--duration-short, 0.18s) ease,
+    opacity var(--duration-short, 0.18s) ease;
+}
+
+.help-chip.is-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.help-chip:not(.is-disabled):hover {
+  background: var(--panel-surface-highlight);
+  transform: translateY(-1px);
+}
+
+.help-chip.is-active {
+  background: var(--panel-surface-chip-active);
+  box-shadow: none;
+}
+
+.help-chip-count {
+  font-size: var(--font-size-xs);
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------
+   Keyboard Hotkey Display
+   -------------------------------------------------- */
+.help-hotkey {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+}
+
+.help-hotkey-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-surface-chip);
+  font-family: var(--font-family-mono, 'IBM Plex Mono', monospace);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------
+   Help Sections
+   -------------------------------------------------- */
+.help-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--panel-surface-divider);
+}
+
+.help-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.help-section-header h3 {
+  margin: 0;
+  font-size: clamp(var(--font-size-base), var(--font-size-md), var(--font-size-md));
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.help-section-description {
+  margin: 6px 0 0;
+  font-size: var(--font-size-sm);
+  opacity: 0.65;
+}
+
+/* --------------------------------------------------
+   Help Tips List
+   -------------------------------------------------- */
+.help-tip-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.help-tip {
+  border-bottom: 1px solid var(--panel-surface-divider);
+  padding: 4px 0;
+  border-radius: var(--radius-lg, 14px);
+  cursor: pointer;
+  transition:
+    background var(--duration-short, 0.18s) ease,
+    transform var(--duration-short, 0.18s) ease;
+}
+
+.help-tip:last-of-type {
+  border-bottom: none;
+}
+
+.help-tip:hover {
+  background: var(--panel-surface-hover);
+}
+
+.help-tip:focus-visible {
+  outline: 2px solid var(--panel-surface-highlight);
+  outline-offset: 4px;
+}
+
+.help-tip.is-highlighted {
+  background: var(--panel-surface-focus);
+  animation: help-tip-highlight 1.2s ease-in-out;
+}
+
+.help-tip-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+@keyframes help-tip-highlight {
+  0% {
+    box-shadow: 0 0 0 rgb(255 255 255 / 0%);
+  }
+
+  20% {
+    box-shadow: 0 0 0 6px var(--panel-surface-highlight);
+  }
+
+  100% {
+    box-shadow: 0 0 0 rgb(255 255 255 / 0%);
+  }
+}
+
+/* --------------------------------------------------
+   Help Tip Components
+   -------------------------------------------------- */
+.help-tip-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md, 12px);
+  background: var(--panel-surface-badge);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.help-tip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.help-tip-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.help-tip-summary {
+  font-size: var(--font-size-sm);
+  line-height: 1.45;
+  opacity: 0.76;
+}
+
+.help-tip-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.help-badge {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--panel-surface-badge);
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------
+   Help Empty State
+   -------------------------------------------------- */
+.help-empty {
+  margin: 40px auto;
+  max-width: 360px;
+  text-align: center;
+  opacity: 0.65;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  font-size: var(--font-size-sm);
+}
+
+.help-empty iconify-icon {
+  font-size: 28px;
+}
+
+/* ==================================================
+   ABOUT PANE SPECIFIC STYLES
+   ================================================== */
+
+/* --------------------------------------------------
+   About Sections
+   -------------------------------------------------- */
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--panel-surface-divider);
+}
+
+.about-section:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.about-section h3 {
+  margin: 0;
+  font-size: clamp(var(--font-size-base), var(--font-size-md), var(--font-size-md));
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.about-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-section-content p {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  opacity: 0.88;
+}
+
+.about-section-content a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.9;
+  transition: opacity var(--duration-short, 0.18s) ease;
+}
+
+.about-section-content a:hover {
+  opacity: 1;
+}
+
+/* Attribution section - smaller text */
+.about-attribution p {
+  font-size: var(--font-size-sm);
+  opacity: 0.72;
+}
+
+/* --------------------------------------------------
+   About Version
+   -------------------------------------------------- */
+.about-version {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-surface-divider);
+  font-size: var(--font-size-sm);
+  opacity: 0.5;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ==================================================
+   VOICE COMMANDS PANE SPECIFIC STYLES
+   ================================================== */
+
+/* --------------------------------------------------
+   Voice Commands Body (markdown content)
+   -------------------------------------------------- */
+.voice-commands-body {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+}
+
+.voice-commands-body h1,
+.voice-commands-body h2,
+.voice-commands-body h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.voice-commands-body h1:first-child,
+.voice-commands-body h2:first-child,
+.voice-commands-body .voice-commands-doc > h1:first-child {
+  margin-top: 0;
+}
+
+.voice-commands-body h1 {
+  font-size: clamp(var(--font-size-lg), var(--font-size-xl), 30px);
+  letter-spacing: 0.3px;
+}
+
+.voice-commands-body h2 {
+  font-size: clamp(var(--font-size-base), var(--font-size-md), var(--font-size-md));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+.voice-commands-body h3 {
+  font-size: var(--font-size-base);
+}
+
+.voice-commands-body p {
+  margin: 0.75em 0;
+  opacity: 0.88;
+}
+
+.voice-commands-body hr {
+  border: none;
+  border-top: 1px solid var(--panel-surface-divider);
+  margin: 1em 0;
+}
+
+.voice-commands-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: var(--font-size-sm);
+}
+
+.voice-commands-body th,
+.voice-commands-body td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--panel-surface-divider);
+}
+
+.voice-commands-body th {
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+
+.voice-commands-body td {
+  opacity: 0.88;
+}
+
+.voice-commands-body tr:last-child td {
+  border-bottom: none;
+}
+
+.voice-commands-body code {
+  background: var(--panel-surface-hover);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+.voice-commands-body pre {
+  background: var(--panel-surface-hover);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-size: var(--font-size-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Hide the wrapper div from the markdown source */
+.voice-commands-body .voice-commands-doc {
+  display: contents;
+}
+
+/* Voice commands documentation (legacy) */
+.voice-commands-doc {
+  font-size: 0.9em !important;
+}
+
+.voice-commands-doc table {
+  width: 100%;
+}
+
+/* ==================================================
+   MOBILE RESPONSIVE STYLES
+   ================================================== */
+
+@media (max-width: 768px) {
+  /* Full-width panels on mobile - override 50% max-width */
+  .side-panel-container,
+  .help-container,
+  .about-container,
+  .voice-commands-container {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Hide splitter on mobile - not needed for full-screen panels */
+  #chat-container.split-mode .splitter {
+    display: none !important;
+  }
+
+  /* Larger close button on mobile for easier touch */
+  .side-panel-close-btn,
+  .about-close-btn,
+  .voice-commands-close-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .side-panel-close-btn iconify-icon,
+  .about-close-btn iconify-icon,
+  .voice-commands-close-btn iconify-icon {
+    font-size: 20px;
+  }
+}

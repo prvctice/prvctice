@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Weather</title>
+  </head>
+  <body class="p-stack pad-4 full gap-3">
+    <div class="p-stat p-stat-left" style="padding: 0">
+      <div class="p-stat-value font-mono" id="temp">--°</div>
+      <div class="p-stat-label p-label-tech" id="loc">LOADING</div>
+    </div>
+
+    <div class="p-divider"></div>
+
+    <div class="p-stack gap-2">
+      <div class="p-split text-xs font-mono">
+        <span class="text-muted">HUMIDITY</span>
+        <span id="humidity">--%</span>
+      </div>
+      <div class="p-split text-xs font-mono">
+        <span class="text-muted">WIND</span>
+        <span id="wind">-- km/h</span>
+      </div>
+      <div class="p-split text-xs font-mono">
+        <span class="text-muted">FEELS LIKE</span>
+        <span id="feels">--°</span>
+      </div>
+      <div class="p-split text-xs font-mono">
+        <span class="text-muted">STATUS</span>
+        <span class="text-success" id="status">● LIVE</span>
+      </div>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        function loadData() {
+          prvctice.weather
+            .current()
+            .then(function (w) {
+              var cur = w.current;
+              document.getElementById('temp').textContent =
+                Math.round(cur.temperature_2m) + '\u00B0';
+              document.getElementById('loc').textContent = (
+                w.location.name || 'LOCAL'
+              ).toUpperCase();
+              document.getElementById('humidity').textContent = cur.relative_humidity_2m + '%';
+              document.getElementById('wind').textContent =
+                Math.round(cur.wind_speed_10m) + ' km/h';
+              document.getElementById('feels').textContent =
+                Math.round(cur.apparent_temperature) + '\u00B0';
+              document.getElementById('status').textContent = '\u25CF LIVE';
+              document.getElementById('status').className = 'text-success';
+            })
+            .catch(function () {
+              document.getElementById('loc').textContent = 'NO SIGNAL';
+              document.getElementById('status').textContent = '\u25CF OFFLINE';
+              document.getElementById('status').className = 'text-muted';
+            });
+        }
+        loadData();
+        prvctice.refresh.onRefresh(loadData);
+        prvctice.refresh.start(600000);
+      });
+    </script>
+  </body>
+</html>

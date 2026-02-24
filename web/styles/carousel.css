@@ -1,0 +1,166 @@
+.tumblr-images-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  padding: 10px;
+  align-items: end;
+}
+
+.tumblr-image-wrapper {
+  overflow: hidden;
+  border-radius: none;
+}
+
+.tumblr-image-wrapper img {
+  width: 100%;
+  display: block;
+}
+
+/* Premium Lightbox Modal */
+#image-carousel-modal {
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: rgb(0 0 0 / 85%); /* Dark, premium overlay */
+}
+
+/* Centering the carousel content */
+#image-carousel-modal .carousel-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Close button styling */
+#image-carousel-modal .carousel-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px 12px;
+  transition:
+    color 0.3s,
+    transform 0.3s;
+}
+
+#image-carousel-modal .carousel-close:hover {
+  color: #f0f0f0;
+  transform: scale(1.1);
+}
+
+#image-carousel-modal .carousel-close:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 60%);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Carousel content container with scale-up animation */
+#image-carousel-modal .carousel-content {
+  position: relative;
+  max-width: 96vw;
+  max-height: 94vh;
+  overflow: visible;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 18px 36px rgb(0 0 0 / 40%);
+  background: rgb(18 18 18 / 24%);
+  display: flex;
+  align-items: stretch;
+}
+
+/* Expanded image styling: contain within viewport */
+#image-carousel-modal .carousel-image {
+  display: block;
+  max-width: calc(96vw - 160px);
+  max-height: calc(94vh - 120px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
+  transition: transform 0.3s;
+  border-radius: var(--radius-lg);
+}
+
+/* Premium arrow styling */
+
+/* Premium arrow styling */
+#image-carousel-modal .carousel-prev,
+#image-carousel-modal .carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgb(0 0 0 / 60%);
+  border: none;
+  border-radius: 50%;
+  width: 36px; /* smaller width */
+  height: 36px; /* smaller height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px; /* smaller font-size */
+  cursor: pointer;
+  transition:
+    background 0.3s,
+    transform 0.3s,
+    opacity 0.3s;
+  user-select: none;
+  opacity: 0.75;
+}
+
+/* Bring arrows back when the modal is hovered */
+#image-carousel-modal:hover .carousel-prev,
+#image-carousel-modal:hover .carousel-next {
+  opacity: 1;
+}
+
+#image-carousel-modal .carousel-prev {
+  left: 20px;
+}
+
+#image-carousel-modal .carousel-next {
+  right: 20px;
+}
+
+/* Small meta row (counter + download) overlay in bottom-right */
+#image-carousel-modal .carousel-meta {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  background: rgb(0 0 0 / 45%);
+  color: #fff;
+  font:
+    500 12px/1.2 system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  padding: 6px 10px;
+  border-radius: var(--radius-xl);
+}
+
+#image-carousel-modal .carousel-download {
+  color: inherit;
+  text-decoration: none;
+  padding: 2px 6px;
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 12%);
+}

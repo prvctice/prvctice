@@ -1,0 +1,858 @@
+/** MOBILE STYLES **/
+
+@media (width <= 768px) {
+  :root {
+    --kb: 0px;
+    --layout-edge-gutter: 16px;
+    --layout-modal-width: min(420px, 92vw);
+    --font-size-body: 15px;
+    --line-height-body: 1.6;
+
+    /* Mobile chat layout overrides */
+    --chat-window-max-width: 100%;
+    --chat-window-min-width: 0;
+    --chat-window-padding-x: 14px;
+    --chat-window-padding-top: 96px;
+    --chat-input-offset: 180px;
+  }
+
+  html {
+    text-size-adjust: 100%;
+  }
+
+  /* Keep solid root background on mobile for most themes,
+     but allow Monday theme's photo to show through */
+  html:not(.custom-theme) {
+    background: #0e0f09;
+  }
+
+  html.custom-theme {
+    background: transparent;
+  }
+
+  body {
+    height: 100dvh;
+    font-size: var(--font-size-body);
+    line-height: var(--line-height-body);
+  }
+
+  /* Prevent input zoom on iOS - must be 16px+ to avoid auto-zoom on focus */
+  input,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  p {
+    margin: 12px 0;
+  }
+
+  header {
+    left: var(--layout-edge-gutter);
+    right: var(--layout-edge-gutter);
+    padding: 10px 0;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background: none;
+    backdrop-filter: none;
+    border-radius: 0;
+  }
+
+  .logo-title {
+    position: static !important;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 22px;
+  }
+
+  .logo-title .title {
+    display: none !important;
+  }
+
+  .notes-header-toolbar {
+    position: static !important;
+    order: 2;
+    width: 100%;
+    gap: 12px;
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
+
+  .notes-header-toolbar button {
+    font-size: 16px !important;
+  }
+
+  .notes-header-toolbar button::after {
+    display: none;
+  }
+
+  .notes-header-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  #menu-button {
+    top: 12px;
+    right: var(--layout-edge-gutter);
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-xl);
+    scale: 1;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    display: grid;
+    place-items: center;
+  }
+
+  #theme-color-circle {
+    width: 18px;
+    height: 18px;
+  }
+
+  .header-hint {
+    top: 24px;
+  }
+
+  .header-hint--search {
+    left: 42px;
+  }
+
+  .header-hint--menu {
+    right: 42px;
+  }
+
+  #jump-latest {
+    top: 64px;
+    right: var(--layout-edge-gutter) !important;
+    width: 44px;
+    height: 44px;
+  }
+
+  #chat-window {
+    /* Tokens handle responsive values; explicit overrides for mobile edge cases */
+    width: 100%;
+    max-width: var(--chat-window-max-width);
+    min-width: var(--chat-window-min-width) !important;
+
+    /* Fixed height - child .chat-scroller handles scroll */
+    height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px));
+    max-height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px));
+    flex: 0 0 auto;
+    padding: 0 !important;
+    box-sizing: border-box;
+    overflow: hidden !important;
+  }
+
+  /* The actual scroll container is the vue-virtual-scroller */
+  #chat-window .chat-scroller {
+    height: 100% !important;
+    padding: var(--chat-window-padding-top, 96px) var(--chat-window-padding-x, 16px) 140px !important;
+    box-sizing: border-box !important;
+    overflow: hidden auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
+  }
+
+  /* Remove redundant horizontal padding from inner layers — chat-scroller handles edge spacing */
+  #chat-window .vue-recycle-scroller__item-wrapper {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .message {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #game-canvas {
+    max-width: 100%;
+  }
+
+  #save-pdf-button {
+    top: 0;
+    bottom: -8px;
+  }
+
+  .input-container {
+    left: var(--layout-edge-gutter);
+    right: var(--layout-edge-gutter);
+    height: auto;
+    min-height: 160px;
+    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+  }
+
+  #bar {
+    height: 64px;
+    left: var(--layout-edge-gutter);
+    right: var(--layout-edge-gutter);
+    /* Use bottom positioning for reliable keyboard avoidance on iOS Safari */
+    top: auto;
+    bottom: calc(
+      max(env(safe-area-inset-bottom), 24px) + 80px /* footer height + spacing */ + var(--kb, 0px)
+    );
+    border-radius: var(--radius-xl);
+    padding: 10px 12px 10px 16px;
+    gap: 12px;
+    align-items: center;
+  }
+
+  #bar::before {
+    background-size: 280% 100% !important;
+  }
+
+  .input-wrapper {
+    gap: 12px;
+    align-items: center;
+  }
+
+  #user-input {
+    font-size: 16px; /* prevent iOS zoom */
+    line-height: 1.5;
+    border-radius: var(--radius-xl);
+    padding: 14px 18px;
+    min-height: 44px;
+    max-height: 140px;
+    background: transparent;
+    appearance: none;
+    box-shadow: none;
+    border: none;
+  }
+
+  #user-input:focus {
+    box-shadow: none;
+    border: none;
+  }
+
+  .tools {
+    flex-direction: row;
+    width: auto;
+    height: 100%;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #send-button,
+  #stop-button {
+    position: static;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 18px;
+    background: none !important;
+    border-radius: var(--radius-lg);
+    display: grid;
+    place-items: center;
+    border: none;
+  }
+
+  #send-button .send-icon {
+    transform: translateX(1px);
+  }
+
+  #upload-button,
+  #voice-input-button {
+    position: relative;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--radius-lg);
+    background: none;
+    border: none;
+    overflow: visible;
+  }
+
+  #voice-input-button.listening {
+    background: var(--color-voice-active);
+    color: var(--color-voice-active-foreground, #05130b);
+    animation: voice-button-glow 1.8s ease-in-out infinite;
+  }
+
+  #voice-input-button.listening iconify-icon,
+  #voice-input-button.listening i {
+    animation: voice-button-bounce 1.8s ease-in-out infinite;
+  }
+
+  #voice-input-button.locked {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .footer-bottom-row {
+    position: static;
+    bottom: auto;
+    padding: 20px 0 0;
+    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer-left {
+    width: 100%;
+  }
+
+  .footer-right {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Skill carousel - position lower on mobile */
+  #skill-carousel,
+  #prompt-carousel {
+    margin-top: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* Scrollable container for the action buttons */
+  .header-extras {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 6px 8px;
+    border-radius: var(--radius-xl);
+    background: rgb(255 255 255 / 6%);
+    overflow: scroll hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .header-extras::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-actions {
+    display: flex;
+    flex-flow: row nowrap;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+
+  .header-actions button {
+    flex: 0 0 auto;
+    opacity: 1;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-lg);
+    background: rgb(255 255 255 / 8%);
+    display: grid;
+    place-items: center;
+    transform: none !important;
+  }
+
+  .tumblr-images-container {
+    align-items: flex-start;
+  }
+
+  .prompt-link,
+  .skill-link {
+    font-size: 12px;
+  }
+
+  .message-content {
+    max-width: 100% !important;
+  }
+
+  .user .message-content,
+  .assistant .message-content {
+    line-height: 1.5;
+    border-radius: var(--radius-lg);
+    padding: 6px 0;
+    letter-spacing: -0.1px;
+  }
+
+  .user .message-content {
+    text-align: left;
+    margin-left: auto;
+    font-size: var(--font-size-user-message-mobile);
+  }
+
+  .assistant .message-content {
+    font-size: 16px;
+    padding-inline: 0 !important;
+    margin-right: auto;
+    max-width: 100%;
+  }
+
+  .user .message-content p,
+  .assistant .message-content p {
+    margin: 0 0 12px;
+  }
+
+  .message-content img {
+    max-width: 60dvw !important;
+    max-height: 60dvh !important;
+  }
+
+  /* Ensure compact grid images use container width and a shorter viewport cap */
+  .image-strip img {
+    max-width: 100% !important;
+    max-height: 40dvh !important;
+  }
+
+  #notifications {
+    top: 74px;
+  }
+
+  #glass-overlay {
+    border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+    width: 100%;
+  }
+
+  /** Light **/
+  body.light-theme #upload-button:hover {
+    background-color: transparent;
+  }
+
+  body.light-theme #voice-input-button:hover {
+    background-color: transparent;
+  }
+
+  /** Night **/
+
+  body.night-theme #upload-button:hover {
+    background-color: transparent;
+  }
+
+  /** Blue **/
+
+  body.vera-baxter-theme #upload-button:hover {
+    background-color: transparent;
+  }
+
+  body.vera-baxter-theme #voice-input-button:hover {
+    background-color: transparent;
+    -webkit-text-fill-color: #fff;
+  }
+
+  /** Vitti **/
+
+  body.vitti-theme #upload-button:hover {
+    background-color: transparent;
+    -webkit-text-fill-color: #fff;
+  }
+
+  body.vitti-theme #voice-input-button:hover {
+    background-color: transparent;
+    -webkit-text-fill-color: #fff;
+  }
+
+  /* Hide notes pane by default on mobile */
+  .notes-container.hidden {
+    display: none !important;
+  }
+
+  /* iOS keyboard open: disable expensive blur and transitions */
+  .kb-open * {
+    backdrop-filter: none !important;
+  }
+
+  .kb-open #bar {
+    transition: none !important;
+  }
+
+  /* Override 100vh heights to use dynamic viewport on mobile */
+  .side-menu {
+    height: 100dvh !important;
+  }
+  .sliding-menu {
+    height: 100dvh !important;
+  }
+  #screen-saver {
+    height: 100dvh !important;
+  }
+
+  /* Hide the legacy translate prompt link on mobile */
+  a.prompt-link[onclick*='help-toggle-button'],
+  a.skill-link[onclick*='help-toggle-button'] {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------
+   Chat / Notes / Help layout – scoped again to mobile
+--------------------------------------------------- */
+
+@media (width <= 768px) {
+  /* Keep help toggle visible alongside other header controls */
+  .help-controls {
+    display: inline-flex !important;
+  }
+
+  /* Notes toggle should be visible on mobile */
+  #notes-toggle-button {
+    display: inline-block !important;
+  }
+
+  /* Hide drag splitter on touch devices */
+  #splitter {
+    display: none !important;
+  }
+
+  /* --------------------------------------------------
+     Notes toolbar – mobile tweaks (keep vertical column)
+     -------------------------------------------------- */
+
+  .notes-toolbar {
+    flex-direction: column !important; /* keep vertical */
+    inset: 0 auto 0 12px !important; /* slight inset from top */ /* align with content */
+    height: auto !important; /* shrink-wrap height */
+    width: auto !important;
+    gap: 12px !important; /* comfortable spacing */
+  }
+
+  .notes-toolbar button {
+    padding: 10px !important; /* larger tap target */
+  }
+
+  /* Restore padding so editor text does not overlap toolbar */
+  .notes-editor {
+    padding: 20px 12px 10px 30px !important;
+  }
+
+  /* Override split-mode on mobile to enable horizontal carousel for notes */
+
+  /* Chat container always flex-row to allow swiping between chat and notes */
+  #chat-container {
+    display: flex !important;
+    flex-direction: row !important;
+
+    /* Disable horizontal scrolling */
+    overflow: hidden visible !important;
+
+    /* Let children handle their own touch/scroll */
+    touch-action: auto !important;
+
+    /* Disable scroll snapping */
+    scroll-snap-type: none !important;
+
+    /* scroll snap and sticky behavior */
+    scroll-padding: 0 !important;
+    overscroll-behavior-x: contain !important;
+    gap: 0 !important;
+
+    /* Hide horizontal scrollbar */
+    -ms-overflow-style: none !important; /* IE 10+ */
+    scrollbar-width: none !important; /* Firefox */
+  }
+
+  /* Hide horizontal scrollbar track */
+  #chat-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Pane styling for notes and help (chat-window handled separately due to virtual scroller) */
+  #chat-container .notes-container,
+  #chat-container .help-container {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    max-height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    padding: 96px 16px 140px !important;
+    min-width: 0 !important;
+    overflow: hidden auto !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    scroll-snap-align: start !important;
+
+    /* include padding in width and hide vertical scrollbar */
+    box-sizing: border-box !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+
+  /* Chat window container - no overflow, child handles scroll */
+  #chat-container .chat-window {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    max-height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure chat window returns to normal position when split-mode is removed */
+  #chat-container:not(.split-mode) .chat-window {
+    position: static !important;
+    left: 0 !important;
+    right: 0 !important;
+    visibility: visible !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  /* Ensure side panels don't take space when hidden (not in split-mode) */
+  #chat-container:not(.split-mode) .side-panel-container,
+  #chat-container:not(.split-mode) .help-container,
+  #chat-container:not(.split-mode) .about-container,
+  #chat-container:not(.split-mode) .voice-commands-container {
+    display: none !important;
+    width: 0 !important;
+    flex: 0 0 0 !important;
+  }
+
+  /* Hide vertical scrollbar track for panes */
+  #chat-container .chat-window::-webkit-scrollbar,
+  #chat-container .notes-container::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Ensure chat-first, notes-second order */
+  #chat-container .chat-window {
+    order: 0 !important;
+  }
+
+  #chat-container .notes-container {
+    order: 1 !important;
+  }
+
+  #chat-container .help-container {
+    order: 2 !important;
+  }
+
+  /* Hide desktop drag splitter – not useful on touch devices */
+
+  /* Keep divider visible for resizing */
+
+  /* Override desktop size to horizontal bar */
+  .splitter {
+    width: 100% !important;
+    height: 12px !important;
+    cursor: ns-resize !important;
+    color: inherit;
+  }
+
+  .splitter::before {
+    top: 50% !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 2px !important;
+    background: currentcolor;
+    opacity: 0.25;
+    transform: translateY(-50%) !important;
+  }
+
+  .splitter::after {
+    width: 60px !important;
+    height: 4px !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  /* Ensure both panes span full width */
+  #chat-container.split-mode .chat-window,
+  #chat-container.split-mode {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+
+  .notes-container {
+    flex: 1 1 auto;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  #chat-container.split-mode .notes-editor {
+    padding: 20px 12px 10px 24px; /* mirror chat padding */
+    overflow-y: auto;
+  }
+
+  /* Mobile split-mode: hide chat when notes/help is open */
+  #chat-container.split-mode .chat-window {
+    display: block !important;
+    position: absolute !important;
+    left: -9999px !important;
+    visibility: hidden !important;
+    overflow-y: auto;
+  }
+
+  /* Mobile back-to-chat button - shown when notes/help is open */
+  #mobile-back-to-chat {
+    display: none;
+  }
+
+  #chat-container.split-mode ~ #mobile-back-to-chat,
+  .split-mode #mobile-back-to-chat {
+    display: flex !important;
+    position: fixed;
+    top: 12px;
+    left: 16px;
+    padding: 8px 14px;
+    background: var(--color-glass-light, rgb(18 19 18 / 80%));
+    color: var(--color-text, #fff);
+    border-radius: var(--radius-xl);
+    font-size: 12px;
+    font-weight: 500;
+    z-index: 1000;
+    cursor: pointer;
+    backdrop-filter: blur(var(--effect-backdrop-blur, 6px));
+    -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 6px));
+    border: 1px solid rgb(255 255 255 / 10%);
+    align-items: center;
+    gap: 6px;
+  }
+
+  #chat-container.split-mode .notes-container {
+    display: block !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+  }
+
+  #chat-container .help-container {
+    padding: 0 !important;
+    overflow: hidden !important;
+
+    /* Ensure height constraint on mobile */
+    height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    max-height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .help-container.hidden {
+    display: none !important;
+  }
+
+  #chat-container .help-pane-shell {
+    height: 100% !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .help-pane-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 96px 16px 140px !important;
+    overflow: hidden auto !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .help-pane-content::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #chat-container.split-mode .help-container {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #chat-container.split-mode .help-container.hidden {
+    display: none !important;
+  }
+
+  #chat-container.split-mode .notes-container.hidden {
+    display: none !important;
+  }
+
+  /* Voice Commands container - full screen overlay on mobile */
+  #chat-container .voice-commands-container {
+    padding: 0 !important;
+    overflow: hidden !important;
+    height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    max-height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .voice-commands-container.hidden {
+    display: none !important;
+  }
+
+  #chat-container .side-panel-shell {
+    height: 100% !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .side-panel-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 96px 16px 140px !important;
+    overflow: hidden auto !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .side-panel-content::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #chat-container.split-mode .voice-commands-container {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #chat-container.split-mode .voice-commands-container.hidden {
+    display: none !important;
+  }
+
+  /* About container - full screen overlay on mobile */
+  #chat-container .about-container {
+    padding: 0 !important;
+    overflow: hidden !important;
+    height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    max-height: calc(100dvh - var(--chat-input-offset, 200px) - var(--kb, 0px)) !important;
+    pointer-events: auto !important;
+  }
+
+  #chat-container .about-container.hidden {
+    display: none !important;
+  }
+
+  #chat-container.split-mode .about-container {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #chat-container.split-mode .about-container.hidden {
+    display: none !important;
+  }
+}

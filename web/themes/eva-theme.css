@@ -1,0 +1,145 @@
+/*
+  Theme: EVA
+  File: eva-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.eva-theme {
+  /* == Variables & Base == */
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background: linear-gradient(
+    to bottom,
+    #6fafd2 0%,
+    #d7d3fd 25%,
+    #cbc1d5 50%,
+    #8e8abe 75%,
+    #7a7480 90%,
+    #49494c 100%
+  ) !important;
+  color: #332f2c;
+  --color-text: #332f2c;
+  --color-text-strong: #332f2c;
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: #b8a602;
+  --skill-power-color-shadow: hsla(50, 70%, 52%, 0.4);
+  --link-color: #1a7a9a;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 255 235 / 20%) 0%,
+    rgb(91 255 114 / 8%) 34%,
+    transparent 74%
+  );
+  --bar-background: rgb(94 66 105 / 30%);
+  --menu-background: rgb(94 66 105 / 70%);
+  --tool-tip-color: #6ee5ff;
+  --theme-shimmer-duration: var(--motion-duration-shimmer);
+  --theme-bar-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --utility-button-color: #332f2c;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(234 179 33 / 20%) 15%,
+    rgb(158 241 236 / 15%) 30%,
+    rgb(39 225 183 / 42%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.5;
+  --shimmer-blend: color;
+}
+
+/* == Bar == */
+body.eva-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(221 0 0 / 8%);
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 25%),
+    0 6px 16px -8px rgb(0 0 0 / 15%),
+    0 0 0 0.5px rgb(221 0 0 / 10%) inset;
+  -webkit-text-fill-color: rgb(255 255 255) !important;
+  color: #ffffff;
+  position: relative;
+}
+
+body.eva-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 30%),
+    0 8px 20px -8px rgb(0 0 0 / 18%),
+    0 0 0 0.5px rgb(0 142 255 / 15%) inset,
+    0 0 24px -4px rgb(0 142 255 / 10%);
+}
+
+/* == Buttons == */
+body.eva-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+body.eva-theme #upload-button:hover,
+body.eva-theme #upload-button.file-attached,
+body.eva-theme #voice-input-button:hover,
+body.eva-theme #voice-input-button.listening,
+body.eva-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Header & Controls == */
+body.eva-theme header .title {
+  color: #efefef;
+}
+
+body.eva-theme .credit {
+  color: #ffffff !important;
+}
+
+body.eva-theme .prompt-link {
+  color: #ffffff !important;
+}
+
+/* Ensure skills use pill tokens */
+body.eva-theme .skill-pill,
+body.eva-theme .skill-link,
+body.eva-theme #toggle-skills-button {
+  color: var(--color-pill-title) !important;
+}
+
+/* Header action buttons & icons */
+body.eva-theme .header-actions button {
+  color: #ffffff !important;
+}
+
+body.eva-theme .header-actions button img {
+  filter: brightness(0) invert(1);
+}
+
+body.eva-theme #menu-button {
+  color: #ffffff !important;
+}
+
+body.eva-theme .notes-header-toolbar button,
+body.eva-theme .notes-header-toolbar i {
+  color: #ffffff !important;
+}
+
+body.eva-theme .notes-header-toolbar button::after {
+  color: #ffffff !important;
+}
+
+/* Input bar buttons & icons */
+body.eva-theme #bar button,
+body.eva-theme #bar i {
+  color: #ffffff !important;
+}
+
+body.eva-theme #bar button img {
+  filter: brightness(0) invert(1);
+}
+
+/* Edit button inside skill tray */
+body.eva-theme .skill-edit-btn,
+body.eva-theme .skill-edit-btn i {
+  color: #ffffff !important;
+  border-color: rgb(255 255 255 / 35%) !important;
+}

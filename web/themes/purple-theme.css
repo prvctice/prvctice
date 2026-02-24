@@ -1,0 +1,130 @@
+/*
+  Theme: Purple
+  File: purple-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.purple-theme {
+  /* == Variables & Base == */
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background-color: #7c73ac !important;
+  color: #f0e6f6;
+  --color-text: #f0e6f6;
+  --color-text-strong: #fdf9ff;
+  --color-bar-text: #f0e6f6;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: #db8eff;
+  --skill-power-color-shadow: rgb(172 76 250 / 40%);
+  --link-color: #a463b4;
+  --bar-background: rgb(4 228 200 / 34%);
+  --menu-background: rgb(4 228 200 / 70%);
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(142 68 173 / 15%) 0%,
+    rgb(142 68 173 / 4%) 34%,
+    transparent 74%
+  );
+  --tool-tip-color: #a463b4;
+  --theme-bar-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --utility-button-color: #f0e6f6;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(234 179 33 / 20%) 15%,
+    rgb(158 241 236 / 15%) 30%,
+    rgb(39 225 183 / 42%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.5;
+  --shimmer-blend: screen;
+}
+
+/* == Bar == */
+body.purple-theme #bar {
+  background-color: var(--bar-background);
+  border: 1px solid rgb(4 228 200 / 10%);
+  -webkit-text-fill-color: #f0e6f6 !important;
+  color: #f0e6f6;
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 25%),
+    0 6px 16px -8px rgb(0 0 0 / 15%),
+    0 0 0 0.5px rgb(4 228 200 / 12%) inset;
+  position: relative;
+}
+
+body.purple-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 30%),
+    0 8px 20px -8px rgb(0 0 0 / 18%),
+    0 0 0 0.5px rgb(142 68 173 / 20%) inset,
+    0 0 24px -4px rgb(142 68 173 / 12%);
+}
+
+/* == Buttons == */
+body.purple-theme .skills-toggle {
+  background: var(--color-text);
+  color: #121212;
+  -webkit-text-fill-color: #121212 !important;
+}
+
+body.purple-theme #upload-button:hover,
+body.purple-theme #upload-button.file-attached {
+  background-color: rgb(142 68 173 / 10%);
+  box-shadow: inset 0 0 20px rgb(142 68 173 / 60%);
+}
+
+body.purple-theme #voice-input-button:hover,
+body.purple-theme #send-button:hover {
+  background-color: rgb(142 68 173 / 10%);
+  box-shadow: inset 0 0 20px rgb(142 68 173 / 60%);
+}
+
+body.purple-theme #voice-input-button.listening {
+  background-color: rgb(50 208 40 / 10%);
+  box-shadow: inset 0 0 20px rgb(50 208 40 / 100%);
+}
+
+/* == Menus == */
+body.purple-theme #sliding-menu,
+body.purple-theme #settings-menu,
+body.purple-theme .theme-modal {
+  background-color: var(--bar-background);
+  -webkit-text-fill-color: #f0e6f6 !important;
+  color: #f0e6f6;
+  box-shadow:
+    0 1px 20px rgb(0 0 0 / 4%),
+    inset 0 0 9px rgb(255 255 255 / 30%);
+}
+
+/* == Header & Controls == */
+body.purple-theme header .title {
+  color: #f0e6f6;
+}
+
+body.purple-theme .prompt-link {
+  color: #f0e6f6 !important;
+}
+
+body.purple-theme .prompt-link:hover {
+  color: #8e44ad;
+}
+
+/* == Thinking Animation == */
+body.purple-theme .thinking.sending {
+  position: relative;
+}
+
+body.purple-theme .thinking.sending::before {
+  background: linear-gradient(90deg, #2e003e, #8e44ad, #2e003e);
+  background-size: 200% 100%;
+  animation: lightning 1.6s infinite;
+  pointer-events: none;
+}
+
+/* == Reduced Motion == */
+@media (prefers-reduced-motion: reduce) {
+  body.purple-theme .thinking.sending::before {
+    animation: none;
+  }
+}

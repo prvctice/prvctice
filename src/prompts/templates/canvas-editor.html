@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Photo Editor</title>
+  </head>
+  <body class="p-stack pad-3 full gap-2">
+    <div id="tabs"></div>
+
+    <div class="p-center flex-1" id="canvasArea" style="display: none">
+      <div id="canvas" style="width: 100%; height: 100%"></div>
+    </div>
+
+    <div class="p-center flex-1" id="dropArea">
+      <div id="dropzone"></div>
+    </div>
+
+    <div class="p-row gap-2 justify-center" id="controls" style="display: none">
+      <div class="p-stack items-center gap-1">
+        <label class="p-label">Brightness</label>
+        <input type="range" class="p-slider" id="brightness" min="-100" max="100" value="0" />
+      </div>
+      <div class="p-stack items-center gap-1">
+        <label class="p-label">Contrast</label>
+        <input type="range" class="p-slider" id="contrast" min="-100" max="100" value="0" />
+      </div>
+      <div class="p-stack items-center gap-1">
+        <label class="p-label">Saturate</label>
+        <input type="range" class="p-slider" id="saturate" min="0" max="200" value="100" />
+      </div>
+    </div>
+
+    <div class="p-row gap-2 justify-center" id="actions" style="display: none">
+      <button class="p-btn p-btn-ghost p-btn-sm" id="resetBtn">Reset</button>
+      <button class="p-btn p-btn-primary p-btn-sm" id="saveBtn">Save</button>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var canvasWidget = null;
+        var originalImage = null;
+        var activeTab = 'adjust';
+
+        var tabsWidget = prvctice.ui.tabs(document.getElementById('tabs'), {
+          tabs: [
+            { id: 'adjust', label: 'Adjust' },
+            { id: 'rotate', label: 'Rotate' },
+            { id: 'flip', label: 'Flip' },
+          ],
+          active: 'adjust',
+          onChange: function (id) {
+            activeTab = id;
+            updateControls();
+          },
+        });
+
+        var dropWidget = prvctice.ui.dropzone(document.getElementById('dropzone'), {
+          accept: 'image/*',
+          multiple: false,
+          label: 'Drop an image here',
+          onDrop: function (files) {
+            if (files.length === 0) return;
+            loadImage(files[0]);
+          },
+        });
+
+        function loadImage(file) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            var img = new Image();
+            img.onload = function () {
+              originalImage = img;
+              showEditor();
+              drawImage();
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+
+        function showEditor() {
+          document.getElementById('dropArea').style.display = 'none';
+          document.getElementById('canvasArea').style.display = '';
+          document.getElementById('controls').style.display = '';
+          document.getElementById('actions').style.display = '';
+
+          canvasWidget = prvctice.ui.canvas(document.getElementById('canvas'), {
+            retina: true,
+            onReady: function () {
+              drawImage();
+            },
+          });
+        }
+
+        var rotation = 0;
+        var flipH = false;
+        var flipV = false;
+
+        function drawImage() {
+          if (!canvasWidget || !originalImage) return;
+          var ctx = canvasWidget.ctx;
+          var c = canvasWidget.canvas;
+
+          var brightness = parseInt(document.getElementById('brightness').value, 10);
+          var contrast = parseInt(document.getElementById('contrast').value, 10);
+          var saturate = parseInt(document.getElementById('saturate').value, 10);
+
+          ctx.clearRect(0, 0, c.width, c.height);
+          ctx.save();
+
+          ctx.translate(c.width / 2, c.height / 2);
+          ctx.rotate((rotation * Math.PI) / 180);
+          ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+
+          var scale =
+            Math.min(c.width / originalImage.width, c.height / originalImage.height) * 0.9;
+          var w = originalImage.width * scale;
+          var h = originalImage.height * scale;
+
+          ctx.filter =
+            'brightness(' +
+            (100 + brightness) +
+            '%) ' +
+            'contrast(' +
+            (100 + contrast) +
+            '%) ' +
+            'saturate(' +
+            saturate +
+            '%)';
+
+          ctx.drawImage(originalImage, -w / 2, -h / 2, w, h);
+          ctx.restore();
+        }
+
+        function updateControls() {
+          document.getElementById('controls').style.display = activeTab === 'adjust' ? '' : 'none';
+        }
+
+        ['brightness', 'contrast', 'saturate'].forEach(function (id) {
+          document.getElementById(id).addEventListener('input', drawImage);
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function () {
+          rotation = 0;
+          flipH = false;
+          flipV = false;
+          document.getElementById('brightness').value = 0;
+          document.getElementById('contrast').value = 0;
+          document.getElementById('saturate').value = 100;
+          drawImage();
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', function () {
+          if (canvasWidget) {
+            var link = document.createElement('a');
+            link.download = 'edited.png';
+            link.href = canvasWidget.toDataURL();
+            link.click();
+          }
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (!originalImage) return;
+          if (e.key === 'r' || e.key === 'R') {
+            rotation = (rotation + 90) % 360;
+            drawImage();
+          }
+          if (e.key === 'h' || e.key === 'H') {
+            flipH = !flipH;
+            drawImage();
+          }
+          if (e.key === 'v' || e.key === 'V') {
+            flipV = !flipV;
+            drawImage();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,668 @@
+/* ------------------------------------------------------------------
+   Prompt skills carousel + pills
+   ------------------------------------------------------------------ */
+.skills-toggle-row {
+  display: flex;
+  justify-content: center;
+  margin: 14px 0;
+  position: absolute;
+  left: auto;
+  right: 0;
+  bottom: 0;
+}
+
+.skills-toggle {
+  border: none;
+  color: inherit;
+  border-radius: var(--radius-xl);
+  padding: var(--space-4) var(--space-7);
+  position: relative;
+  overflow: visible;
+  font-size: 11px;
+  font-family: var(--font-family-sans);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    transform var(--duration-short) var(--motion-ease-hover),
+    margin var(--duration-medium) var(--motion-ease-hover),
+    box-shadow 0.4s var(--motion-ease-hover),
+    scale 0.4s var(--motion-ease-hover),
+    opacity 0.4s var(--motion-ease-hover);
+  backdrop-filter: saturate(120%) blur(var(--effect-backdrop-blur, 6px));
+  -webkit-backdrop-filter: saturate(120%) blur(var(--effect-backdrop-blur, 6px));
+  background: rgb(127 174 191 / 30%);
+  -webkit-text-fill-color: #fff;
+  box-shadow:
+    rgb(20 20 20 / 25%) 5px 8px 9px 0,
+    rgb(255 255 255 / 19%) 0 0 0 1.5px inset;
+  scale: 0.75;
+  opacity: 0.8;
+
+  --skills-shimmer-duration: var(--motion-duration-shimmer-fast);
+}
+
+.skills-toggle:hover {
+  box-shadow:
+    rgb(20 20 20 / 25%) 3px 6px 10px 5px,
+    rgb(255 255 255 / 20%) 0 0 0 1.5px inset,
+    rgb(0 255 235 / 52%) 0 0 8px 1px inset;
+  scale: 0.877;
+  opacity: 1;
+}
+
+.skills-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+.skills-toggle.skill-drop-ready {
+  scale: 0.95;
+  opacity: 1;
+  box-shadow:
+    rgb(20 20 20 / 32%) 3px 6px 14px 6px,
+    rgb(0 255 235 / 42%) 0 0 12px 2px inset,
+    rgb(255 255 255 / 22%) 0 0 0 1.5px inset;
+}
+
+.skills-toggle.skill-drop-target {
+  scale: 1.05;
+  box-shadow:
+    rgb(20 20 20 / 40%) 3px 6px 16px 8px,
+    rgb(0 255 235 / 58%) 0 0 16px 3px inset,
+    rgb(255 185 255 / 46%) 0 0 24px 0 inset;
+  animation: skill-drop-target-pulse 0.7s ease-in-out infinite alternate;
+}
+
+.skills-toggle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    #f01df000 0%,
+    rgb(33 164 234 / 20.6%) 15%,
+    rgb(241 158 227 / 29.3%),
+    30%,
+    rgb(106 229 238 / 52.7%) 65%,
+    rgb(76 225 39 / 42%) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 400% 200%;
+  animation: shimmer-pan var(--skills-shimmer-duration, var(--motion-duration-shimmer)) linear
+    infinite alternate;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: color;
+  border-radius: var(--radius-xl);
+}
+
+.skill-drop-tooltip {
+  --skill-drop-tooltip-offset-x: -50%;
+  --skill-drop-tooltip-offset-y: 8px;
+  --skill-drop-tooltip-gap: 10px;
+
+  position: absolute;
+  bottom: calc(100% + var(--skill-drop-tooltip-gap));
+  left: 50%;
+  transform: translate(var(--skill-drop-tooltip-offset-x), var(--skill-drop-tooltip-offset-y));
+  background: rgb(18 35 46 / 80%);
+  color: #f0f9ff;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-family-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity var(--duration-medium, 0.3s) ease,
+    transform var(--duration-medium, 0.3s) ease,
+    filter var(--duration-medium, 0.3s) ease;
+  filter: drop-shadow(0 6px 14px rgb(10 24 36 / 45%));
+  z-index: 40;
+}
+
+.skill-drop-tooltip-icon {
+  font-size: 14px;
+  color: #8ef1ff;
+}
+
+.skill-drop-tooltip-label {
+  white-space: nowrap;
+}
+
+.skills-toggle.skill-drop-ready .skill-drop-tooltip {
+  opacity: 1;
+
+  --skill-drop-tooltip-offset-y: 0;
+}
+
+.skills-toggle.skill-drop-target .skill-drop-tooltip {
+  --skill-drop-tooltip-offset-y: -6px;
+
+  filter: drop-shadow(0 10px 20px rgb(0 200 255 / 45%));
+  color: #faffff;
+}
+
+.skills-toggle.skill-drop-target .skill-drop-tooltip-icon {
+  color: #c0fbff;
+}
+
+.skill-drop-tooltip--align-left {
+  left: 0;
+  right: auto;
+
+  --skill-drop-tooltip-offset-x: 0;
+}
+
+.skill-drop-tooltip--align-right {
+  left: auto;
+  right: 0;
+
+  --skill-drop-tooltip-offset-x: 0;
+}
+
+.skill-drop-tooltip--over-tray {
+  --skill-drop-tooltip-gap: 48px;
+}
+
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-7);
+  margin-right: var(--space-3);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1;
+  border-radius: var(--radius-pill);
+  color: var(--color-pill-title);
+  background: var(--color-pill-bg);
+  border: 1px solid var(--color-pill-border);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    transform var(--duration-short) var(--motion-ease-hover),
+    background-color var(--duration-short) var(--motion-ease-hover),
+    border-color var(--duration-short) var(--motion-ease-hover),
+    box-shadow var(--duration-short) var(--motion-ease-hover);
+}
+
+.skill-pill .skill-inner-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Color dot indicator */
+.skill-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skill-pill .skill-title {
+  white-space: nowrap;
+
+  /* No truncation - show full title */
+}
+
+/* ------------------------------------------------------------------
+   Overflow Button ("+N more" / "less")
+   ------------------------------------------------------------------ */
+.skill-overflow-btn {
+  opacity: 0.7;
+  font-style: italic;
+  cursor: pointer;
+  border: 1px dashed var(--glass-border-subtle, rgb(255 255 255 / 12%));
+  background: transparent;
+  color: var(--color-pill-title);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+}
+
+.skill-overflow-btn:hover {
+  opacity: 1;
+  background: rgb(255 255 255 / 5%);
+}
+
+.skill-overflow-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+.skill-collapse-btn {
+  font-style: normal;
+}
+
+/* ------------------------------------------------------------------
+   Combined Pill (arrow-separated with blended background)
+   ------------------------------------------------------------------ */
+.skill-pill.combined-pill {
+  padding: var(--space-4) var(--space-6);
+  border: 1px solid var(--color-pill-border);
+
+  /* Background set dynamically via inline style (blended color) */
+}
+
+.combined-pill__content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.combined-pill__item-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-pill-title);
+}
+
+/* Arrow separator between skills */
+.combined-pill__arrow {
+  font-size: 14px;
+  color: var(--color-pill-title);
+  opacity: 0.9;
+  flex-shrink: 0;
+  margin: 0 var(--space-3);
+}
+
+/* Hover state for combined pills */
+.skill-pill.combined-pill:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 2px 12px rgb(0 0 0 / 20%);
+}
+
+.skill-pill.combined-pill:active {
+  transform: scale(0.97);
+}
+
+.skill-pill:hover {
+  background: var(--color-pill-bg-hover);
+  border-color: var(--color-pill-border-hover);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.skill-pill:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+.skill-pill:active {
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.skill-pill.skill-floating {
+  opacity: 0.85;
+  cursor: grab;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
+}
+
+.skill-pill.skill-floating:not(.magnet-attached) .skill-inner-link {
+  pointer-events: none;
+}
+
+.skill-pill.skill-floating:active {
+  cursor: grabbing;
+}
+
+.skill-pill.magnet-attached {
+  opacity: 1;
+  position: relative;
+  transition:
+    transform var(--duration-short) var(--motion-ease-hover),
+    box-shadow var(--duration-medium) var(--motion-ease-hover);
+  box-shadow:
+    0 2px 12px rgb(0 0 0 / 20%),
+    0 0 20px 4px var(--color-magnet-glow-soft),
+    0 0 40px 8px var(--color-magnet-glow-diffuse);
+}
+
+.skill-pill.magnet-attached.magnet-edge-top::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 80%;
+  height: 8px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 100%,
+    var(--color-magnet-glow) 0%,
+    var(--color-magnet-glow-soft) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 1;
+}
+
+.skill-pill.magnet-attached.magnet-edge-bottom::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 80%;
+  height: 8px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 0%,
+    var(--color-magnet-glow) 0%,
+    var(--color-magnet-glow-soft) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 1;
+}
+
+@keyframes skill-power-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--skill-power-color-shadow, rgb(0 200 255 / 0%));
+  }
+
+  40% {
+    box-shadow: 0 0 16px 4px var(--skill-power-color, rgb(0 200 255 / 80%));
+  }
+
+  100% {
+    box-shadow: 0 0 8px 1px var(--skill-power-color-shadow, rgb(0 200 255 / 40%));
+  }
+}
+
+@keyframes skill-drop-target-pulse {
+  0% {
+    filter: saturate(120%) brightness(1);
+  }
+
+  100% {
+    filter: saturate(150%) brightness(1.1);
+  }
+}
+
+/* Highlight animation for duplicate combination attempts */
+.skill-pill--highlight {
+  animation: skill-highlight-pulse 0.8s ease-out;
+}
+
+@keyframes skill-highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 200 100 / 80%);
+    transform: scale(1);
+  }
+
+  30% {
+    box-shadow: 0 0 20px 8px rgb(255 200 100 / 60%);
+    transform: scale(1.15);
+  }
+
+  60% {
+    box-shadow: 0 0 12px 4px rgb(255 200 100 / 40%);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 200 100 / 0%);
+    transform: scale(1);
+  }
+}
+
+@supports not (scale: 1) {
+  .skills-toggle {
+    transform: scale(0.75);
+  }
+
+  .skills-toggle:hover {
+    transform: scale(0.877);
+  }
+
+  .skills-toggle.skill-drop-ready {
+    transform: scale(0.95);
+  }
+
+  .skills-toggle.skill-drop-target {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-toggle::before {
+    animation: none;
+  }
+
+  .skills-toggle.skill-drop-target {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Liquid Merge Animation
+   ------------------------------------------------------------------ */
+.liquid-merge-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2001;
+}
+
+.liquid-merge-shapes {
+  position: absolute;
+  inset: 0;
+  filter: url('#liquid-merge-goo');
+}
+
+.liquid-merge-pill {
+  position: fixed;
+  border-radius: var(--radius-pill);
+  will-change: transform, left, top;
+  pointer-events: none;
+  border: 1px solid var(--color-pill-border);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+}
+
+/* Mode-specific pill colors */
+.liquid-merge-pill--chain {
+  background: linear-gradient(135deg, rgb(100 180 255 / 85%) 0%, rgb(60 140 220 / 90%) 100%);
+}
+
+.liquid-merge-pill--pipe {
+  background: linear-gradient(135deg, rgb(140 200 255 / 85%) 0%, rgb(100 180 240 / 90%) 100%);
+}
+
+.liquid-merge-pill--modify {
+  background: linear-gradient(135deg, rgb(255 200 120 / 85%) 0%, rgb(240 160 80 / 90%) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-merge-shapes {
+    filter: none;
+  }
+
+  .liquid-merge-pill {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Oil Drop Micro-interactions
+   ------------------------------------------------------------------ */
+
+/* Drag lift state - pill feels picked up */
+.skill-pill.skill-drag-active {
+  transform: scale(1.03);
+  box-shadow:
+    0 12px 32px rgb(0 0 0 / 35%),
+    0 0 0 2px rgb(255 255 255 / 8%);
+  z-index: 2001;
+}
+
+/* Combine preview glow - pulsing effect when pills can merge */
+.skill-pill--combine-preview {
+  --combine-glow-opacity: 0;
+
+  box-shadow:
+    0 4px 16px rgb(0 0 0 / 25%),
+    0 0 calc(var(--combine-glow-opacity) * 24px) calc(var(--combine-glow-opacity) * 12px)
+      rgb(100 200 255 / var(--combine-glow-opacity));
+  animation: combine-preview-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes combine-preview-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.1);
+  }
+}
+
+/* Oil drop surface shine effect */
+.liquid-merge-pill--oil-drop {
+  border: 1px solid rgb(255 255 255 / 15%);
+  background: linear-gradient(
+    135deg,
+    rgb(255 255 255 / 12%) 0%,
+    rgb(255 255 255 / 5%) 50%,
+    rgb(0 0 0 / 10%) 100%
+  );
+  backdrop-filter: blur(var(--effect-backdrop-blur, 8px));
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 8px));
+}
+
+/* Highlight reflection on liquid pills */
+.liquid-merge-pill::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 10%;
+  right: 10%;
+  height: 30%;
+  background: linear-gradient(180deg, rgb(255 255 255 / 25%) 0%, rgb(255 255 255 / 0%) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Enhanced mode-specific merge colors with oil-drop gradient */
+.liquid-merge-pill--chain {
+  background: linear-gradient(
+    160deg,
+    rgb(100 180 255 / 90%) 0%,
+    rgb(60 140 220 / 95%) 60%,
+    rgb(40 100 180 / 90%) 100%
+  );
+}
+
+.liquid-merge-pill--pipe {
+  background: linear-gradient(
+    160deg,
+    rgb(140 220 255 / 90%) 0%,
+    rgb(100 180 240 / 95%) 60%,
+    rgb(70 150 210 / 90%) 100%
+  );
+}
+
+.liquid-merge-pill--modify {
+  background: linear-gradient(
+    160deg,
+    rgb(255 220 140 / 90%) 0%,
+    rgb(255 180 100 / 95%) 60%,
+    rgb(230 140 60 / 90%) 100%
+  );
+}
+
+/* Smooth deformation transitions for floating pills */
+.skill-pill.skill-floating {
+  transition-property: border-radius;
+  transition-duration: 0.1s;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Deformation active state */
+.skill-pill[style*='transform'] {
+  will-change: transform, border-radius;
+}
+
+/* Zone proximity feedback glow */
+.skill-pill.near-zone {
+  box-shadow:
+    0 4px 16px rgb(0 0 0 / 25%),
+    0 0 20px 2px rgb(0 200 255 / 30%);
+}
+
+/* Settle wobble animation class */
+@keyframes pill-settle-wobble {
+  0% {
+    transform: scale(1.05, 0.95);
+  }
+
+  25% {
+    transform: scale(0.97, 1.03);
+  }
+
+  50% {
+    transform: scale(1.02, 0.98);
+  }
+
+  75% {
+    transform: scale(0.99, 1.01);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+.skill-pill--settling {
+  animation: pill-settle-wobble 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Idle breathing - barely perceptible organic motion */
+@keyframes pill-idle-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.003, 0.998);
+  }
+}
+
+.skill-pill.skill-floating:not(.skill-drag-active):not(.skill-pill--settling):not(
+    .skill-pill--combine-preview
+  ) {
+  animation: pill-idle-breathe 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-pill--combine-preview {
+    animation: none;
+  }
+
+  .skill-pill--settling {
+    animation: none;
+  }
+
+  .skill-pill.skill-drag-active {
+    transform: none;
+  }
+
+  .skill-pill.skill-floating {
+    animation: none;
+  }
+}

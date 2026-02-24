@@ -1,0 +1,48 @@
+/*
+  Linen / canvas weave texture overlay.
+  Sits above the body background, below all content.
+  Opacity is theme-controlled via --linen-opacity.
+*/
+
+:root {
+  --linen-opacity: 0.035;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  /*
+    Two-layer linen weave:
+    1. Fine horizontal threads (repeating-linear-gradient)
+    2. Fine vertical threads (repeating-linear-gradient)
+    Offset slightly to avoid perfect grid alignment.
+  */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgb(128 128 128 / 18%) 1px,
+      rgb(128 128 128 / 18%) 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgb(128 128 128 / 14%) 1px,
+      rgb(128 128 128 / 14%) 2px
+    );
+  background-size:
+    4px 4px,
+    4px 4px;
+  background-position:
+    0 0,
+    1px 1px;
+
+  opacity: var(--linen-opacity);
+  mix-blend-mode: overlay;
+}

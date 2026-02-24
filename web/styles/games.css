@@ -1,0 +1,418 @@
+/* Default (dark) theme game colors - uses vera-baxter as default */
+:root {
+  --paddle-color: #2880f0;
+  --ball-color: #2880f0;
+  --brick-color: #2880f0;
+  --break-color: #2880f0;
+}
+
+/* Game Mode Overlay Styles */
+#game-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+
+  /* Transparent to show theme background + dotmatrix behind canvas */
+  background: transparent;
+}
+
+#game-container.hidden {
+  display: none;
+}
+
+#game-canvas {
+  flex: 1;
+  width: 100%;
+  background: transparent;
+}
+
+#hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 24px;
+  padding-right: max(24px, env(safe-area-inset-right, 24px));
+  box-sizing: border-box;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 14px;
+
+  /* Use consistent white text for dark themes */
+  color: #fff;
+  opacity: 0.85;
+}
+
+#score-display {
+  color: inherit;
+}
+
+#lives-display::before {
+  content: 'Lives: ' attr(data-lives);
+  color: inherit;
+}
+
+#pause-btn,
+#exit-game,
+#game-hand-tracking-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+#pause-btn:hover,
+#exit-game:hover,
+#game-hand-tracking-btn:hover {
+  opacity: 1;
+}
+
+#pause-btn:focus-visible,
+#exit-game:focus-visible,
+#game-hand-tracking-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+#game-hand-tracking-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+#game-hand-tracking-btn.active {
+  opacity: 1;
+}
+
+#game-hand-tracking-btn iconify-icon {
+  display: block;
+}
+
+#game-over-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0 0 0 / 0%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeInOverlay 0.4s ease-out forwards;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    background: rgb(0 0 0 / 0%);
+  }
+
+  to {
+    background: rgb(0 0 0 / 85%);
+  }
+}
+
+#game-over-menu .game-over-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  gap: 8px;
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+  animation: slideUpContent 0.5s ease-out 0.2s forwards;
+}
+
+@keyframes slideUpContent {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+#game-over-menu h1 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 2.5rem;
+  margin: 0 0 10px;
+}
+
+#game-over-menu .new-high-score {
+  color: #ffd700;
+  font-size: 1.2rem;
+  font-weight: bold;
+  animation: pulseScale 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+#game-over-menu .final-score {
+  font-size: 1.5rem;
+  margin: 5px 0;
+}
+
+#game-over-menu .high-score-display {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+#game-over-menu .level-display {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-bottom: 15px;
+}
+
+#game-over-menu button {
+  background: rgb(255 255 255 / 8%);
+  backdrop-filter: blur(var(--effect-backdrop-blur, 8px)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 8px)) saturate(150%);
+  border: 1px solid rgb(255 255 255 / 15%);
+  color: rgb(255 255 255 / 92%);
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  margin: 5px;
+}
+
+#game-over-menu button:hover {
+  transform: translateY(-2px);
+  background: rgb(255 255 255 / 12%);
+  border-color: rgb(255 255 255 / 30%);
+  box-shadow: inset 0 0 16px rgb(109 254 253 / 25%);
+}
+
+#game-over-menu button:active {
+  transform: translateY(0);
+}
+
+#game-over-menu button:focus-visible {
+  outline: none;
+  border-color: rgb(255 255 255 / 50%);
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 25%);
+}
+
+body.vitti-theme {
+  --paddle-color: #0d2822;
+  --ball-color: #0d2822;
+  --brick-color: #0d2822;
+  --break-color: #0d2822;
+}
+
+body.light-theme {
+  --paddle-color: #0f6164;
+  --ball-color: #0f6164;
+  --brick-color: #0f6164;
+  --break-color: #0f6164;
+}
+
+body.vera-baxter-theme {
+  --paddle-color: #2880f0;
+  --ball-color: #2880f0;
+  --brick-color: #2880f0;
+  --break-color: #2880f0;
+}
+
+body.night-theme {
+  --paddle-color: #b2d408;
+  --ball-color: #b2d408;
+  --brick-color: #b2d408;
+  --break-color: #b2d408;
+}
+
+body.dev-theme {
+  --paddle-color: #e26bfa;
+  --ball-color: #e26bfa;
+  --brick-color: #e26bfa;
+  --break-color: #e26bfa;
+}
+
+body.high-contrast-theme {
+  --paddle-color: #000;
+  --ball-color: #000;
+  --brick-color: #000;
+  --break-color: #000;
+}
+
+body.share-bear-theme {
+  --paddle-color: #5586b0;
+  --ball-color: #5586b0;
+  --brick-color: #5586b0;
+  --break-color: #5586b0;
+}
+
+body.eva-theme {
+  --paddle-color: #3a2840;
+  --ball-color: #3a2840;
+  --brick-color: #3a2840;
+  --break-color: #3a2840;
+}
+
+body.purple-theme {
+  --paddle-color: #04e4c8;
+  --ball-color: #04e4c8;
+  --brick-color: #04e4c8;
+  --break-color: #04e4c8;
+}
+
+body.fragile-theme {
+  --paddle-color: #2a5070;
+  --ball-color: #2a5070;
+  --brick-color: #2a5070;
+  --break-color: #2a5070;
+}
+
+body.custom-theme {
+  --paddle-color: #00c5ff;
+  --ball-color: #00c5ff;
+  --brick-color: #00c5ff;
+  --break-color: #00c5ff;
+}
+
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  #game-over-menu {
+    animation: none;
+    background: rgb(0 0 0 / 85%);
+  }
+
+  #game-over-menu .game-over-content {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  #game-over-menu button {
+    transition: none;
+  }
+
+  #game-over-menu button:hover {
+    transform: none;
+  }
+
+  #game-over-menu button::before {
+    display: none;
+  }
+
+  #game-over-menu .new-high-score {
+    animation: none;
+  }
+
+  #pause-btn,
+  #exit-game,
+  #game-hand-tracking-btn {
+    transition: none;
+  }
+}
+
+/* ========================================
+   Light Theme Overrides for Brick Game
+   For: high-contrast, vitti, light, eva, share-bear, fragile
+   ======================================== */
+
+/* HUD text for light themes */
+body.high-contrast-theme #hud,
+body.vitti-theme #hud,
+body.light-theme #hud,
+body.eva-theme #hud,
+body.share-bear-theme #hud,
+body.fragile-theme #hud {
+  color: rgb(0 0 0 / 85%);
+}
+
+/* Game-over menu for light themes */
+body.high-contrast-theme #game-over-menu,
+body.vitti-theme #game-over-menu,
+body.light-theme #game-over-menu,
+body.eva-theme #game-over-menu,
+body.share-bear-theme #game-over-menu,
+body.fragile-theme #game-over-menu {
+  background: rgb(255 255 255 / 92%);
+}
+
+body.high-contrast-theme #game-over-menu .game-over-content,
+body.vitti-theme #game-over-menu .game-over-content,
+body.light-theme #game-over-menu .game-over-content,
+body.eva-theme #game-over-menu .game-over-content,
+body.share-bear-theme #game-over-menu .game-over-content,
+body.fragile-theme #game-over-menu .game-over-content {
+  color: rgb(0 0 0 / 90%);
+}
+
+body.high-contrast-theme #game-over-menu h1,
+body.vitti-theme #game-over-menu h1,
+body.light-theme #game-over-menu h1,
+body.eva-theme #game-over-menu h1,
+body.share-bear-theme #game-over-menu h1,
+body.fragile-theme #game-over-menu h1 {
+  color: rgb(0 0 0 / 90%);
+}
+
+body.high-contrast-theme #game-over-menu .new-high-score,
+body.vitti-theme #game-over-menu .new-high-score,
+body.light-theme #game-over-menu .new-high-score,
+body.eva-theme #game-over-menu .new-high-score,
+body.share-bear-theme #game-over-menu .new-high-score,
+body.fragile-theme #game-over-menu .new-high-score {
+  color: #b8860b;
+}
+
+body.high-contrast-theme #game-over-menu button,
+body.vitti-theme #game-over-menu button,
+body.light-theme #game-over-menu button,
+body.eva-theme #game-over-menu button,
+body.share-bear-theme #game-over-menu button,
+body.fragile-theme #game-over-menu button {
+  background: rgb(0 0 0 / 8%);
+  border-color: rgb(0 0 0 / 15%);
+  color: rgb(0 0 0 / 90%);
+}
+
+body.high-contrast-theme #game-over-menu button:hover,
+body.vitti-theme #game-over-menu button:hover,
+body.light-theme #game-over-menu button:hover,
+body.eva-theme #game-over-menu button:hover,
+body.share-bear-theme #game-over-menu button:hover,
+body.fragile-theme #game-over-menu button:hover {
+  background: rgb(0 0 0 / 12%);
+  border-color: rgb(0 0 0 / 25%);
+  box-shadow: inset 0 0 16px rgb(0 100 150 / 15%);
+}

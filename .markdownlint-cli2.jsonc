@@ -1,0 +1,12 @@
+{
+  "globs": [
+    "documentation/**/*.md",
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CLAUDE.md",
+    "AGENTS.md",
+    "CHANGELOG.md",
+  ],
+  "ignores": ["node_modules/", ".planning/", ".claude/", "archive/", "src/skills/"],
+}

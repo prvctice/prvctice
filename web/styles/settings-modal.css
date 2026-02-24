@@ -1,0 +1,323 @@
+/* Simple overlay modal for settings */
+
+/* ============================================================
+   Revamped Settings Modal – Polished "Agency" aesthetic
+   ------------------------------------------------------------
+   Small visual lift without touching underlying markup / JS.
+   Focus on: glassy surfaces, subtle motion, richer typography.
+   ============================================================ */
+
+/* ---------- Overlay ---------- */
+.settings-modal {
+  position: fixed;
+  inset: 0;
+
+  /* Semi-transparent dark veil with slight blur for depth */
+  background: rgb(10 10 10 / 55%);
+  backdrop-filter: blur(var(--effect-backdrop-blur, 6px));
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 6px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-fade) var(--motion-ease-standard);
+}
+
+.settings-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#settings-modal.is-motion-driven,
+.settings-modal.is-motion-driven,
+.settings-modal.is-motion-driven .settings-modal-dialog {
+  transition: none !important;
+}
+
+#settings-modal:not(.open) {
+  pointer-events: none !important;
+}
+
+/* ---------- Dialog Container ---------- */
+.settings-modal-dialog {
+  width: min(640px, 90vw);
+  max-height: 90vh;
+
+  /* Glassmorphic panel */
+  background: rgb(30 30 30 / 70%);
+  border: 1px solid rgb(255 255 255 / 7%);
+  backdrop-filter: blur(var(--effect-backdrop-blur, 22px)) saturate(140%);
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 22px)) saturate(140%);
+  color: #f3f3f3;
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  /* Gentle entrance animation */
+  transform: translateY(24px) scale(0.98);
+  opacity: 0;
+  transition:
+    transform var(--duration-long) var(--motion-ease-emphasis),
+    opacity var(--motion-duration-fade) var(--motion-ease-standard);
+}
+
+.settings-modal.open .settings-modal-dialog {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* ---------- Header / Footer ---------- */
+.settings-modal-header,
+.settings-modal-footer {
+  padding: 20px 24px;
+  background: rgb(255 255 255 / 4%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* Subtle inner shadow top/bottom */
+  box-shadow: 0 -1px 0 rgb(255 255 255 / 3%) inset;
+}
+
+.settings-modal-header {
+  border-bottom: 1px solid rgb(255 255 255 / 6%);
+}
+
+.settings-modal-footer {
+  border-top: 1px solid rgb(255 255 255 / 6%);
+}
+
+.settings-modal-header h2 {
+  margin: 0;
+  font-weight: 300;
+  font-size: var(--font-size-sm);
+  color: #fff;
+}
+
+#close-settings-modal {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+#close-settings-modal:hover {
+  opacity: 1;
+}
+
+#close-settings-modal:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 50%);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Body ---------- */
+.settings-modal-body {
+  padding: 24px 28px 28px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1 1 auto;
+}
+
+.settings-modal-body::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-section + .settings-section {
+  margin-top: 32px;
+}
+
+.settings-section h3 {
+  margin: 0 0 14px;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #b5b5b5;
+  position: relative;
+}
+
+/* Accent rule under heading */
+.settings-section h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 28px;
+  height: 2px;
+  background: rgb(255 255 255 / 30%);
+  border-radius: 1px; /* leave as-is - tiny decorative */
+}
+
+.settings-section label {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-sm);
+  margin-bottom: 12px;
+  gap: 4px;
+}
+
+.settings-section input {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgb(255 255 255 / 12%);
+  background: rgb(255 255 255 / 6%);
+  color: inherit;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+}
+
+.settings-section input::placeholder {
+  color: #aaa;
+  opacity: 0.45;
+}
+
+.settings-section input:focus {
+  border-color: rgb(255 255 255 / 40%);
+  background: rgb(255 255 255 / 9%);
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(100 180 255 / 40%);
+}
+
+/* ---------- Theme Toggle Buttons ---------- */
+.theme-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.theme-options button {
+  flex: 1 1 auto;
+  padding: 8px 12px;
+  border: 1px solid rgb(255 255 255 / 18%);
+  background: rgb(255 255 255 / 3%);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.theme-options button:hover {
+  background: rgb(255 255 255 / 7%);
+  transform: translateY(-1px);
+}
+
+.theme-options button:focus-visible {
+  outline: 2px solid rgb(100 180 255 / 60%);
+  outline-offset: 2px;
+}
+
+.theme-options button.active {
+  background: #f0ebe3;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+  color: #0a0a0a;
+}
+
+/* ---------- Save Button ---------- */
+.settings-modal-footer button.primary {
+  padding: 10px 28px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: #f0ebe3;
+  color: #0a0a0a;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition:
+    box-shadow var(--motion-duration-fade) var(--motion-ease-standard),
+    transform var(--duration-short) var(--motion-ease-standard);
+}
+
+.settings-modal-footer button.primary:hover {
+  box-shadow: 0 6px 18px rgb(0 0 0 / 25%);
+  transform: translateY(-1px);
+}
+
+.settings-modal-footer button.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+}
+
+.settings-modal-footer button.primary:focus-visible {
+  outline: 2px solid rgb(0 100 180 / 80%);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-modal,
+  .settings-modal-dialog,
+  .settings-modal-footer button.primary {
+    transition: none;
+  }
+}
+
+@media (width <= 600px) {
+  .settings-modal {
+    align-items: flex-end;
+    padding: 0 0 max(env(safe-area-inset-bottom), 12px);
+  }
+
+  .settings-modal-dialog {
+    width: 100%;
+    max-height: 80vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    transform-origin: bottom center;
+  }
+
+  .settings-modal-header,
+  .settings-modal-footer {
+    padding: 16px 20px;
+  }
+
+  .settings-modal-body {
+    padding: 20px 20px 24px;
+  }
+
+  .settings-section + .settings-section {
+    margin-top: 24px;
+  }
+
+  .settings-section h3 {
+    font-size: var(--font-size-sm);
+  }
+
+  .settings-section input {
+    font-size: var(--font-size-base);
+    padding: 12px 14px;
+  }
+
+  .theme-options {
+    gap: 8px;
+  }
+
+  .theme-options button {
+    flex: 1 1 calc(50% - 8px);
+    font-size: var(--font-size-xs);
+  }
+
+  .settings-modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+}

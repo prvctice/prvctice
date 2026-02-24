@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      /* ── Audio Tool Skeleton ──
+ * Pattern: Header + dropzone/waveform + controls + faders + footer
+ * Examples: Noise Generator, Waveform Editor, Voice Modulator, DJ Mixer
+ */
+
+      /* Mixer/fader channel strip */
+      .at-channels {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        gap: 4px;
+        flex: 1;
+        min-height: 0;
+        padding: 8px 0;
+      }
+      .at-channel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .at-channel-label {
+        font-size: 8px;
+        font-family: var(--p-font-mono);
+        font-weight: 600;
+        color: var(--p-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: center;
+        line-height: 1.1;
+      }
+
+      /* Waveform display area */
+      .at-waveform-wrap {
+        height: 80px;
+        flex-shrink: 0;
+        border: 1px dashed var(--p-border);
+        border-radius: var(--p-radius-sm);
+        background: var(--p-surface);
+        overflow: hidden;
+        position: relative;
+      }
+      .at-waveform-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      /* Drop zone for audio files */
+      .at-dropzone {
+        padding: 20px;
+        text-align: center;
+        border: 2px dashed var(--p-border);
+        border-radius: var(--p-radius-lg);
+        cursor: pointer;
+        transition: all 150ms ease;
+        color: var(--p-text-muted);
+        font-size: 11px;
+        font-family: var(--p-font-mono);
+      }
+      .at-dropzone:hover,
+      .at-dropzone.dragover {
+        border-color: var(--p-accent-blue);
+        background: rgba(68, 136, 255, 0.04);
+      }
+
+      /* Effect/control card */
+      .at-effect-card {
+        border: 1px dashed var(--p-border);
+        border-radius: var(--p-radius-sm);
+        padding: 6px 8px;
+        background: transparent;
+      }
+      .at-effect-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 4px;
+      }
+
+      /* Toggle button for layer/effect on/off */
+      .at-toggle {
+        all: unset;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        border-radius: var(--p-radius-sm);
+        background: var(--p-surface);
+        border: 1px solid var(--p-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        color: var(--p-text-muted);
+        transition: all 80ms ease;
+      }
+      .at-toggle.on {
+        background: var(--p-accent-green);
+        border-color: var(--p-accent-green);
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body class="p-stack pad-2 full gap-1">
+    <!-- Terminal header -->
+    <div class="p-terminal-header">
+      <span class="p-label-tech"><!-- TODO: TOOL NAME --></span>
+      <span id="status" class="p-label-tech" style="color: var(--p-text-muted)">READY</span>
+    </div>
+
+    <!-- Drop zone (for file-based tools) or waveform display -->
+    <div id="dropArea" class="at-dropzone">
+      DROP AUDIO FILE HERE
+      <div style="font-size: 9px; margin-top: 4px; color: var(--p-text-muted)">
+        OR RECORD FROM MIC
+      </div>
+    </div>
+
+    <!-- Waveform display (hidden until file loaded) -->
+    <div id="waveformWrap" class="at-waveform-wrap" style="display: none">
+      <canvas id="waveformCanvas" class="at-waveform-canvas"></canvas>
+    </div>
+
+    <!-- Fader channels (for mixer-style tools) -->
+    <div id="channelsArea" class="at-channels">
+      <!-- TODO: Generate fader channels using prvctice.ui.fader() -->
+    </div>
+
+    <!-- Controls row -->
+    <div class="p-row gap-2" style="flex-shrink: 0">
+      <button class="p-btn p-btn-sm" id="playBtn">PLAY</button>
+      <button class="p-btn p-btn-sm" id="recBtn">REC</button>
+      <button class="p-btn p-btn-sm" id="exportBtn">EXPORT WAV</button>
+      <!-- TODO: Add tool-specific controls -->
+    </div>
+
+    <!-- Visualizer -->
+    <div id="vizContainer" style="height: 32px; flex-shrink: 0"></div>
+
+    <!-- Footer -->
+    <div class="p-split p-feed-meta">
+      <span class="p-label-tech" id="presetName">DEFAULT</span>
+      <span class="p-label-tech" style="color: var(--p-text-muted)" id="footerStatus">IDLE</span>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        // ── Audio Setup ──
+        var ctx = prvctice.audio.createContext();
+        var masterGain = prvctice.audio.getMasterGain();
+        var analyser = prvctice.audio.getAnalyser();
+
+        // ── Visualizer ──
+        var viz = prvctice.ui.oscilloscope(document.getElementById('vizContainer'), {
+          analyser: analyser,
+          color: 'var(--p-accent-blue)',
+        });
+
+        // ── Recording ──
+        var recorder = prvctice.audio.createRecorder();
+        var recording = false;
+
+        // ── File Drop ──
+        var dropArea = document.getElementById('dropArea');
+        dropArea.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          dropArea.classList.add('dragover');
+        });
+        dropArea.addEventListener('dragleave', function () {
+          dropArea.classList.remove('dragover');
+        });
+        dropArea.addEventListener('drop', function (e) {
+          e.preventDefault();
+          dropArea.classList.remove('dragover');
+          var file = e.dataTransfer.files[0];
+          if (file) loadAudioFile(file);
+        });
+
+        var audioBuffer = null;
+
+        function loadAudioFile(file) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            prvctice.audio.buffer.decode(reader.result).then(function (buf) {
+              audioBuffer = buf;
+              dropArea.style.display = 'none';
+              document.getElementById('waveformWrap').style.display = '';
+              drawWaveform(buf);
+              document.getElementById('status').textContent = file.name.toUpperCase();
+            });
+          };
+          reader.readAsArrayBuffer(file);
+        }
+
+        function drawWaveform(buf) {
+          var peaks = prvctice.audio.buffer.waveformPeaks(buf, 200);
+          var canvas = document.getElementById('waveformCanvas');
+          var w = canvas.parentNode.offsetWidth;
+          var h = canvas.parentNode.offsetHeight;
+          canvas.width = w;
+          canvas.height = h;
+          var drawCtx = canvas.getContext('2d');
+          drawCtx.clearRect(0, 0, w, h);
+          drawCtx.fillStyle = 'rgba(68,136,255,0.6)';
+          var barW = w / peaks.length;
+          for (var i = 0; i < peaks.length; i++) {
+            var minY = ((1 - peaks[i].max) * h) / 2;
+            var maxY = ((1 - peaks[i].min) * h) / 2;
+            drawCtx.fillRect(i * barW, minY, Math.max(1, barW - 1), maxY - minY);
+          }
+        }
+
+        // ── Faders ──
+        // TODO: Create faders using prvctice.ui.fader() for each channel/parameter
+        // var volFader = prvctice.ui.fader(container, {
+        //   min: 0, max: 1, value: 0.75, label: 'VOL',
+        //   orientation: 'vertical', onChange: function(v) { gainNode.gain.value = v; }
+        // });
+
+        // ── Presets ──
+        // TODO: Load/save presets via prvctice.storage
+
+        // ── Export ──
+        document.getElementById('exportBtn').addEventListener('click', function () {
+          if (!audioBuffer) return;
+          var wavBlob = prvctice.audio.encodeWAV(audioBuffer);
+          prvctice.audio.bufferToBase64(wavBlob).then(function (b64) {
+            prvctice.media.download(b64, 'export.wav', 'audio/wav');
+          });
+        });
+
+        // ── Record ──
+        document.getElementById('recBtn').addEventListener('click', function () {
+          if (!recording) {
+            recorder.start();
+            recording = true;
+            this.textContent = 'STOP REC';
+            this.style.color = '#ff4444';
+          } else {
+            recorder.stop().then(function (result) {
+              recording = false;
+              document.getElementById('recBtn').textContent = 'REC';
+              document.getElementById('recBtn').style.color = '';
+              prvctice.audio.bufferToBase64(result.blob).then(function (b64) {
+                prvctice.media.download(b64, 'recording.webm', 'audio/webm');
+              });
+            });
+          }
+        });
+
+        // ── Cleanup ──
+        prvctice.onDispose(function () {
+          if (recording) recorder.stop();
+          recorder.dispose();
+          viz.dispose();
+          // TODO: Dispose faders
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.*.local
+src/config/desktop-env.json
+app-update.yml
+
+# Uploaded files
+/uploads/
+public/uploads/
+outputs/
+shaderproject/
+blobs/
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Backend TypeScript compiled output (source is .ts, compiled during build)
+src/**/*.js
+
+# Dist
+/dist/
+/docs/
+/out/
+/build/
+/bin/
+# Electron Forge output (installers, zipped bundles)
+/out/make/
+*.dmg
+*.exe
+*.zip
+# Native addon artifacts
+*.node
+/model/
+/vendor/
+/public/vendor/vosk/model.tar.gz
+/public/vendor/
+
+# SSL keys and certificates
+*.pem
+
+# Tesseract trained data
+*.traineddata
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDE/editor stuff
+.vscode/
+.idea/
+.claude/
+
+
+# Coverage
+coverage/
+.nyc_output/
+
+#config
+
+SETTINGS_PANEL_SETUP.txt
+.localstorage.json
+
+# Canon/banned lists are local-only (secret sauce)
+canon.json
+banned.json
+
+# Ignore local dev scratch notes
+server-refactor.txt
+mcp-instructions.md
+open-in-codepen.html
+dutch_study.html
+landing-page/
+
+# Developer docs
+docs/electron-tray.md
+notesReview.txt
+public/.DS_Store
+docs/cinematic_prompt_rigs.pdf
+
+# Archives (prevent accidental commits)
+*.zip
+*.tar.gz
+
+# Editor swap/backup files
+*.swp
+*~
+
+blog-post-open-source-release.md
+
+# Internal planning (local paths, infra details)
+.planning/

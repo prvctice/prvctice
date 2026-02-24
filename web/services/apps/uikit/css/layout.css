@@ -1,0 +1,286 @@
+/* ==========================================================
+   prvctice UI Kit — Layout Primitives
+   Grid, stack, row, split, center, scroll + spacing utilities.
+   ========================================================== */
+
+/* --- Modular Grid --- */
+
+.p-grid {
+  display: grid;
+  gap: var(--p-3);
+  grid-template-columns: repeat(var(--cols, 2), 1fr);
+  grid-template-rows: repeat(var(--rows, auto), 1fr);
+  height: 100%;
+  width: 100%;
+}
+
+/* Auto rows when --rows not set */
+.p-grid:not([style*='--rows']) {
+  grid-template-rows: auto;
+  height: auto;
+}
+
+/* Preset grid sizes */
+.p-grid-2x2 {
+  --cols: 2;
+  --rows: 2;
+}
+.p-grid-3x2 {
+  --cols: 3;
+  --rows: 2;
+}
+.p-grid-4x2 {
+  --cols: 4;
+  --rows: 2;
+}
+.p-grid-3x3 {
+  --cols: 3;
+  --rows: 3;
+}
+.p-grid-4x3 {
+  --cols: 4;
+  --rows: 3;
+}
+
+/* Grid cell spanning */
+.col-span-2 {
+  grid-column: span 2;
+}
+.col-span-3 {
+  grid-column: span 3;
+}
+.col-span-4 {
+  grid-column: span 4;
+}
+.row-span-2 {
+  grid-row: span 2;
+}
+.row-span-3 {
+  grid-row: span 3;
+}
+.col-full {
+  grid-column: 1 / -1;
+}
+
+/* --- Flex layouts --- */
+
+.p-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-3);
+}
+
+.p-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--p-3);
+}
+
+.p-split {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--p-3);
+}
+
+.p-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-wrap {
+  flex-wrap: wrap;
+}
+
+/* --- Scrollable container --- */
+
+.p-scroll {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.p-scroll-y {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.p-scroll-x {
+  overflow-y: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Gap utilities --- */
+
+.gap-1 {
+  gap: var(--p-1);
+}
+.gap-2 {
+  gap: var(--p-2);
+}
+.gap-3 {
+  gap: var(--p-3);
+}
+.gap-4 {
+  gap: var(--p-4);
+}
+.gap-5 {
+  gap: var(--p-5);
+}
+.gap-6 {
+  gap: var(--p-6);
+}
+.gap-8 {
+  gap: var(--p-8);
+}
+
+/* --- Padding utilities --- */
+
+.pad-1 {
+  padding: var(--p-1);
+}
+.pad-2 {
+  padding: var(--p-2);
+}
+.pad-3 {
+  padding: var(--p-3);
+}
+.pad-4 {
+  padding: var(--p-4);
+}
+.pad-5 {
+  padding: var(--p-5);
+}
+.pad-6 {
+  padding: var(--p-6);
+}
+.pad-8 {
+  padding: var(--p-8);
+}
+
+/* --- Sizing --- */
+
+.full-height {
+  height: 100%;
+}
+.full-width {
+  width: 100%;
+}
+.full {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Flex helpers --- */
+
+.flex-1 {
+  flex: 1;
+}
+.flex-none {
+  flex: none;
+}
+.flex-grow {
+  flex-grow: 1;
+}
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+/* --- Alignment --- */
+
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.items-end {
+  align-items: flex-end;
+}
+.items-stretch {
+  align-items: stretch;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+
+.self-start {
+  align-self: flex-start;
+}
+.self-center {
+  align-self: center;
+}
+.self-end {
+  align-self: flex-end;
+}
+.self-stretch {
+  align-self: stretch;
+}
+
+/* --- Text alignment --- */
+
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+
+/* --- Overflow --- */
+
+.overflow-hidden {
+  overflow: hidden;
+}
+/* --- Position --- */
+
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* --- Widget aspect-ratio locks --- */
+
+.p-widget-1x1 {
+  width: var(--p-widget-unit);
+  aspect-ratio: 1 / 1;
+}
+
+.p-widget-2x1 {
+  width: calc(var(--p-widget-unit) * 2);
+  aspect-ratio: 2 / 1;
+}
+
+.p-widget-1x2 {
+  width: var(--p-widget-unit);
+  aspect-ratio: 1 / 2;
+}
+
+.p-widget-2x2 {
+  width: calc(var(--p-widget-unit) * 2);
+  aspect-ratio: 1 / 1;
+}

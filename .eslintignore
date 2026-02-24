@@ -1,0 +1,12 @@
+node_modules/
+bin/
+dist/
+public/
+build/
+out/
+forge.config.js
+main.js
+src/adapters/**/*.js
+tests/
+src/middleware/sessionConfig.js
+src/utils/systemPrompt.js

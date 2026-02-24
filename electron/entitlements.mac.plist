@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  macOS Hardened Runtime Entitlements for Prvctice
+
+  These entitlements are required for the app to function correctly with:
+  - Electron's V8 JavaScript engine (JIT compilation)
+  - Native speech recognition addon (speech_recognizer.node)
+  - Microphone access for dictation
+
+  Security Note: While these relax some macOS protections, they are standard
+  requirements for Electron apps with native addons. The app still benefits
+  from code signing, notarization, and Electron's security fuses.
+-->
+<plist version="1.0">
+<dict>
+  <!-- Required by Electron/V8 for JavaScript JIT compilation -->
+  <key>com.apple.security.cs.allow-jit</key>
+  <true/>
+
+  <!-- Required by Electron/V8 for memory allocation during JS execution -->
+  <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+  <true/>
+
+  <!-- Required for loading native addon (speech_recognizer.node) that is
+       built separately and not signed with the same certificate -->
+  <key>com.apple.security.cs.disable-library-validation</key>
+  <true/>
+
+  <!-- Required for microphone access (dictation feature) -->
+  <key>com.apple.security.device.audio-input</key>
+  <true/>
+
+  <!-- Required for Export Chat as PDF functionality -->
+  <key>com.apple.security.device.print</key>
+  <true/>
+
+  <!-- Required for native speech recognition (Apple Speech framework) -->
+  <key>com.apple.security.personal-information.speech-recognition</key>
+  <true/>
+</dict>
+</plist>

@@ -1,0 +1,105 @@
+/*
+  Theme: Vera Baxter
+  File: vera-baxter-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.vera-baxter-theme {
+  /* == Variables & Base == */
+  --linen-opacity: 0.04;
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background: radial-gradient(#030e71 25%, #030847 50%, #01050d 90%, #030e2c 100%) !important;
+  color: #fff;
+  --color-text: #ffffff;
+  --color-text-strong: #ffffff;
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: #81d6ff;
+  --skill-power-color-shadow: rgb(66 228 234 / 40.9%);
+  --link-color: #81d6ff;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 157 255 / 20%) 0%,
+    rgb(45 85 216 / 5%) 34%,
+    transparent 74%
+  );
+  --bar-background: #0b0c0d7a;
+  --menu-background: #03040a9a;
+  --tool-tip-color: #81d6ff;
+  --theme-bar-shimmer-duration: 7s;
+  --utility-button-color: #cccccc;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(33 234 90 / 20%) 15%,
+    rgb(158 241 236 / 15%) 30%,
+    rgb(39 225 183 / 20%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.3;
+  --shimmer-blend: screen;
+}
+
+/* == Bar == */
+body.vera-baxter-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(207 176 130 / 10%);
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  box-shadow:
+    0 16px 40px -16px rgb(18 2 54 / 35%),
+    0 6px 16px -8px rgb(0 0 0 / 18%),
+    0 0 0 0.5px rgb(207 176 130 / 12%) inset;
+  position: relative;
+}
+
+body.vera-baxter-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(18 2 54 / 40%),
+    0 8px 20px -8px rgb(0 0 0 / 20%),
+    0 0 0 0.5px rgb(255 63 205 / 15%) inset,
+    0 0 20px -4px rgb(255 63 205 / 10%);
+}
+
+/* == Buttons == */
+body.vera-baxter-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+  box-shadow:
+    rgb(20 20 20 / 25%) 4px 8px 12px 0px,
+    rgb(31 67 165 / 50%) 0px 0px 0px 1.5px inset;
+}
+
+body.vera-baxter-theme #upload-button:hover,
+body.vera-baxter-theme #upload-button.file-attached,
+body.vera-baxter-theme #voice-input-button:hover,
+body.vera-baxter-theme #voice-input-button.listening,
+body.vera-baxter-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Header & Controls == */
+body.vera-baxter-theme header .title {
+  color: #fff;
+}
+
+body.vera-baxter-theme #save-pdf-button,
+body.vera-baxter-theme #save-chat-option {
+  color: #fff;
+  background-color: transparent;
+}
+
+body.vera-baxter-theme #menu-button {
+  color: var(--color-text);
+  background-color: transparent;
+}
+
+body.vera-baxter-theme .prompt-link {
+  color: #fff;
+}
+
+body.vera-baxter-theme .credit {
+  color: #fff;
+}

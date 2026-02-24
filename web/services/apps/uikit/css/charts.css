@@ -1,0 +1,110 @@
+/* ==========================================================
+   prvctice UI Kit — Charts
+   SVG chart component styles. Theme-aware via CSS custom properties.
+   ========================================================== */
+
+/* --- Chart container --- */
+
+.p-chart {
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+}
+
+.p-chart svg {
+  overflow: visible;
+}
+
+.p-chart text {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --- Type-specific default heights --- */
+
+.p-chart-sparkline {
+  height: 40px;
+}
+
+.p-chart-bar {
+  height: 160px;
+}
+
+.p-chart-line {
+  height: 160px;
+}
+
+.p-chart-gauge {
+  height: 140px;
+}
+
+.p-chart-pie {
+  height: 180px;
+}
+
+.p-chart-progress-ring {
+  height: 120px;
+  width: 120px;
+  margin: 0 auto;
+}
+
+/* --- Size overrides for compact layouts --- */
+
+.p-compact .p-chart-sparkline,
+.p-size-compact .p-chart-sparkline {
+  height: 28px;
+}
+
+.p-compact .p-chart-bar,
+.p-size-compact .p-chart-bar {
+  height: 120px;
+}
+
+.p-compact .p-chart-line,
+.p-size-compact .p-chart-line {
+  height: 120px;
+}
+
+.p-compact .p-chart-gauge,
+.p-size-compact .p-chart-gauge {
+  height: 100px;
+}
+
+.p-compact .p-chart-pie,
+.p-size-compact .p-chart-pie {
+  height: 130px;
+}
+
+.p-compact .p-chart-progress-ring,
+.p-size-compact .p-chart-progress-ring {
+  height: 80px;
+  width: 80px;
+}
+
+/* --- Expanded size overrides --- */
+
+.p-expanded .p-chart-bar,
+.p-size-expanded .p-chart-bar {
+  height: 220px;
+}
+
+.p-expanded .p-chart-line,
+.p-size-expanded .p-chart-line {
+  height: 220px;
+}
+
+.p-expanded .p-chart-pie,
+.p-size-expanded .p-chart-pie {
+  height: 240px;
+}
+
+.p-expanded .p-chart-gauge,
+.p-size-expanded .p-chart-gauge {
+  height: 180px;
+}
+
+.p-expanded .p-chart-progress-ring,
+.p-size-expanded .p-chart-progress-ring {
+  height: 160px;
+  width: 160px;
+}

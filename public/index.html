@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prvctice</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="Prvctice - Type A — AI-driven research and notes. Chat, image tools, speech, and a polished desktop UI."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- Performance: preconnect to external assets in use -->
+    <link rel="preconnect" href="https://api.iconify.design" crossorigin />
+    <!-- Hardware acceleration is always enabled; remove legacy no-hw-accel toggle -->
+    <script>
+      try {
+        window.__flags = window.__flags || {};
+        window.__flags.__VUE_CHAT_ACTIVE = true;
+      } catch (_) {}
+    </script>
+    <script>
+      (function () {
+        try {
+          if (typeof window === 'undefined') return;
+          if (window.prvStorage && window.prvStorage.__shimVersion === 1) return;
+          var store = {
+            __shimVersion: 0,
+            get: function (key) {
+              try {
+                var ls = window.localStorage;
+                return ls ? ls.getItem(key) : null;
+              } catch (_) {
+                return null;
+              }
+            },
+            getItem: function (key) {
+              return store.get(key);
+            },
+            set: function (key, value) {
+              var str = value == null ? null : String(value);
+              try {
+                var ls = window.localStorage;
+                if (ls) {
+                  if (str === null) ls.removeItem(key);
+                  else ls.setItem(key, str);
+                }
+              } catch (_) {}
+              return str;
+            },
+            setItem: function (key, value) {
+              return store.set(key, value);
+            },
+            remove: function (key) {
+              try {
+                var ls = window.localStorage;
+                if (ls) ls.removeItem(key);
+              } catch (_) {}
+            },
+            removeItem: function (key) {
+              store.remove(key);
+            },
+            clear: function () {
+              try {
+                var ls = window.localStorage;
+                if (ls) ls.clear();
+              } catch (_) {}
+            },
+            keys: function () {
+              try {
+                var ls = window.localStorage;
+                if (!ls) return [];
+                var out = [];
+                for (var i = 0; i < ls.length; i += 1) {
+                  var k = ls.key(i);
+                  if (typeof k === 'string') out.push(k);
+                }
+                return out;
+              } catch (_) {
+                return [];
+              }
+            },
+            dump: function () {
+              var out = {};
+              try {
+                var ls = window.localStorage;
+                if (!ls) return out;
+                for (var i = 0; i < ls.length; i += 1) {
+                  var key = ls.key(i);
+                  if (typeof key === 'string') out[key] = ls.getItem(key);
+                }
+              } catch (_) {}
+              return out;
+            },
+          };
+          window.prvStorage = store;
+        } catch (_) {}
+      })();
+    </script>
+    <!-- Preload vendor libraries (Three.js, Markdown, DOMPurify) locally -->
+    <script>
+      (function () {
+        try {
+          if (!window.__vendorReadyPromise) {
+            window.__vendorReadyResolvers = [];
+            window.__vendorReadyPromise = new Promise(function (resolve) {
+              window.__vendorReadyResolvers.push(resolve);
+            });
+          }
+        } catch (_) {}
+      })();
+    </script>
+    <script type="module" src="/vendor-libs.js"></script>
+    <!-- Fonts: self-hosted (see web/styles/fonts.css) -->
+    <!-- All CSS migrated to web/styles/ and imported via @web/styles/main.css -->
+    <!-- Quill is now installed locally (imported in NotesPane) -->
+    <!-- Quill is bundled via Vite; remaining legacy helpers load below -->
+    <!-- Legacy UI helpers (loaded sequentially at runtime) -->
+    <!-- ios-viewport-fixes.js → web/utils/iosViewport.ts (imported in main.ts) -->
+    <!-- bar-gestures.js → web/composables/useBarGestures.ts (imported in main.ts) -->
+    <!-- magnet.js → web/utils/magnet.ts (imported via directive) -->
+    <!-- theme-and-ui.js → ported to Vue composables -->
+    <!-- file-upload.js → web/composables/useFileAttachments.ts -->
+    <!-- settings-pane-modal.js → Vue UnifiedSettingsModal -->
+    <!-- gamepad.js → web/composables/useGamepad.ts (imported in main.ts) -->
+    <!-- Dot-matrix renderer (migrated to web/graphics/dotmatrix/) -->
+    <!-- dotmatrix.js → web/graphics/dotmatrix/core.ts (imported in main.ts) -->
+    <!-- dotmatrix-handtrack.js → web/graphics/dotmatrix/handtrack.ts (imported in main.ts) -->
+    <!-- Loader to sequentially attach the above non-module scripts without Vite bundling them -->
+    <script>
+      (function () {
+        try {
+          var nodes = Array.prototype.slice.call(document.querySelectorAll('script[data-src]'));
+          var startLoader = function () {
+            (function load(i) {
+              if (i >= nodes.length) return;
+              var src = nodes[i].getAttribute('data-src');
+              var s = document.createElement('script');
+              s.src = src;
+              s.defer = true;
+              s.onload = function () {
+                load(i + 1);
+              };
+              s.onerror = function () {
+                load(i + 1);
+              };
+              document.head.appendChild(s);
+            })(0);
+          };
+          var vendorReady = window.__vendorReadyPromise;
+          if (vendorReady && typeof vendorReady.then === 'function') {
+            vendorReady.then(startLoader).catch(startLoader);
+          } else {
+            startLoader();
+          }
+        } catch (e) {
+          /* no-op */
+        }
+      })();
+    </script>
+  </head>
+  <body class="high-contrast-theme">
+    <div id="app"></div>
+    <script type="module" src="/main.ts"></script>
+
+    <!-- Liquid Glass SVG Filter -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden" aria-hidden="true">
+      <defs>
+        <filter id="glass-distortion" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.02"
+            numOctaves="3"
+            result="noise"
+            seed="5"
+          />
+          <feSpecularLighting
+            in="noise"
+            surfaceScale="3"
+            specularConstant="1"
+            specularExponent="80"
+            lighting-color="#fff"
+            result="specular"
+          >
+            <fePointLight x="-100" y="-100" z="200" />
+          </feSpecularLighting>
+          <feComposite
+            in="SourceGraphic"
+            in2="specular"
+            operator="arithmetic"
+            k1="0"
+            k2="1"
+            k3="0.25"
+            k4="0"
+            result="lit"
+          />
+          <feDisplacementMap
+            in="lit"
+            in2="noise"
+            scale="4"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+  </body>
+</html>

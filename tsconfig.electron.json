@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "noEmit": false,
+    "outDir": ".",
+    "rootDir": ".",
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": ["src/config/**/*.ts", "src/ipc.ts", "src/storage/**/*.ts"],
+  "exclude": ["node_modules", "dist", "web", "public", "tests"]
+}

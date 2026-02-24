@@ -1,0 +1,102 @@
+/*
+  Theme: Vitti
+  File: vitti-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.vitti-theme {
+  /* == Variables & Base == */
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background: radial-gradient(#c8cfca 0%, #a8afaa 80%, #9fa39d 106%) !important;
+  color: #121212;
+  --color-text: #121212;
+  --color-text-strong: #121212;
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: #3ad3b2;
+  --skill-power-color-shadow: rgb(62 229 237 / 45.9%);
+  --link-color: #121212;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 255 235 / 20%) 0%,
+    rgb(91 255 114 / 8%) 34%,
+    transparent 74%
+  );
+  --bar-background: rgb(13 40 34 / 50%);
+  --menu-background: rgb(13 40 34 / 70%);
+  --tool-tip-color: #000000;
+  --theme-bar-shimmer-duration: 15s;
+  --utility-button-color: #000000;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(206 232 225 / 33%) 15%,
+    rgb(188 206 213 / 30%) 30%,
+    rgb(114 250 174 / 30%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.7;
+  --shimmer-blend: color;
+}
+
+/* == Bar == */
+body.vitti-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(13 40 34 / 15%);
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 22%),
+    0 6px 16px -8px rgb(0 0 0 / 14%),
+    0 0 0 0.5px rgb(255 255 255 / 6%) inset;
+  position: relative;
+}
+
+body.vitti-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 28%),
+    0 8px 20px -8px rgb(0 0 0 / 16%),
+    0 0 0 0.5px rgb(0 255 235 / 12%) inset,
+    0 0 20px -4px rgb(0 255 235 / 8%);
+}
+
+/* == Buttons == */
+body.vitti-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+body.vitti-theme #upload-button:hover,
+body.vitti-theme #upload-button.file-attached,
+body.vitti-theme #voice-input-button:hover,
+body.vitti-theme #voice-input-button.listening,
+body.vitti-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+body.vitti-theme #voice-input-button.muted {
+  background-color: #a5adaa;
+  -webkit-text-fill-color: #000;
+}
+
+/* == Header & Controls == */
+body.vitti-theme header .title {
+  color: #121212;
+}
+
+body.vitti-theme #save-pdf-button,
+body.vitti-theme #new-chat-button,
+body.vitti-theme #save-chat-option,
+body.vitti-theme #menu-button {
+  color: #121212;
+  background-color: transparent;
+}
+
+body.vitti-theme .prompt-link {
+  color: #121212 !important;
+}
+
+body.vitti-theme .credit {
+  color: #121212 !important;
+}

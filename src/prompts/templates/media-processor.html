@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Video Screenshots</title>
+    <style>
+      video.p-video {
+        max-height: 200px;
+      }
+    </style>
+  </head>
+  <body class="p-stack pad-3 full gap-2">
+    <div class="p-split text-xs font-mono" style="flex-shrink: 0">
+      <span class="text-muted">CAPTURES</span>
+      <span id="count">0</span>
+    </div>
+
+    <div class="p-center" id="dropArea">
+      <div id="dropzone"></div>
+    </div>
+
+    <div id="videoArea" style="display: none" class="p-stack gap-2 flex-1">
+      <div class="p-center">
+        <video id="video" class="p-video" controls></video>
+      </div>
+
+      <div class="p-row justify-center gap-2">
+        <button class="p-btn p-btn-primary p-btn-sm" id="captureBtn">Capture</button>
+        <button class="p-btn p-btn-ghost p-btn-sm" id="capture5Btn">Every 5s</button>
+      </div>
+
+      <div class="p-thumbnail-grid p-scroll" id="thumbnails" style="max-height: 160px"></div>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var video = document.getElementById('video');
+        var thumbnailsEl = document.getElementById('thumbnails');
+        var countEl = document.getElementById('count');
+        var captures = [];
+
+        var dropWidget = prvctice.ui.dropzone(document.getElementById('dropzone'), {
+          accept: 'video/*',
+          multiple: false,
+          label: 'Drop a video file here',
+          onDrop: function (files) {
+            if (files.length === 0) return;
+            loadVideo(files[0]);
+          },
+        });
+
+        function loadVideo(file) {
+          var url = URL.createObjectURL(file);
+          video.src = url;
+          document.getElementById('dropArea').style.display = 'none';
+          document.getElementById('videoArea').style.display = '';
+        }
+
+        function captureFrame() {
+          if (video.readyState < 2) return;
+
+          var canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0);
+
+          var dataUrl = canvas.toDataURL('image/png');
+          var time = formatTime(video.currentTime);
+
+          captures.push({ dataUrl: dataUrl, time: time });
+          countEl.textContent = captures.length;
+          renderThumbnails();
+        }
+
+        function formatTime(seconds) {
+          var m = Math.floor(seconds / 60);
+          var s = Math.floor(seconds % 60);
+          return m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        function renderThumbnails() {
+          thumbnailsEl.innerHTML = '';
+          captures.forEach(function (cap) {
+            var thumb = document.createElement('div');
+            thumb.className = 'p-thumbnail';
+            thumb.innerHTML =
+              '<img src="' +
+              cap.dataUrl +
+              '" alt="Frame at ' +
+              cap.time +
+              '" />' +
+              '<div class="text-xs text-muted font-mono" style="text-align:center">' +
+              cap.time +
+              '</div>';
+            thumb.addEventListener('click', function () {
+              var link = document.createElement('a');
+              link.download = 'frame-' + cap.time.replace(':', '-') + '.png';
+              link.href = cap.dataUrl;
+              link.click();
+            });
+            thumbnailsEl.appendChild(thumb);
+          });
+        }
+
+        document.getElementById('captureBtn').addEventListener('click', captureFrame);
+
+        document.getElementById('capture5Btn').addEventListener('click', function () {
+          if (video.readyState < 2) return;
+          var duration = video.duration;
+          var times = [];
+          for (var t = 0; t < duration; t += 5) times.push(t);
+
+          var idx = 0;
+          function next() {
+            if (idx >= times.length) return;
+            video.currentTime = times[idx];
+            video.onseeked = function () {
+              captureFrame();
+              idx++;
+              next();
+            };
+          }
+          next();
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,347 @@
+/* Simple fixed right-hand navigation menu */
+
+.side-menu {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 30%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(110%);
+  opacity: 0;
+  transition:
+    transform var(--motion-duration-fade, var(--duration-medium)) var(--motion-ease-emphasis),
+    opacity var(--motion-duration-fade) var(--motion-ease-standard);
+  z-index: 10000;
+  -webkit-text-fill-color: #fff !important;
+  color: #fff; /* Ensure icons using currentColor match menu text */
+  background: var(--menu-background, rgb(20 20 20 / 30%));
+  box-shadow:
+    rgb(20 20 20 / 20%) 4px 8px 12px 0,
+    rgb(255 255 255 / 19%) 0 0 0 2px inset,
+    rgb(90 90 90 / 31%) 3px 4px 11px 0 inset;
+  backdrop-filter: saturate(300%) blur(var(--effect-backdrop-blur, 8px));
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-backdrop-filter: saturate(300%) blur(var(--effect-backdrop-blur, 8px));
+  pointer-events: none;
+}
+
+.side-menu.is-motion-driven {
+  transition: none !important;
+}
+
+.side-menu.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.side-menu-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(255 255 255 / 3%);
+  padding: 17px 18px;
+  left: 0;
+  right: 0;
+}
+
+.header-search-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1.2rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.header-search-btn:hover {
+  opacity: 1;
+}
+
+.side-menu-header h2 {
+  margin: 0;
+  font-weight: 400;
+  font-size: var(--font-size-sm);
+  color: #fff;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.side-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.side-menu-list::-webkit-scrollbar {
+  display: none;
+}
+
+.side-menu-list li {
+  width: 100%;
+  list-style: none; /* ensure no bullets on top-level */
+}
+
+.side-menu-list button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-family-display, 'Gothic A1', sans-serif);
+  cursor: pointer;
+  transition: background var(--duration-short) var(--motion-ease-standard);
+  font-weight: 300;
+}
+
+.side-menu-list button i,
+.side-menu-list button img,
+.side-menu-list button iconify-icon {
+  flex: 0 0 auto;
+  font-size: var(--font-size-lg);
+}
+
+/* Increase indent for submenu items */
+.submenu li button {
+  padding-left: 40px;
+}
+
+.side-menu-list button:hover,
+.side-menu-list button:focus-visible {
+  background: rgb(255 255 255 / 6%);
+}
+
+.side-menu-list button:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 50%);
+  outline-offset: -2px;
+}
+
+/* -------- Sub-menu (collapsible) -------- */
+
+.has-submenu {
+  /* A11y: parent <li> uses .has-submenu for toggling state */
+}
+
+.submenu-toggle {
+  justify-content: space-between; /* keep chevron on far right */
+}
+
+.submenu-toggle .chevron {
+  transition: transform var(--duration-short) var(--motion-ease-standard);
+  margin-left: auto;
+  font-size: var(--font-size-lg);
+}
+
+/* Remove bullets in nested submenu as well */
+.submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.has-submenu:not(.open) .submenu {
+  /* Hidden by default, but we still want it in the DOM for SR */
+  max-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: max-height var(--motion-duration-fade) var(--motion-ease-standard);
+}
+
+.has-submenu.open .submenu {
+  visibility: visible;
+  max-height: 800px; /* large enough for smooth expand */
+  transition: max-height var(--motion-duration-fade) var(--motion-ease-standard);
+}
+
+.has-submenu.open > .submenu-toggle .chevron {
+  transform: rotate(180deg);
+}
+
+.side-menu-footer {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
+/* Brand short mark typography: Pta_v1.1.16 */
+.brand-short {
+  display: flex;
+  align-items: baseline;
+}
+
+.brand-short .brand-p {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.brand-short .brand-t {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 36px;
+  text-transform: lowercase;
+  line-height: 1;
+}
+
+.brand-short .brand-a {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 36px;
+  text-transform: lowercase;
+  line-height: 1;
+}
+
+.brand-short .brand-version {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: lowercase;
+}
+
+/* Expandable parts slide in horizontally on hover */
+.brand-short .brand-expand {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  vertical-align: baseline;
+  transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.brand-short.expanded .brand-expand {
+  max-width: 120px;
+}
+
+/* The "a" becomes uppercase "A" when expanded */
+.brand-short.expanded .brand-a {
+  text-transform: uppercase;
+}
+
+/* Match header typography for expanded parts */
+.brand-short .brand-rvctice {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.brand-short .brand-ype {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 36px;
+  line-height: 1;
+}
+
+#close-side-menu {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: var(--font-size-lg); /* Close icon matches side-menu icon size */
+  cursor: pointer;
+  padding: 4px;
+}
+
+#close-side-menu:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 50%);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+#close-side-menu:hover {
+  background: rgb(255 255 255 / 10%);
+  border-radius: var(--radius-sm);
+}
+
+@media (width <= 768px) {
+  .side-menu {
+    width: min(360px, 82vw);
+    border-radius: var(--radius-xl) 0 0 var(--radius-xl);
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+
+  .side-menu-header {
+    padding: 16px 18px;
+  }
+
+  .side-menu-header h2 {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+  }
+
+  .side-menu-list {
+    padding-block: 8px 18px;
+  }
+
+  .side-menu-list button {
+    font-size: clamp(17px, 5vw, 20px);
+    padding: 14px 18px;
+    gap: 14px;
+  }
+
+  .side-menu-list button i,
+  .side-menu-list button img,
+  .side-menu-list button iconify-icon {
+    font-size: 20px;
+  }
+
+  .submenu li button {
+    padding-left: 32px;
+  }
+
+  .side-menu-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .brand-short .brand-t,
+  .brand-short .brand-a,
+  .brand-short .brand-ype {
+    font-size: 28px;
+  }
+
+  .brand-short .brand-p,
+  .brand-short .brand-version,
+  .brand-short .brand-rvctice {
+    font-size: 11px;
+  }
+
+  #close-side-menu {
+    align-self: flex-end;
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .side-menu {
+    transition: none;
+  }
+
+  .side-menu-list button,
+  .submenu-toggle .chevron,
+  .has-submenu:not(.open) .submenu,
+  .has-submenu.open .submenu,
+  .brand-short .brand-expand {
+    transition: none;
+  }
+}

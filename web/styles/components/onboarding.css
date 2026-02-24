@@ -1,0 +1,66 @@
+/* ------------------------------------------------------------------
+   Onboarding System Styles
+   Pulse hints and highlight animations for feature discovery.
+   ------------------------------------------------------------------ */
+
+/* Pulse animation for feature hints */
+@keyframes onboarding-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--color-accent-glow, rgb(94 240 163 / 40%));
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px var(--color-accent-glow-transparent, rgb(94 240 163 / 0%));
+  }
+}
+
+/* Applied via JavaScript - animates 3 times then stops */
+.onboarding-pulse {
+  animation: onboarding-pulse 2s ease-in-out 3;
+  position: relative;
+  z-index: 1;
+}
+
+/* Static highlight for reduced motion preference */
+.onboarding-highlight {
+  outline: 2px solid var(--color-accent, #5ef0a3);
+  outline-offset: 3px;
+  border-radius: inherit;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-pulse {
+    animation: none;
+    outline: 2px solid var(--color-accent, #5ef0a3);
+    outline-offset: 3px;
+  }
+}
+
+/* Get Started pill special styling in skills dock */
+.skill-pill[data-skill-id='get-started'] {
+  --pill-glow: rgb(94 240 163 / 20%);
+}
+
+.skill-pill[data-skill-id='get-started']:not(:hover) {
+  animation: get-started-glow 3s ease-in-out infinite;
+}
+
+@keyframes get-started-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--pill-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 12px 2px var(--pill-glow);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-pill[data-skill-id='get-started']:not(:hover) {
+    animation: none;
+    box-shadow: 0 0 8px 1px var(--pill-glow);
+  }
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Study Timer</title>
+  </head>
+  <body class="p-stack pad-4 full gap-3">
+    <div class="p-center flex-1">
+      <div class="p-timer-display-lg" id="display">25:00</div>
+    </div>
+
+    <div id="duration" class="self-center"></div>
+
+    <div class="p-row justify-center gap-3">
+      <button class="p-btn" id="resetBtn">Reset</button>
+      <button class="p-btn p-btn-primary" id="startBtn">Start</button>
+    </div>
+
+    <div class="p-progress" id="progress" style="--progress: 0"></div>
+
+    <div class="p-split text-xs font-mono" style="flex-shrink: 0">
+      <span class="text-muted">STATUS</span>
+      <span id="status"><span class="p-badge-dot"></span> READY</span>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var dur = 25 * 60 * 1000;
+        var statusEl = document.getElementById('status');
+
+        var timer = prvctice.ui.timer(document.getElementById('display'), {
+          duration: dur,
+          mode: 'countdown',
+          onTick: function (remaining) {
+            var pct = 1 - remaining / dur;
+            document.getElementById('progress').style.setProperty('--progress', pct);
+          },
+          onComplete: function () {
+            document.getElementById('startBtn').textContent = 'Done!';
+            statusEl.innerHTML = '<span class="p-badge-dot"></span> COMPLETE';
+          },
+        });
+
+        var stepper = prvctice.ui.stepper(document.getElementById('duration'), {
+          min: 5,
+          max: 120,
+          step: 5,
+          value: 25,
+          format: function (v) {
+            return v + ' min';
+          },
+          onChange: function (v) {
+            dur = v * 60000;
+            timer.setDuration(dur);
+          },
+        });
+
+        document.getElementById('startBtn').addEventListener('click', function () {
+          if (timer.isRunning()) {
+            timer.pause();
+            this.textContent = 'Resume';
+            statusEl.innerHTML = '<span class="p-badge-dot"></span> PAUSED';
+          } else {
+            timer.start();
+            this.textContent = 'Pause';
+            statusEl.innerHTML = '<span class="p-badge-dot"></span> FOCUSING';
+          }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function () {
+          timer.reset();
+          document.getElementById('startBtn').textContent = 'Start';
+          document.getElementById('progress').style.setProperty('--progress', 0);
+          statusEl.innerHTML = '<span class="p-badge-dot"></span> READY';
+        });
+      });
+    </script>
+  </body>
+</html>

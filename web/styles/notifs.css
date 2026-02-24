@@ -1,0 +1,251 @@
+/* ================================================================
+   Sileo-style Toast Notification System
+   Ported from https://github.com/hiaaryan/sileo/blob/main/src/styles.css
+   ================================================================ */
+
+:root {
+  --sileo-spring-easing: linear(
+    0,
+    0.002 0.6%,
+    0.007 1.2%,
+    0.015 1.8%,
+    0.026 2.4%,
+    0.041 3.1%,
+    0.06 3.8%,
+    0.108 5.3%,
+    0.157 6.6%,
+    0.214 8%,
+    0.467 13.7%,
+    0.577 16.3%,
+    0.631 17.7%,
+    0.682 19.1%,
+    0.73 20.5%,
+    0.771 21.8%,
+    0.808 23.1%,
+    0.844 24.5%,
+    0.874 25.8%,
+    0.903 27.2%,
+    0.928 28.6%,
+    0.952 30.1%,
+    0.972 31.6%,
+    0.988 33.1%,
+    1.01 35.7%,
+    1.025 38.5%,
+    1.034 41.6%,
+    1.038 45%,
+    1.035 50.1%,
+    1.012 64.2%,
+    1.003 73%,
+    0.999 83.7%,
+    1
+  );
+  --sileo-duration: 550ms;
+  --sileo-height: 40px;
+  --sileo-width: 350px;
+
+  --sileo-state-success: oklch(0.723 0.219 142.136);
+  --sileo-state-error: oklch(0.637 0.237 25.331);
+  --sileo-state-warning: oklch(0.795 0.184 86.047);
+  --sileo-state-info: oklch(0.685 0.169 237.323);
+}
+
+/* ---- container ------------------------------------------------ */
+#notifications {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.75rem;
+  max-width: calc(100vw - 1.5rem);
+  pointer-events: none;
+}
+
+#notifications p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ---- individual toast ----------------------------------------- */
+.sileo-toast {
+  position: relative;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  width: var(--sileo-width);
+  opacity: 0;
+  transform: translateY(-6px) scale(0.95);
+  contain: layout style;
+  overflow: visible;
+}
+
+.sileo-toast.is-ready {
+  opacity: 1;
+  transform: translateZ(0) scale(1);
+  transition:
+    transform calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
+    opacity calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
+    height var(--sileo-duration) var(--sileo-spring-easing);
+}
+
+.sileo-toast.is-fading {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.95);
+  pointer-events: none;
+  transition:
+    transform calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing),
+    opacity calc(var(--sileo-duration) * 0.66) var(--sileo-spring-easing);
+}
+
+/* ---- gooey wrapper: merges pill + body into organic blob ------ */
+.sileo-toast__gooey-wrap {
+  filter: url(#sileo-gooey);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ---- header pill: badge + title ------------------------------- */
+.sileo-toast__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgb(18 18 22);
+  border-radius: 14px;
+  padding: 14px 24px 14px 14px;
+  height: var(--sileo-height);
+  box-sizing: border-box;
+}
+
+/* ---- badge ---------------------------------------------------- */
+.sileo-toast__badge {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+.sileo-toast__badge--success {
+  color: var(--sileo-state-success);
+  background: color-mix(in oklch, var(--sileo-state-success) 20%, transparent);
+}
+.sileo-toast__badge--error {
+  color: var(--sileo-state-error);
+  background: color-mix(in oklch, var(--sileo-state-error) 20%, transparent);
+}
+.sileo-toast__badge--warning {
+  color: var(--sileo-state-warning);
+  background: color-mix(in oklch, var(--sileo-state-warning) 20%, transparent);
+}
+.sileo-toast__badge--info {
+  color: var(--sileo-state-info);
+  background: color-mix(in oklch, var(--sileo-state-info) 20%, transparent);
+}
+
+/* ---- title ---------------------------------------------------- */
+.sileo-toast__title {
+  font-size: 0.725rem;
+  line-height: 1rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.sileo-toast__title--success {
+  color: var(--sileo-state-success);
+}
+.sileo-toast__title--error {
+  color: var(--sileo-state-error);
+}
+.sileo-toast__title--warning {
+  color: var(--sileo-state-warning);
+}
+.sileo-toast__title--info {
+  color: var(--sileo-state-info);
+}
+
+/* ---- body card: description below ----------------------------- */
+.sileo-toast__body {
+  background: rgb(18 18 22);
+  border-radius: 6px 12px 12px 12px;
+  margin-top: 0;
+  padding: 10px 15px 15px 15px;
+}
+
+/* ---- description ---------------------------------------------- */
+.sileo-toast__desc {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(255 255 255 / 60%);
+}
+
+/* ---- action buttons ------------------------------------------- */
+.sileo-toast__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0 1rem 1rem;
+}
+
+.sileo-toast__action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.75rem;
+  padding: 0 0.625rem;
+  border-radius: 9999px;
+  border: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: rgb(255 255 255 / 85%);
+  background: rgb(255 255 255 / 10%);
+  transition: background-color 150ms ease;
+}
+
+.sileo-toast__action-btn:hover {
+  background: rgb(255 255 255 / 18%);
+}
+
+.sileo-toast__dismiss-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 8%);
+  color: rgb(255 255 255 / 60%);
+  font-size: 0.875rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 150ms ease;
+}
+
+.sileo-toast__dismiss-btn:hover {
+  background: rgb(255 255 255 / 18%);
+}
+
+/* ---- reduced motion ------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .sileo-toast,
+  .sileo-toast.is-ready,
+  .sileo-toast.is-fading {
+    transition-duration: 0.01ms !important;
+  }
+
+  .sileo-toast__gooey-wrap {
+    filter: none !important;
+  }
+}

@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      /* ── Audio Instrument Skeleton (Mixer-Routed) ──
+ * Pattern: Terminal header + play surface + controls + visualizer
+ * Audio routes through host mixer, NOT local AudioContext.
+ * Examples: Drum Machine, Drum Pad, Piano Synth, Theremin
+ */
+
+      /* Play surface — keys, pads, or touch area */
+      .inst-surface {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        gap: 2px;
+        /* TODO: Replace with your instrument layout (grid for pads, flex for keys) */
+      }
+
+      /* Individual interactive element (key, pad, step) */
+      .inst-element {
+        min-width: 44px;
+        min-height: 44px; /* Touch target minimum */
+        border-radius: var(--p-radius-sm);
+        background: var(--p-surface);
+        border: 1px solid var(--p-border);
+        cursor: pointer;
+        transition:
+          background 80ms ease,
+          box-shadow 80ms ease;
+      }
+      .inst-element:hover {
+        background: var(--p-surface-raised);
+      }
+      .inst-element.active {
+        background: var(--p-accent-blue);
+        border-color: var(--p-accent-blue);
+        box-shadow: 0 0 6px rgba(68, 136, 255, 0.3);
+      }
+
+      /* Transport controls row */
+      .inst-transport {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        padding: 4px 0;
+      }
+      .inst-transport-btn {
+        all: unset;
+        cursor: pointer;
+        padding: 4px 10px;
+        font-size: 9px;
+        font-family: var(--p-font-mono);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--p-text-muted);
+        border: 1px solid var(--p-border);
+        border-radius: var(--p-radius-pill);
+        transition: all 100ms ease;
+      }
+      .inst-transport-btn:hover {
+        color: var(--p-text);
+        background: var(--p-surface-raised);
+      }
+      .inst-transport-btn.active {
+        color: var(--p-accent-amber);
+        border-color: var(--p-accent-amber);
+      }
+
+      /* Connection status */
+      .inst-conn {
+        font-size: 8px;
+        font-family: var(--p-font-mono);
+        color: var(--p-text-muted);
+      }
+      .inst-conn.connected {
+        color: var(--p-accent-green);
+      }
+    </style>
+  </head>
+  <body class="p-stack pad-2 full gap-1">
+    <!-- Terminal header -->
+    <div class="p-terminal-header">
+      <span class="p-label-tech"><!-- TODO: INSTRUMENT NAME --></span>
+      <span class="inst-conn" id="connStatus">DISCONNECTED</span>
+    </div>
+
+    <!-- Play surface — TODO: Replace with your instrument UI -->
+    <div class="inst-surface" id="surface">
+      <!-- TODO: Generate keys, pads, steps, or touch surface here -->
+    </div>
+
+    <!-- Controls row -->
+    <div class="inst-transport" id="transport">
+      <!-- TODO: Add instrument-specific controls (BPM, presets, etc.) -->
+      <span class="p-label-tech" style="color: var(--p-text-muted); margin-left: auto" id="position"
+        >0:00</span
+      >
+    </div>
+
+    <!-- Visualizer -->
+    <div id="vizContainer" style="height: 40px; flex-shrink: 0"></div>
+
+    <!-- Footer -->
+    <div class="p-split p-feed-meta">
+      <span class="p-label-tech" id="footerLeft"><!-- TODO: preset name --></span>
+      <span class="p-label-tech" style="color: var(--p-text-muted)" id="footerRight"
+        ><!-- TODO: status --></span
+      >
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var connStatus = document.getElementById('connStatus');
+        var channelId = null;
+
+        // ── Connect to mixer ──
+        prvctice.mixer
+          .connect({ name: '<!-- TODO: INSTRUMENT NAME -->' })
+          .then(function (result) {
+            channelId = result.channelId;
+            connStatus.textContent = 'CONNECTED';
+            connStatus.className = 'inst-conn connected';
+          })
+          .catch(function () {
+            connStatus.textContent = 'ERROR';
+          });
+
+        // ── Visualizer (uses mixer analyser) ──
+        var vizEl = document.getElementById('vizContainer');
+        var vizInterval = setInterval(function () {
+          if (!channelId) return;
+          prvctice.mixer
+            .getAnalyserData(channelId)
+            .then(function (data) {
+              if (!data) return;
+              // TODO: Draw frequency/time-domain data to vizEl
+            })
+            .catch(function () {});
+        }, 50);
+
+        // ── Play Surface ──
+        // TODO: Build your instrument surface (keys, pads, grid)
+        var surface = document.getElementById('surface');
+        surface.addEventListener('pointerdown', function (e) {
+          // TODO: Identify which element was triggered
+          // Play sound via mixer:
+          // prvctice.mixer.tone(freq, duration, { waveform: 'sine', gain: 0.6 });
+          // or for sustained notes:
+          // prvctice.mixer.noteOn(freq, opts).then(function(r) { voiceId = r.voiceId; });
+          // prvctice.mixer.noteOff(voiceId);
+        });
+
+        // ── Cleanup ──
+        prvctice.onDispose(function () {
+          clearInterval(vizInterval);
+          prvctice.mixer.disconnect();
+        });
+      });
+    </script>
+  </body>
+</html>

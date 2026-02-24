@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Music Studio</title>
+  </head>
+  <body class="p-stack pad-3 full gap-2" style="background: transparent">
+    <div class="p-row gap-2">
+      <div class="p-label-tech flex-1">MUSIC STUDIO</div>
+      <button class="p-btn p-btn-sm p-btn-danger" id="recBtn">REC</button>
+    </div>
+
+    <div id="viz" style="height: 60px"></div>
+
+    <div id="pads" class="p-grid gap-2" style="--cols: 4; flex: 1; min-height: 0"></div>
+
+    <div class="p-row gap-2">
+      <div id="scaleTabs" class="flex-1"></div>
+    </div>
+
+    <div id="settings-form"></div>
+
+    <div class="p-split text-xs font-mono" style="flex-shrink: 0">
+      <span class="text-muted">STATUS</span>
+      <span id="status">READY</span>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        var statusEl = document.getElementById('status');
+        var recBtn = document.getElementById('recBtn');
+        var isRecording = false;
+        var recorder = null;
+
+        // ===== SCALE DEFINITIONS =====
+        var scales = {
+          Major: [261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88, 523.25],
+          Minor: [261.63, 293.66, 311.13, 349.23, 392.0, 415.3, 466.16, 523.25],
+          Pentatonic: [261.63, 293.66, 329.63, 392.0, 440.0, 523.25, 587.33, 659.25],
+          Blues: [261.63, 311.13, 349.23, 370.0, 392.0, 466.16, 523.25, 622.25],
+        };
+        var scaleNames = Object.keys(scales);
+        var currentScale = 'Major';
+        var noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C\u2032'];
+        var padColors = [
+          'var(--p-primary)',
+          'var(--p-secondary)',
+          'var(--p-accent)',
+          'var(--p-success)',
+          'var(--p-warning)',
+          'var(--p-danger)',
+          'var(--p-info)',
+          'var(--p-primary)',
+        ];
+
+        // Settings
+        var settings = { tempo: 120, volume: 70, waveType: 'sine' };
+
+        // ===== PAD GRID =====
+        var padsContainer = document.getElementById('pads');
+        var padEls = [];
+
+        function buildPads() {
+          padsContainer.innerHTML = '';
+          padEls = [];
+          var freqs = scales[currentScale];
+          for (var i = 0; i < 8; i++) {
+            var pad = document.createElement('button');
+            pad.className = 'p-btn';
+            pad.style.cssText =
+              'flex:1; min-height:48px; border:1px solid ' +
+              padColors[i] +
+              '; color:' +
+              padColors[i] +
+              '; font-family:var(--p-font-mono); font-size:var(--p-text-sm);' +
+              ' display:flex; align-items:center; justify-content:center; border-radius:var(--p-radius-md);';
+            pad.textContent = noteNames[i];
+            pad.setAttribute('data-freq', freqs[i]);
+            pad.setAttribute('data-index', i);
+            pad.addEventListener('click', onPadClick);
+            padsContainer.appendChild(pad);
+            padEls.push(pad);
+          }
+
+          // Stagger entrance animation
+          prvctice.ui.animateEntrance(padsContainer, {
+            spring: 'snappy',
+            stagger: 40,
+          });
+        }
+
+        function onPadClick(e) {
+          var freq = parseFloat(e.currentTarget.getAttribute('data-freq'));
+          var idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+          var vol = settings.volume / 100;
+
+          // Play tone
+          prvctice.audio.tone(freq, 300, {
+            type: settings.waveType,
+            volume: vol,
+            attack: 10,
+            release: 80,
+          });
+
+          // Pad press animation
+          var pad = e.currentTarget;
+          prvctice
+            .animate(pad, { transform: 'scale(0.9)' }, { spring: 'xsnappy' })
+            .finished.then(function () {
+              prvctice.animate(pad, { transform: 'scale(1)' }, { spring: 'snappy' });
+            });
+        }
+
+        buildPads();
+
+        // ===== WAVEFORM VISUALIZATION =====
+        var oscInstance = prvctice.ui.oscilloscope(document.getElementById('viz'), {
+          color: 'var(--p-primary)',
+          lineWidth: 2,
+        });
+
+        // ===== SCALE TABS =====
+        var tabs = prvctice.ui.tabs(document.getElementById('scaleTabs'), {
+          items: scaleNames,
+          active: 0,
+          onChange: function (index, label) {
+            currentScale = label;
+            var freqs = scales[currentScale];
+            for (var i = 0; i < padEls.length; i++) {
+              padEls[i].setAttribute('data-freq', freqs[i]);
+            }
+            statusEl.textContent = currentScale.toUpperCase();
+          },
+        });
+
+        // ===== SETTINGS FORM =====
+        var form = prvctice.ui.form(document.getElementById('settings-form'), {
+          fields: [
+            {
+              name: 'tempo',
+              label: 'Tempo (BPM)',
+              type: 'slider',
+              min: 60,
+              max: 200,
+              value: settings.tempo,
+              step: 5,
+            },
+            {
+              name: 'volume',
+              label: 'Volume',
+              type: 'slider',
+              min: 0,
+              max: 100,
+              value: settings.volume,
+              step: 5,
+            },
+            {
+              name: 'waveType',
+              label: 'Wave',
+              type: 'select',
+              options: [
+                { label: 'Sine', value: 'sine' },
+                { label: 'Square', value: 'square' },
+                { label: 'Sawtooth', value: 'sawtooth' },
+                { label: 'Triangle', value: 'triangle' },
+              ],
+              value: settings.waveType,
+            },
+          ],
+          onSubmit: function (data) {
+            settings.tempo = data.tempo;
+            settings.volume = data.volume;
+            settings.waveType = data.waveType;
+            prvctice.storage.set('studio-settings', settings);
+            prvctice.ui.toast({ message: 'Settings saved', type: 'success' });
+          },
+          submitLabel: 'Apply',
+        });
+
+        // ===== LOAD SAVED SETTINGS =====
+        prvctice.storage.get('studio-settings').then(function (saved) {
+          if (saved) {
+            settings = saved;
+            form.setValues(saved);
+          }
+        });
+
+        // ===== RECORDING =====
+        recBtn.addEventListener('click', function () {
+          if (!isRecording) {
+            recorder = prvctice.audio.createRecorder();
+            recorder.start();
+            isRecording = true;
+            recBtn.textContent = 'STOP';
+            recBtn.className = 'p-btn p-btn-sm p-btn-primary';
+            statusEl.textContent = 'RECORDING';
+
+            prvctice.animate(recBtn, { transform: 'scale(1.1)' }, { spring: 'bouncy' });
+          } else {
+            recorder.stop().then(function (result) {
+              isRecording = false;
+              recBtn.textContent = 'REC';
+              recBtn.className = 'p-btn p-btn-sm p-btn-danger';
+              statusEl.textContent = 'RECORDED';
+
+              prvctice.animate(recBtn, { transform: 'scale(1)' }, { spring: 'snappy' });
+
+              // Offer download
+              var wavData = prvctice.audio.encodeWAV(result.buffer);
+              var base64 = prvctice.audio.bufferToBase64(wavData);
+              prvctice.media.download(base64, 'recording.wav', 'audio/wav');
+              prvctice.ui.toast({ message: 'Recording saved', type: 'success' });
+            });
+          }
+        });
+
+        // ===== DEMO SEQUENCE BUTTON (double-tap status) =====
+        var tapCount = 0;
+        statusEl.addEventListener('click', function () {
+          tapCount++;
+          if (tapCount >= 2) {
+            tapCount = 0;
+            // Play a demo melody
+            var freqs = scales[currentScale];
+            var melody = [
+              { freq: freqs[0], duration: 200 },
+              { freq: freqs[2], duration: 200 },
+              { freq: freqs[4], duration: 200 },
+              { freq: freqs[5], duration: 300 },
+              { freq: freqs[4], duration: 200 },
+              { freq: freqs[2], duration: 400 },
+            ];
+            prvctice.audio.sequence(melody, {
+              type: settings.waveType,
+              volume: settings.volume / 100,
+            });
+            statusEl.textContent = 'PLAYING';
+            setTimeout(function () {
+              statusEl.textContent = currentScale.toUpperCase();
+            }, 1800);
+          }
+          setTimeout(function () {
+            tapCount = 0;
+          }, 500);
+        });
+
+        // ===== CLEANUP =====
+        prvctice.onDispose(function () {
+          if (oscInstance && oscInstance.dispose) oscInstance.dispose();
+          if (form && form.dispose) form.dispose();
+          if (recorder && isRecording) {
+            try {
+              recorder.stop();
+            } catch (e) {}
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,96 @@
+/*
+  Theme: Fragile
+  File: fragile-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.fragile-theme {
+  /* == Variables & Base == */
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background: #c1ced8 !important;
+  color: #000000;
+  --color-text: #000000;
+  --color-text-strong: #000000;
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --skill-power-color: rgb(0 255 235 / 68%);
+  --skill-power-color-shadow: rgb(0 255 235 / 68%);
+  --link-color: #0076c0;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 255 235 / 20%) 0%,
+    rgb(91 255 114 / 8%) 34%,
+    transparent 74%
+  );
+  --bar-background: rgb(85 134 176 / 30%);
+  --menu-background: rgb(85 134 176 / 70%);
+  --tool-tip-color: #d06900;
+  --theme-shimmer-duration: var(--motion-duration-shimmer);
+  --theme-bar-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --utility-button-color: #000000;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(79 223 186 / 41%) 15%,
+    rgb(51 194 255 / 30%) 30%,
+    rgb(255 182 7 / 30%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.2;
+  --shimmer-blend: color;
+}
+
+/* == Bar == */
+body.fragile-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(85 134 176 / 12%);
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 22%),
+    0 6px 16px -8px rgb(0 0 0 / 14%),
+    0 0 0 0.5px rgb(255 255 255 / 8%) inset;
+  position: relative;
+}
+
+body.fragile-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 28%),
+    0 8px 20px -8px rgb(0 0 0 / 16%),
+    0 0 0 0.5px rgb(0 255 235 / 15%) inset,
+    0 0 20px -4px rgb(0 255 235 / 10%);
+}
+
+/* == Buttons == */
+body.fragile-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+body.fragile-theme .skill-pill {
+  /* Uses dark pill tokens from :root (dark bg, light text) */
+  background: var(--color-pill-bg);
+}
+
+body.fragile-theme #upload-button:hover,
+body.fragile-theme #upload-button.file-attached,
+body.fragile-theme #voice-input-button:hover,
+body.fragile-theme #voice-input-button.listening,
+body.fragile-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Header & Controls == */
+body.fragile-theme header .title {
+  color: #000;
+}
+
+body.fragile-theme .prompt-link {
+  color: #000000 !important;
+}
+
+body.fragile-theme .credit {
+  color: #000 !important;
+}

@@ -1,0 +1,92 @@
+/* ------------------------------------------------------------------
+   Message toolbar buttons (listen/copy/note/like)
+   ------------------------------------------------------------------ */
+.listen-button,
+.copy-button,
+.note-button,
+.like-button {
+  background: transparent;
+  color: currentcolor;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.listen-button {
+  border: 1px solid currentcolor;
+  width: 28px;
+  height: 28px;
+}
+
+.copy-button,
+.note-button,
+.like-button {
+  border: none;
+  width: 20px;
+  height: 20px;
+  margin-left: var(--space-2);
+}
+
+.listen-button i,
+.listen-button iconify-icon,
+.copy-button i,
+.copy-button iconify-icon,
+.note-button i,
+.note-button iconify-icon,
+.like-button i,
+.like-button iconify-icon {
+  font-size: 16pt;
+  color: currentcolor;
+}
+
+.like-button i,
+.like-button iconify-icon {
+  font-size: 16px;
+}
+
+.listen-button:active,
+.copy-button:active,
+.note-button:active,
+.like-button:active {
+  transform: scale(0.9);
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.like-button:hover {
+  transform: scale(1.3);
+}
+
+.listen-button:focus-visible,
+.copy-button:focus-visible,
+.note-button:focus-visible,
+.like-button:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+.message-tools {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  gap: 8px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* Utility animation for spinning iconify icons */
+@keyframes iconify-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.iconify-spin {
+  animation: iconify-spin 1s linear infinite;
+  transform-origin: center;
+}

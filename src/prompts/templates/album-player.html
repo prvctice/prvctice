@@ -1,0 +1,450 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Album Player</title>
+  </head>
+  <body class="p-stack full" style="background: transparent">
+    <!-- ===== LIBRARY VIEW ===== -->
+    <div data-view="library" class="p-stack full">
+      <div
+        class="p-row pad-3 gap-2"
+        style="flex-shrink: 0; border-bottom: 1px solid var(--p-border-subtle)"
+      >
+        <div class="p-label-tech flex-1">LIBRARY</div>
+        <button class="p-btn p-btn-sm p-btn-icon" id="queueBtn" title="Queue">&#9776;</button>
+      </div>
+      <div
+        id="album-grid"
+        class="p-grid gap-3 pad-3 flex-1 p-scroll-y"
+        style="--cols: 2; align-content: start"
+      ></div>
+    </div>
+
+    <!-- ===== NOW PLAYING VIEW ===== -->
+    <div data-view="now-playing" class="p-stack full">
+      <div
+        class="p-row pad-3 gap-2"
+        style="flex-shrink: 0; border-bottom: 1px solid var(--p-border-subtle)"
+      >
+        <button class="p-btn p-btn-sm p-btn-ghost" id="npBackBtn">&larr;</button>
+        <div class="p-label-tech flex-1">NOW PLAYING</div>
+        <button class="p-btn p-btn-sm p-btn-ghost" id="npQueueBtn">Queue</button>
+      </div>
+      <div class="p-stack pad-4 gap-3 flex-1 items-center justify-center">
+        <div
+          id="np-art"
+          style="width: 180px; height: 180px; border-radius: var(--p-radius-lg); overflow: hidden"
+        ></div>
+        <div class="text-center">
+          <div class="text-lg font-medium" id="np-title">--</div>
+          <div class="text-sm text-muted" id="np-artist">--</div>
+        </div>
+        <div id="np-progress" class="full-width"></div>
+        <div class="p-row gap-4 justify-center">
+          <button class="p-btn p-btn-icon" id="prevBtn">&#9664;&#9664;</button>
+          <button
+            class="p-btn p-btn-primary"
+            id="playBtn"
+            style="width: 48px; height: 48px; border-radius: 50%; font-size: 18px"
+          >
+            &#9654;
+          </button>
+          <button class="p-btn p-btn-icon" id="nextBtn">&#9654;&#9654;</button>
+        </div>
+        <div id="np-track-info" class="text-xs text-muted font-mono">Track 1 of 1</div>
+      </div>
+    </div>
+
+    <!-- ===== QUEUE VIEW ===== -->
+    <div data-view="queue" class="p-stack full">
+      <div
+        class="p-row pad-3 gap-2"
+        style="flex-shrink: 0; border-bottom: 1px solid var(--p-border-subtle)"
+      >
+        <button class="p-btn p-btn-sm p-btn-ghost" id="qBackBtn">&larr;</button>
+        <div class="p-label-tech flex-1">QUEUE</div>
+        <button class="p-btn p-btn-sm p-btn-danger" id="clearQueueBtn">Clear</button>
+      </div>
+      <div id="queue-list" class="p-list flex-1 p-scroll-y"></div>
+      <div class="p-empty" id="queue-empty">
+        <div class="p-empty-message">Queue is empty</div>
+      </div>
+    </div>
+
+    <script>
+      prvctice.onReady(function () {
+        // ===== DEMO ALBUMS =====
+        var albums = [
+          {
+            title: 'Neon Dreams',
+            artist: 'Synthwave Collective',
+            year: 2024,
+            color: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+            tracks: [
+              { name: 'Digital Sunrise', freq: 440, dur: 300 },
+              { name: 'Midnight Drive', freq: 523, dur: 250 },
+              { name: 'Chrome Horizon', freq: 392, dur: 350 },
+              { name: 'Neon Rain', freq: 349, dur: 280 },
+            ],
+          },
+          {
+            title: 'Ocean Waves',
+            artist: 'Ambient Lab',
+            year: 2023,
+            color: 'linear-gradient(135deg, #0891B2, #06B6D4)',
+            tracks: [
+              { name: 'Tide Pool', freq: 329, dur: 400 },
+              { name: 'Deep Blue', freq: 261, dur: 350 },
+              { name: 'Shore Break', freq: 293, dur: 300 },
+            ],
+          },
+          {
+            title: 'Mountain Air',
+            artist: 'Folk Echoes',
+            year: 2024,
+            color: 'linear-gradient(135deg, #22c55e, #16a34a)',
+            tracks: [
+              { name: 'Pine Trail', freq: 440, dur: 250 },
+              { name: 'Summit View', freq: 587, dur: 300 },
+              { name: 'Valley Song', freq: 349, dur: 350 },
+              { name: 'River Stone', freq: 392, dur: 280 },
+              { name: 'Campfire', freq: 329, dur: 400 },
+            ],
+          },
+          {
+            title: 'City Pulse',
+            artist: 'Beat Machine',
+            year: 2025,
+            color: 'linear-gradient(135deg, #ef4444, #f59e0b)',
+            tracks: [
+              { name: 'Rush Hour', freq: 523, dur: 200 },
+              { name: 'Subway Beat', freq: 659, dur: 180 },
+              { name: 'Rooftop', freq: 440, dur: 300 },
+              { name: 'Last Train', freq: 349, dur: 350 },
+            ],
+          },
+          {
+            title: 'Quiet Hours',
+            artist: 'Piano Room',
+            year: 2023,
+            color: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+            tracks: [
+              { name: 'Morning Light', freq: 261, dur: 500 },
+              { name: 'Soft Rain', freq: 329, dur: 450 },
+              { name: 'Paper Crane', freq: 392, dur: 400 },
+            ],
+          },
+        ];
+
+        // ===== STATE =====
+        var currentAlbum = null;
+        var currentTrackIdx = 0;
+        var isPlaying = false;
+        var queue = [];
+        var playTimeout = null;
+
+        // ===== ROUTER =====
+        var router = prvctice.ui.router({
+          container: document.body,
+          initial: 'library',
+        });
+
+        // ===== LIBRARY VIEW =====
+        var gridEl = document.getElementById('album-grid');
+
+        function buildLibrary() {
+          gridEl.innerHTML = '';
+          for (var i = 0; i < albums.length; i++) {
+            var album = albums[i];
+            var card = document.createElement('div');
+            card.className = 'p-card p-stack gap-2';
+            card.style.cssText = 'cursor:pointer; padding:var(--p-2);';
+            card.innerHTML =
+              '<div style="width:100%; aspect-ratio:1/1; border-radius:var(--p-radius-md); background:' +
+              album.color +
+              '"></div>' +
+              '<div class="p-text-truncate text-sm font-medium">' +
+              album.title +
+              '</div>' +
+              '<div class="p-text-truncate text-xs text-muted">' +
+              album.artist +
+              '</div>';
+            card.setAttribute('data-album', i);
+            card.addEventListener('click', onAlbumClick);
+            gridEl.appendChild(card);
+          }
+
+          // Stagger entrance
+          prvctice.ui.animateEntrance(gridEl, { spring: 'gentle', stagger: 80 });
+        }
+
+        function onAlbumClick(e) {
+          var idx = parseInt(e.currentTarget.getAttribute('data-album'), 10);
+          currentAlbum = albums[idx];
+          currentTrackIdx = 0;
+          updateNowPlaying();
+          router.push('now-playing');
+
+          // Add all tracks to queue
+          queue = [];
+          for (var i = 0; i < currentAlbum.tracks.length; i++) {
+            queue.push({ album: currentAlbum, trackIdx: i });
+          }
+          saveQueue();
+          prvctice.ui.toast({ message: 'Playing: ' + currentAlbum.title, type: 'info' });
+        }
+
+        buildLibrary();
+
+        // ===== NOW PLAYING VIEW =====
+        var npArt = document.getElementById('np-art');
+        var npTitle = document.getElementById('np-title');
+        var npArtist = document.getElementById('np-artist');
+        var npTrackInfo = document.getElementById('np-track-info');
+        var playBtn = document.getElementById('playBtn');
+        var progressEl = document.getElementById('np-progress');
+
+        function updateNowPlaying() {
+          if (!currentAlbum) return;
+          var track = currentAlbum.tracks[currentTrackIdx];
+          npArt.style.background = currentAlbum.color;
+          npTitle.textContent = track.name;
+          npArtist.textContent = currentAlbum.artist + ' \u2022 ' + currentAlbum.title;
+          npTrackInfo.textContent =
+            'Track ' + (currentTrackIdx + 1) + ' of ' + currentAlbum.tracks.length;
+
+          // Animate art entrance
+          prvctice.animate(
+            npArt,
+            {
+              transform: 'scale(1)',
+              opacity: 1,
+            },
+            { spring: 'gentle' }
+          );
+        }
+
+        // Play/Pause
+        playBtn.addEventListener('click', function () {
+          if (!currentAlbum) return;
+          if (isPlaying) {
+            pausePlayback();
+          } else {
+            startPlayback();
+          }
+        });
+
+        function startPlayback() {
+          if (!currentAlbum) return;
+          isPlaying = true;
+          playBtn.innerHTML = '&#9646;&#9646;';
+
+          var track = currentAlbum.tracks[currentTrackIdx];
+          // Synthesize a tone preview as the "track"
+          prvctice.audio.tone(track.freq, track.dur * 3, {
+            type: 'sine',
+            volume: 0.25,
+            attack: 50,
+            release: 100,
+          });
+
+          // Play button spring animation
+          prvctice
+            .animate(playBtn, { transform: 'scale(0.9)' }, { spring: 'xsnappy' })
+            .finished.then(function () {
+              prvctice.animate(playBtn, { transform: 'scale(1)' }, { spring: 'bouncy' });
+            });
+
+          // Progress bar
+          var progDiv = progressEl;
+          progDiv.innerHTML = '<div class="p-progress" style="--progress:0"><div>';
+          var progBar = progDiv.querySelector('.p-progress');
+          var startTime = Date.now();
+          var trackDur = track.dur * 3;
+
+          function updateProgress() {
+            var elapsed = Date.now() - startTime;
+            var pct = Math.min(1, elapsed / trackDur);
+            progBar.style.setProperty('--progress', pct);
+            if (pct < 1 && isPlaying) {
+              playTimeout = setTimeout(updateProgress, 100);
+            } else if (pct >= 1) {
+              nextTrack();
+            }
+          }
+          updateProgress();
+        }
+
+        function pausePlayback() {
+          isPlaying = false;
+          playBtn.innerHTML = '&#9654;';
+          if (playTimeout) clearTimeout(playTimeout);
+        }
+
+        function nextTrack() {
+          pausePlayback();
+          if (queue.length > 1) {
+            queue.shift();
+            var next = queue[0];
+            currentAlbum = next.album;
+            currentTrackIdx = next.trackIdx;
+          } else if (currentAlbum && currentTrackIdx < currentAlbum.tracks.length - 1) {
+            currentTrackIdx++;
+          } else {
+            prvctice.ui.toast({ message: 'Album complete', type: 'info' });
+            return;
+          }
+          updateNowPlaying();
+          startPlayback();
+          saveQueue();
+        }
+
+        function prevTrack() {
+          pausePlayback();
+          if (currentTrackIdx > 0) {
+            currentTrackIdx--;
+            updateNowPlaying();
+            startPlayback();
+          }
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', nextTrack);
+        document.getElementById('prevBtn').addEventListener('click', prevTrack);
+
+        // ===== QUEUE VIEW =====
+        var queueListEl = document.getElementById('queue-list');
+        var queueEmptyEl = document.getElementById('queue-empty');
+
+        function renderQueue() {
+          queueListEl.innerHTML = '';
+          queueEmptyEl.style.display = queue.length === 0 ? '' : 'none';
+
+          for (var i = 0; i < queue.length; i++) {
+            var item = queue[i];
+            var track = item.album.tracks[item.trackIdx];
+            var el = document.createElement('div');
+            el.className = 'p-list-item';
+            el.setAttribute('data-queue-idx', i);
+            el.innerHTML =
+              '<div style="width:32px; height:32px; border-radius:var(--p-radius-sm); background:' +
+              item.album.color +
+              '; flex-shrink:0"></div>' +
+              '<div class="p-list-item-content">' +
+              '<div class="p-list-item-title">' +
+              track.name +
+              '</div>' +
+              '<div class="p-list-item-subtitle">' +
+              item.album.artist +
+              '</div>' +
+              '</div>' +
+              '<div class="p-list-item-action">' +
+              '<button class="p-btn p-btn-sm p-btn-ghost" data-remove="' +
+              i +
+              '">&times;</button>' +
+              '</div>';
+            el.addEventListener('click', function (e) {
+              if (e.target.getAttribute('data-remove') !== null) return;
+              var idx = parseInt(e.currentTarget.getAttribute('data-queue-idx'), 10);
+              var selected = queue[idx];
+              currentAlbum = selected.album;
+              currentTrackIdx = selected.trackIdx;
+              queue = queue.slice(idx);
+              updateNowPlaying();
+              router.pop();
+              startPlayback();
+              saveQueue();
+            });
+
+            var removeBtn = el.querySelector('[data-remove]');
+            if (removeBtn) {
+              removeBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var ridx = parseInt(e.target.getAttribute('data-remove'), 10);
+                queue.splice(ridx, 1);
+                renderQueue();
+                saveQueue();
+                prvctice.ui.toast({ message: 'Removed from queue', type: 'info', duration: 1000 });
+              });
+            }
+            queueListEl.appendChild(el);
+          }
+
+          if (queue.length > 0) {
+            prvctice.ui.animateEntrance(queueListEl, { spring: 'snappy', stagger: 40 });
+          }
+        }
+
+        document.getElementById('clearQueueBtn').addEventListener('click', function () {
+          prvctice.ui
+            .confirm({
+              title: 'Clear Queue',
+              message: 'Remove all tracks from the queue?',
+              confirmLabel: 'Clear',
+              cancelLabel: 'Cancel',
+            })
+            .then(function (confirmed) {
+              if (confirmed) {
+                queue = [];
+                renderQueue();
+                saveQueue();
+                prvctice.ui.toast({ message: 'Queue cleared', type: 'success' });
+              }
+            });
+        });
+
+        // ===== NAVIGATION =====
+        document.getElementById('npBackBtn').addEventListener('click', function () {
+          router.pop();
+        });
+        document.getElementById('qBackBtn').addEventListener('click', function () {
+          router.pop();
+        });
+        document.getElementById('queueBtn').addEventListener('click', function () {
+          renderQueue();
+          router.push('queue');
+        });
+        document.getElementById('npQueueBtn').addEventListener('click', function () {
+          renderQueue();
+          router.push('queue');
+        });
+
+        // ===== PERSISTENCE =====
+        function saveQueue() {
+          var data = queue.map(function (item) {
+            return {
+              albumTitle: item.album.title,
+              trackIdx: item.trackIdx,
+            };
+          });
+          prvctice.storage.set('album-queue', data);
+        }
+
+        function loadQueue() {
+          prvctice.storage.get('album-queue').then(function (saved) {
+            if (saved && saved.length > 0) {
+              queue = [];
+              for (var i = 0; i < saved.length; i++) {
+                var entry = saved[i];
+                for (var j = 0; j < albums.length; j++) {
+                  if (albums[j].title === entry.albumTitle) {
+                    queue.push({ album: albums[j], trackIdx: entry.trackIdx });
+                    break;
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        loadQueue();
+
+        // ===== CLEANUP =====
+        prvctice.onDispose(function () {
+          if (playTimeout) clearTimeout(playTimeout);
+          if (router && router.dispose) router.dispose();
+        });
+      });
+    </script>
+  </body>
+</html>

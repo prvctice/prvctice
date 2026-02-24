@@ -1,0 +1,767 @@
+/** HEADER STYLES **/
+
+/* Header Layout */
+
+/* Header Layout */
+header {
+  position: fixed;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 24px;
+  align-items: center;
+  background: var(--color-glass-light);
+  padding: 12px 0;
+  z-index: 600;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Electron-only: Titlebar overlay support */
+body.electron header {
+  /* shift header below the title bar overlay */
+  top: 0;
+  right: 70px;
+  left: 10px;
+  -webkit-app-region: drag;
+}
+
+body.electron #menu-button {
+  /* shift header below the title bar overlay */
+  top: 37px;
+  right: 24px;
+}
+
+/* Custom theme photo controls (next to menu button) */
+.custom-photo-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  position: fixed;
+  top: 19px;
+  z-index: 900;
+  opacity: 0.7;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  display: none; /* default hidden; revealed when Custom theme active */
+}
+
+.custom-photo-button:hover,
+.custom-photo-button:focus {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.custom-photo-button:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+/* Place buttons to the left of the menu button */
+#custom-add-photo-button {
+  right: 54px;
+}
+
+#custom-remove-photo-button {
+  right: 84px;
+}
+
+/* Adjust for Electron title bar overlay */
+body.electron .custom-photo-button {
+  top: 37px;
+}
+
+/* Only show the add button automatically on Custom theme; remove is toggled by JS */
+body.custom-theme #custom-add-photo-button {
+  display: inline;
+}
+
+body.electron header * {
+  /* child elements remain interactive */
+  -webkit-app-region: no-drag;
+}
+
+/* draggable strip for the native title bar above header */
+body.electron::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  -webkit-app-region: drag;
+  z-index: 700;
+}
+
+/* ensure menu button and header meta widgets stay interactive */
+body.electron #menu-button,
+body.electron .header-meta-widgets,
+body.electron .header-meta-widgets * {
+  -webkit-app-region: no-drag;
+}
+
+body.electron .notes-header-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: fixed;
+  top: 38px;
+  left: 64px; /* leave some space after logo */
+  z-index: 900;
+}
+
+#menu-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color 0.25s ease,
+    scale 0.25s ease,
+    box-shadow 0.25s ease;
+  position: fixed;
+  top: 17px;
+  right: 24px;
+  z-index: 900;
+  scale: 1.2;
+}
+
+#menu-button:hover {
+  scale: 1.4;
+}
+
+#menu-button:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+#theme-color-circle {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  border-radius: 50%;
+  margin-left: 1px;
+  border: none;
+  background-color: transparent; /* Default color */
+  transition:
+    background-color 0.25s ease,
+    scale 0.25s ease,
+    box-shadow 0.25s ease;
+  list-style-type: none;
+  pointer-events: none;
+  box-shadow:
+    rgb(20 20 20 / 25%) 5px 8px 9px 0,
+    rgb(255 255 255 / 10%) 0 0 0 1.5px inset;
+}
+
+#theme-color-circle:hover {
+  box-shadow:
+    rgb(20 20 20 / 15%) 5px 8px 9px 12px,
+    rgb(255 255 255 / 19%) 0 0 0 1.5px inset;
+}
+
+.logo-title {
+  display: flex !important; /* restore logo */
+  align-items: flex-end;
+  position: fixed;
+  top: 17px;
+  left: 24px;
+  z-index: 900;
+}
+
+/* Show the branded title next to the logo */
+.logo-title .title {
+  display: flex;
+}
+
+/* ------------------------------------------------------------------
+   Notes header toolbar (appears next to logo when notes open)
+------------------------------------------------------------------ */
+.notes-header-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: fixed;
+  top: 18px;
+  left: 64px; /* leave some space after logo */
+  z-index: 900;
+}
+
+.notes-header-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 9pt;
+}
+
+.notes-header-toolbar button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 12pt !important;
+  padding: 0;
+  opacity: 0.6;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.notes-header-toolbar button:hover,
+.notes-header-toolbar button:focus {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.notes-header-toolbar button:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+.notes-header-toolbar button::after {
+  content: attr(data-label);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  margin-left: 4px;
+  color: inherit;
+}
+
+.logo {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.logo:hover,
+.logo:focus-visible {
+  opacity: 1;
+}
+
+.logo img {
+  width: 24px;
+  margin-right: 4px;
+  pointer-events: none;
+}
+
+/* Logo/version toggle button */
+.logo-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.logo-toggle:hover,
+.logo-toggle:focus-visible {
+  opacity: 1;
+}
+
+.logo-toggle .site-logo {
+  width: 24px;
+  pointer-events: none;
+}
+
+/* Version mark: expandable Pta → PRVCTICE_type A */
+.version-mark {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: 11px;
+  color: inherit;
+  white-space: nowrap;
+}
+
+/* Expandable parts slide in horizontally */
+.version-mark .vm-expand {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  vertical-align: baseline;
+  transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.version-mark.expanded .vm-expand {
+  max-width: 120px;
+}
+
+/* The "a" becomes uppercase "A" when expanded */
+.version-mark.expanded .vm-a {
+  text-transform: uppercase;
+}
+
+/* Version mark typography */
+.version-mark .vm-p {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.version-mark .vm-rvctice {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.version-mark .vm-t {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 2.2em;
+  line-height: 1;
+}
+
+.version-mark .vm-ype {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 2.2em;
+  line-height: 1;
+}
+
+.version-mark .vm-a {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 2.2em;
+  line-height: 1;
+}
+
+.version-mark .vm-version {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+}
+
+/* Header hint labels ("Search" next to logo, "Apps" next to menu dot) */
+.header-hint {
+  position: fixed;
+  top: 24px;
+  z-index: 900;
+  font-family: var(--font-family-sans);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--color-text);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  white-space: nowrap;
+}
+
+.header-hint--search {
+  left: 52px;
+}
+
+.header-hint--menu {
+  right: 48px;
+}
+
+.header-hint.gone {
+  opacity: 0;
+}
+
+body.electron .logo-title {
+  position: fixed;
+  top: 37px;
+  left: 24px;
+  z-index: 900;
+}
+
+.title {
+  font-size: 16pt;
+  color: var(--color-text);
+  font-weight: 400;
+  font-style: normal;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+/* Branding typography: PRVCTICE_ in Gothic A1, type A in Crimson Pro */
+.brand-prvctice {
+  font-family: 'Gothic A1', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.brand-type {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-size: 1.7em;
+  letter-spacing: -0.01em;
+}
+
+.brand-type-italic {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 1.7em;
+  letter-spacing: -0.01em;
+}
+
+/* Minimal header branding: _a next to logo */
+.brand-mini {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  align-self: flex-end;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  /* Dim the buttons by default so they don't compete with the main
+       content.  They will animate back to full opacity on hover. */
+}
+
+/*
+ * Header action buttons – default to 60 % opacity and animate smoothly
+ * to full visibility when the user hovers or focuses them.  The effect
+ * makes the actions feel less distracting while still discoverable.
+ */
+.header-actions button {
+  background: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-bar-icon, currentColor); /* inherit theme icon color */
+  opacity: 0.6; /* 60 % visible by default */
+  transition:
+    opacity 0.25s ease,
+    /* fade nicely */ transform 0.25s ease; /* optional subtle scale */
+}
+
+.header-actions button:hover,
+.header-actions button:focus {
+  opacity: 1; /* full visibility on interaction */
+  transform: translateY(-1px); /* tiny lift for tactile feel */
+}
+
+.header-actions button:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+/* Active state */
+.header-actions button.active {
+  opacity: 1 !important; /* ensure fully visible */
+  color: #049835 !important; /* green accent (matches voice-input) */
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.header-actions button.active img {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(75%) saturate(504%) hue-rotate(103deg)
+    brightness(93%) contrast(101%);
+}
+
+/* Icon sizing for image icons in header actions */
+.header-actions button img {
+  width: 27px;
+  height: auto;
+  pointer-events: none;
+}
+
+/* Default non-side-menu icon size */
+.header-actions button iconify-icon {
+  font-size: 16pt;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Extras (time, weather, actions) hidden on initial page load */
+.header-extra {
+  display: flex; /* always visible */
+}
+
+/* Container for extras */
+.header-extras {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  /* glassy blurred background for header actions */
+
+  /* Match the glass & depth styling of the input bar */
+  background: var(--color-glass-light);
+  backdrop-filter: saturate(100%) blur(var(--effect-backdrop-blur, 7px));
+  -webkit-backdrop-filter: saturate(100%) blur(var(--effect-backdrop-blur, 7px));
+
+  /*
+    box-shadow: 0 0px 20px rgba(0, 0, 0, 0.02), inset 0 0 9px rgba(0, 1, 0, 0.1);
+    
+    */
+  -webkit-text-fill-color: var(--color-text) !important;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+}
+
+/* Time / weather widgets in header */
+#header-time-widget,
+#header-weather-widget {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+#new-chat-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+#storyboard-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+#save-chat-option {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+  border: none;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+/* Match header-action button style for save, change theme, and 3D toggle */
+#change-theme-button {
+  display: none;
+}
+
+#save-chat-option {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+  display: none;
+}
+
+#toggle-model-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+/* Cycle theme button (same style) */
+#cycle-theme-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+/* Weather widget toggle (same style) */
+#weather-widget-toggle-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+/* Notes toggle (matches header action buttons) */
+#notes-toggle-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+/* Hand tracking toggle (matches header action buttons) */
+#hand-tracking-toggle-button,
+#face-tracking-toggle-button {
+  border: none;
+  background: transparent;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.3s;
+  font-size: 14pt;
+}
+
+/* Header meta widgets (time and weather) */
+.header-meta-widgets {
+  position: fixed;
+  top: 14px;
+  right: 80px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 900;
+}
+
+.header-meta-widgets .widget {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+/* Theme selection modal */
+.theme-modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-glass-light);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  backdrop-filter: saturate(180%) blur(var(--effect-backdrop-blur, 7px));
+  -webkit-backdrop-filter: saturate(180%) blur(var(--effect-backdrop-blur, 7px));
+  box-shadow:
+    0 0 20px rgb(0 0 0 / 2%),
+    inset 0 0 9px rgb(0 1 0 / 10%);
+  -webkit-text-fill-color: var(--color-text) !important;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.theme-modal.visible {
+  transform: translateY(0);
+}
+
+.theme-modal.hidden {
+  transform: translateY(100%);
+}
+
+.theme-modal h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+/* Paragraph in modals (confirm and theme) */
+.theme-modal p {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--color-text);
+  font-size: 14px;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.theme-options-modal {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.theme-options-modal button {
+  padding: 10px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: pointer;
+  border: none;
+  background: var(--color-glass-dark);
+  color: var(--color-text);
+  font-size: 16px; /* Increase visibility */
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.theme-options-modal button:hover {
+  background: var(--color-glass-light);
+  transform: scale(1.05);
+}
+
+.theme-options-modal button:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}
+
+#close-theme-modal {
+  padding: 8px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: pointer;
+  border: none;
+  background: var(--color-glass-dark);
+  color: var(--color-text);
+  transition: background 0.2s var(--motion-ease-hover);
+}
+
+#close-theme-modal:hover {
+  background: var(--color-glass-light);
+}
+
+#close-theme-modal:focus-visible {
+  outline: 2px solid var(--color-focus-ring, rgb(0 125 200 / 60%));
+  outline-offset: 2px;
+}

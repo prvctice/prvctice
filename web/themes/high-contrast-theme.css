@@ -1,0 +1,154 @@
+/*
+  Theme: High Contrast
+  File: high-contrast-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.high-contrast-theme {
+  /* == Variables & Base == */
+  --linen-opacity: 0.018;
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background: #ffffff !important;
+  color: #000000;
+  --color-text: #000000;
+  --color-text-strong: #000000;
+  --skill-power-color: #000000;
+  --skill-power-color-shadow: rgb(0 0 0 / 20%);
+  --link-color: #0066cc;
+  --bar-background: rgb(0 147 59 / 6%);
+  --menu-background: rgb(0 0 0 / 90%);
+  --input-button-color: rgb(0 0 0 / 5%);
+  --tool-tip-color: #000000;
+  --color-bar-text: #000000;
+  --color-bar-icon: #000000;
+  --utility-button-color: #000000;
+  /* No shimmer for high contrast */
+  --shimmer-gradient: none;
+  --shimmer-opacity: 0;
+}
+
+/* == Bar == */
+body.high-contrast-theme #bar {
+  background-color: var(--bar-background);
+  border: 1px solid rgb(0 0 0 / 15%);
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000;
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 15%),
+    0 6px 16px -8px rgb(0 0 0 / 8%),
+    0 0 0 0.5px rgb(0 0 0 / 20%) inset;
+  position: relative;
+}
+
+body.high-contrast-theme #bar:hover {
+  border-color: rgb(255 255 255 / 25%);
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 25%),
+    0 8px 20px -8px rgb(0 0 0 / 15%),
+    0 0 0 0.5px rgb(255 255 255 / 25%) inset;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  background-color: rgb(18 18 18 / 25%);
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+}
+
+/* Bar icon color rules (default black, white on hover) */
+body.high-contrast-theme #bar #upload-button iconify-icon,
+body.high-contrast-theme #bar #voice-input-button iconify-icon {
+  color: #000000 !important;
+}
+
+body.high-contrast-theme #bar:hover #upload-button iconify-icon,
+body.high-contrast-theme #bar:hover #voice-input-button iconify-icon {
+  color: #ffffff !important;
+}
+
+/* Listening state should follow the same rule unless hovered */
+body.high-contrast-theme #bar #voice-input-button.listening iconify-icon {
+  color: #000000 !important;
+}
+
+body.high-contrast-theme #bar:hover #voice-input-button.listening iconify-icon {
+  color: #ffffff !important;
+}
+
+/* == Toggle == */
+body.high-contrast-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+  color: var(--color-pill-title);
+  box-shadow:
+    rgb(20 20 20 / 25%) 5px 8px 9px 0px,
+    rgb(90 191 249 / 20.6%) 0px 0px 0px 2px inset;
+}
+
+body.high-contrast-theme .skills-toggle:hover {
+  box-shadow:
+    rgb(20 20 20 / 25%) 3px 6px 10px 5px,
+    rgb(255 255 255 / 20%) 0px 0px 0px 1.5px inset;
+  scale: 0.877;
+  opacity: 1;
+  background: var(--color-pill-bg-hover);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+  color: var(--color-pill-title);
+}
+
+/* == Pills == */
+body.high-contrast-theme .skill-pill {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+/* == Buttons == */
+body.high-contrast-theme #upload-button:hover,
+body.high-contrast-theme #upload-button.file-attached,
+body.high-contrast-theme #voice-input-button:hover,
+body.high-contrast-theme #voice-input-button.listening,
+body.high-contrast-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Menus == */
+body.high-contrast-theme .side-menu {
+  background: #000000e6;
+}
+
+/* Side menu text/icons - white on dark background for visibility */
+body.high-contrast-theme .side-menu,
+body.high-contrast-theme .side-menu-header h2,
+body.high-contrast-theme .side-menu-list button,
+body.high-contrast-theme .side-menu iconify-icon,
+body.high-contrast-theme .side-menu .chevron,
+body.high-contrast-theme #close-side-menu iconify-icon {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body.high-contrast-theme .side-menu-list button i,
+body.high-contrast-theme .side-menu-list button iconify-icon {
+  color: #ffffff !important;
+}
+
+body.high-contrast-theme .side-menu-list button img {
+  filter: brightness(0) invert(1);
+}
+
+/* == Magnet Effects == */
+body.high-contrast-theme .skill-pill.magnet-attached.magnet-edge-top::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgb(255 255 255 / 80%) 0%,
+    rgb(255 255 255 / 0%) 70%
+  );
+  box-shadow: 0px -10px 14px 1px rgb(255 255 255 / 30%);
+}
+
+body.high-contrast-theme .skill-pill.magnet-attached.magnet-edge-bottom::after {
+  background: radial-gradient(
+    ellipse at center,
+    rgb(255 255 255 / 80%) 0%,
+    rgb(255 255 255 / 0%) 70%
+  );
+  box-shadow: 0px 10px 14px 1px rgb(255 255 255 / 30%);
+}

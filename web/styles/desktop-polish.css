@@ -1,0 +1,245 @@
+/* Desktop polish: cohesive spacing, elevation, motion, and scrollbars */
+
+/* ---------------------------------------------------------------
+   Mobile back-to-chat button (hidden on desktop)
+   --------------------------------------------------------------- */
+#mobile-back-to-chat {
+  display: none;
+}
+
+/* ---------------------------------------------------------------
+   Design tokens (theme-agnostic defaults; themes can override)
+   --------------------------------------------------------------- */
+:root {
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --shadow-1: 0 2px 10px rgb(0 0 0 / 6%);
+  --shadow-2: 0 6px 22px rgb(0 0 0 / 10%);
+  --shadow-3: 0 16px 40px rgb(0 0 0 / 18%);
+  --ring: 0 0 0 2px rgb(92 163 255 / 35%);
+  --panel-bg: rgb(255 255 255 / 35%);
+  --panel-border: rgb(0 0 0 / 6%);
+}
+
+/* Night-theme sensible defaults (can be overridden in theme files) */
+body.night-theme {
+  --panel-bg: rgb(20 20 20 / 28%);
+  --panel-border: rgb(255 255 255 / 6%);
+}
+
+/* ---------------------------------------------------------------
+   Chat window: typography rhythm and max line length
+   --------------------------------------------------------------- */
+@media (width >= 981px) {
+  /* #chat-window max-width removed - now full viewport width with centered content */
+  .assistant .message-content,
+  .user .message-content {
+    margin-top: 8px;
+  }
+}
+
+/* Subtle entrance for new messages (applies when nodes are inserted) */
+.message {
+  animation: msg-enter 180ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes msg-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Message tools reveal pattern */
+.assistant .message .message-tools {
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.assistant .message:hover .message-tools {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Rich links */
+.assistant .message-content a,
+.user .message-content a {
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1.25px;
+}
+
+.assistant .message-content a:hover,
+.user .message-content a:hover {
+  filter: saturate(1.1) brightness(1.02);
+}
+
+/* Smooth, minimal scrollbars where visible (desktop only)
+   Note: exclude #chat-window so its scrollbars remain hidden */
+@media (hover: hover) and (pointer: fine) {
+  .help-pane-shell,
+  .notes-editor,
+  .tumblr-images-container {
+    scrollbar-color: rgb(127 127 127 / 35%) transparent;
+    scrollbar-width: thin;
+  }
+
+  .help-pane-shell::-webkit-scrollbar,
+  .notes-editor::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .help-pane-shell::-webkit-scrollbar-thumb,
+  .notes-editor::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgb(255 255 255 / 35%), rgb(128 128 128 / 35%));
+    border-radius: var(--radius-lg);
+  }
+
+  .help-pane-shell::-webkit-scrollbar-track,
+  .notes-editor::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* Image polish: slightly larger default tile on desktop */
+@media (width >= 981px) {
+  .image-strip {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .image-strip img.attachment-image {
+    max-height: 260px;
+  }
+}
+
+/* Focus rings for interactive items in the chat (keyboard-friendly) */
+.attachment-container:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--radius-md);
+}
+
+/* Lightbox: slight inner border for premium feel */
+#image-carousel-modal .carousel-content {
+  border: 1px solid var(--panel-border);
+}
+
+/* ---------------------------------------------------------------
+   Sticky "jump to latest" button
+   --------------------------------------------------------------- */
+#jump-latest {
+  position: fixed;
+  right: 11px;
+  top: 64px;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--panel-border, rgb(255 255 255 / 0%));
+  background: var(--color-glass-light, rgb(18 19 18 / 80%));
+  color: inherit; /* match theme text color */
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+  z-index: 980;
+  pointer-events: none;
+  backdrop-filter: blur(var(--effect-backdrop-blur, 6px));
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 6px));
+}
+
+#jump-latest.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#jump-latest:hover {
+  box-shadow: var(--shadow-3);
+  border-color: var(--panel-border, rgb(255 255 255 / 45%));
+}
+
+#jump-latest .jl-icon {
+  font-size: 18px;
+  line-height: 1;
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------
+   Image hover toolbar (desktop only)
+   --------------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  .attachment-container,
+  .tumblr-image-wrapper {
+    position: relative;
+  }
+
+  .image-toolbar {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: inline-flex;
+    gap: 6px;
+    background: rgb(0 0 0 / 45%);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: var(--radius-pill);
+    align-items: center;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+    pointer-events: none;
+  }
+
+  .attachment-container:hover .image-toolbar,
+  .tumblr-image-wrapper:hover .image-toolbar {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .image-toolbar button,
+  .image-toolbar a {
+    appearance: none;
+    border: none;
+    background: rgb(255 255 255 / 18%);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .image-toolbar button:hover,
+  .image-toolbar a:hover {
+    background: rgb(255 255 255 / 28%);
+  }
+
+  .image-toolbar i {
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+  }
+}

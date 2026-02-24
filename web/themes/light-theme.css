@@ -1,0 +1,116 @@
+/*
+  Theme: Light
+  File: light-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.light-theme {
+  /* == Variables & Base == */
+  --skill-power-color: #0cfbd3;
+  --skill-power-color-shadow: rgb(9 254 222 / 41.8%);
+  --link-color: #1f0fff;
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 255 235 / 20%) 0%,
+    rgb(91 255 114 / 8%) 34%,
+    transparent 74%
+  );
+  --bar-background: rgb(15 97 100 / 58%);
+  --menu-background: rgb(15 97 100 / 70%);
+  --tool-tip-color: #1f0fff;
+  --theme-bar-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --theme-overlay-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --utility-button-color: #332f2c;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(224 33 234 / 8.5%) 15%,
+    rgb(158 241 236 / 15%) 30%,
+    rgb(39 225 183 / 42%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.8;
+  --shimmer-blend: color;
+
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  --linen-opacity: 0.025;
+  background: radial-gradient(
+    #cbebff 0%,
+    #c4e2f6 25%,
+    #b8d5ea 50%,
+    #a7cbc5 75%,
+    #79ced4 100%,
+    #3f1546e0 111%
+  ) !important;
+
+  --color-text: #332f2c;
+  --color-text-strong: #332f2c;
+  color: var(--color-text);
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+}
+
+/* == Bar == */
+body.light-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(26 228 209 / 10%);
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 20%),
+    0 6px 16px -8px rgb(0 0 0 / 12%),
+    0 0 0 0.5px rgb(26 228 209 / 15%) inset;
+  -webkit-text-fill-color: rgb(255 255 255) !important;
+  color: #ffffff;
+  position: relative;
+}
+
+body.light-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 25%),
+    0 8px 20px -8px rgb(0 0 0 / 15%),
+    0 0 0 0.5px rgb(26 228 209 / 20%) inset,
+    0 0 24px -4px rgb(26 228 209 / 12%);
+}
+
+/* == Buttons == */
+body.light-theme #upload-button:hover,
+body.light-theme #upload-button.file-attached,
+body.light-theme #voice-input-button:hover,
+body.light-theme #voice-input-button.listening,
+body.light-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+body.light-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+/* == Header & Controls == */
+body.light-theme header .title {
+  color: var(--color-text-strong);
+}
+
+body.light-theme .credit {
+  color: var(--color-text-strong) !important;
+}
+
+/* == Thinking Animation == */
+body.light-theme .thinking.sending {
+  position: relative;
+}
+
+body.light-theme .thinking.sending::before {
+  background: linear-gradient(90deg, #ffecd1, #ff4500, #ffecd1);
+  background-size: 200% 100%;
+  animation: lightning 1.6s infinite;
+  pointer-events: none;
+}
+
+/* == Reduced Motion == */
+@media (prefers-reduced-motion: reduce) {
+  body.light-theme .thinking.sending::before {
+    animation: none;
+  }
+}

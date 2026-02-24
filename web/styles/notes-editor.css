@@ -1,0 +1,390 @@
+/* --------------------------------------------------
+   Notes Editor
+   TipTap-based rich text editor for notes pane
+   -------------------------------------------------- */
+
+.notes-editor {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  resize: none;
+  border: none;
+  padding: 20px 24px 10px;
+  background: transparent;
+  color: inherit;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-y: auto;
+  outline: none !important;
+  pointer-events: auto !important;
+  user-select: text !important;
+  user-select: text !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure all editor descendants can receive pointer events */
+.notes-editor * {
+  pointer-events: auto;
+}
+
+/* TipTap ProseMirror editor core */
+.notes-editor .ProseMirror {
+  font-family: var(--font-family-display, 'Gothic A1', sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: 0.3px;
+  color: inherit;
+  background: transparent;
+  outline: none;
+  min-height: 200px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  pointer-events: auto;
+  user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
+.notes-editor .ProseMirror:focus {
+  outline: none;
+}
+
+/* Placeholder text */
+.notes-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--color-text, currentColor);
+  opacity: 0.4;
+  pointer-events: none;
+  height: 0;
+}
+
+/* --------------------------------------------------
+   Typography
+   -------------------------------------------------- */
+.notes-editor .ProseMirror p {
+  margin: 0 0 14px;
+}
+
+.notes-editor .ProseMirror ul,
+.notes-editor .ProseMirror ol {
+  margin: 0 0 12px 1.2em;
+  padding-left: 1.2em;
+}
+
+.notes-editor .ProseMirror li {
+  margin: 2px 0;
+}
+
+.notes-editor .ProseMirror li p {
+  margin: 0;
+}
+
+/* Heading styles */
+.notes-editor .ProseMirror h1 {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-tight);
+  margin: 12px 0 8px;
+}
+
+.notes-editor .ProseMirror h2 {
+  font-family: 'Crimson Pro', serif;
+  font-weight: 300;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-tight);
+  margin: 10px 0 6px;
+}
+
+/* --------------------------------------------------
+   Task List (Checkbox) Styles
+   -------------------------------------------------- */
+.notes-editor .ProseMirror ul[data-type='taskList'] {
+  list-style: none;
+  padding-left: 0;
+  margin: 0 0 12px;
+}
+
+.notes-editor .ProseMirror ul[data-type='taskList'] li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3, 6px);
+  margin: 4px 0;
+}
+
+.notes-editor .ProseMirror ul[data-type='taskList'] li > label {
+  flex: 0 0 auto;
+  margin-top: 0.2em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notes-editor .ProseMirror ul[data-type='taskList'] li > label input[type='checkbox'] {
+  appearance: none;
+  appearance: none;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentcolor;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+}
+
+.notes-editor .ProseMirror ul[data-type='taskList'] li > label input[type='checkbox']:checked {
+  background: var(--color-text, currentColor);
+  border-color: var(--color-text, currentColor);
+}
+
+.notes-editor
+  .ProseMirror
+  ul[data-type='taskList']
+  li
+  > label
+  input[type='checkbox']:checked::after {
+  content: '\2713';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -55%);
+  font-size: 0.7em;
+  line-height: 1;
+  color: var(--color-bg-primary, white);
+}
+
+.notes-editor .ProseMirror ul[data-type='taskList'] li > div {
+  flex: 1;
+}
+
+.notes-editor .ProseMirror ul[data-type='taskList'] li[data-checked='true'] > div {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Nested task lists */
+.notes-editor .ProseMirror ul[data-type='taskList'] ul[data-type='taskList'] {
+  margin-left: var(--space-4, 12px);
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------
+   Notes Container
+   -------------------------------------------------- */
+.notes-container {
+  position: relative;
+  pointer-events: auto;
+  height: calc(100dvh - var(--chat-input-offset, 80px));
+  max-height: calc(100dvh - var(--chat-input-offset, 80px));
+  min-height: 0;
+}
+
+.notes-pane-wrapper {
+  position: relative;
+  height: 100%;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-container.hidden {
+  display: none;
+}
+
+/* Force interactive state when container is visible */
+.notes-container:not(.hidden) .notes-editor,
+.notes-container:not(.hidden) .notes-editor *,
+.notes-container:not(.hidden) .ProseMirror,
+.notes-container:not(.hidden) .ProseMirror * {
+  pointer-events: auto !important;
+}
+
+/* --------------------------------------------------
+   Notes Panel Header
+   -------------------------------------------------- */
+.notes-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgb(0 0 0 / 8%);
+  background: transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 3;
+}
+
+/* Electron: account for the native title bar overlay */
+body.electron .notes-panel-header {
+  padding-top: 38px;
+}
+
+.notes-panel-title {
+  font-family: var(--font-family-display, 'Gothic A1', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.notes-panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.notes-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notes-action-btn:hover {
+  opacity: 0.8;
+  background: rgb(0 0 0 / 5%);
+}
+
+.notes-close-btn {
+  opacity: 0.6;
+}
+
+.notes-close-btn:hover {
+  opacity: 1;
+  background: rgb(0 0 0 / 8%);
+}
+
+/* Hide fullscreen button on touch devices */
+@media (width <= 768px), (pointer: coarse) {
+  .notes-fullscreen-btn {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------
+   Floating Bubble Toolbar
+   -------------------------------------------------- */
+.notes-bubble-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  background: var(--glass-bg, rgb(255 255 255 / 90%));
+  backdrop-filter: blur(var(--effect-backdrop-blur, 12px));
+  -webkit-backdrop-filter: blur(var(--effect-backdrop-blur, 12px));
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 2px 8px rgb(0 0 0 / 12%),
+    0 0 1px rgb(0 0 0 / 8%);
+  animation: bubbleFadeIn 0.15s ease-out;
+}
+
+@keyframes bubbleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.notes-bubble-toolbar button {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notes-bubble-toolbar button:hover {
+  background: rgb(0 0 0 / 6%);
+}
+
+.notes-bubble-toolbar button.active {
+  background: rgb(0 0 0 / 10%);
+}
+
+.notes-bubble-divider {
+  width: 1px;
+  height: 16px;
+  background: rgb(0 0 0 / 12%);
+  margin: 0 4px;
+}
+
+.notes-bubble-toolbar iconify-icon {
+  pointer-events: none;
+}
+
+/* --------------------------------------------------
+   Selection styling
+   -------------------------------------------------- */
+.notes-editor .ProseMirror ::selection {
+  background: rgb(0 0 0 / 15%);
+}
+
+/* --------------------------------------------------
+   Link styling
+   -------------------------------------------------- */
+.notes-editor .ProseMirror a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgb(0 0 0 / 30%);
+  text-underline-offset: 2px;
+}
+
+.notes-editor .ProseMirror a:hover {
+  text-decoration-color: currentcolor;
+}
+
+/* --------------------------------------------------
+   Code and blockquote
+   -------------------------------------------------- */
+.notes-editor .ProseMirror code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.9em;
+  background: rgb(0 0 0 / 6%);
+  padding: 0.1em 0.3em;
+  border-radius: var(--radius-sm);
+}
+
+.notes-editor .ProseMirror blockquote {
+  border-left: 3px solid rgb(0 0 0 / 20%);
+  margin: 12px 0;
+  padding-left: 16px;
+  color: inherit;
+  opacity: 0.8;
+}
+
+/* --------------------------------------------------
+   Horizontal rule
+   -------------------------------------------------- */
+.notes-editor .ProseMirror hr {
+  border: none;
+  border-top: 1px solid rgb(0 0 0 / 15%);
+  margin: 24px 0;
+}

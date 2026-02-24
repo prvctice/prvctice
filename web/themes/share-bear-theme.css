@@ -1,0 +1,94 @@
+/*
+  Theme: Share Bear
+  File: share-bear-theme.css
+  Scope: Theme-specific tokens and selectors only.
+*/
+body.share-bear-theme {
+  /* == Variables & Base == */
+  /* !important ensures background persists during WebGL context changes (hand tracking, games) */
+  background: radial-gradient(#d1c7ec 0%, #d6ceec 80%, #a9a3b8 106%) !important;
+  color: #121212;
+  --color-text: #121212;
+  --color-text-strong: #121212;
+  --skill-power-color: #db8eff;
+  --skill-power-color-shadow: rgb(172 76 250 / 40%);
+  --link-color: #4f82da;
+  --bar-background: rgb(85 134 176 / 50%);
+  --menu-background: rgb(85 134 176 / 70%);
+  --input-button-color: radial-gradient(
+    circle,
+    rgb(0 255 235 / 20%) 0%,
+    rgb(91 255 114 / 8%) 34%,
+    transparent 74%
+  );
+  --tool-tip-color: #4f82da;
+  --color-bar-text: #ffffff;
+  --color-bar-icon: #ffffff;
+  --theme-bar-shimmer-duration: var(--motion-duration-shimmer-fast);
+  --utility-button-color: #000000;
+
+  /* Shimmer settings */
+  --shimmer-gradient: linear-gradient(
+    120deg,
+    #f0cf1d00 0%,
+    rgb(234 179 33 / 20%) 15%,
+    rgb(158 241 236 / 15%) 30%,
+    rgb(39 225 183 / 42%) 45%,
+    transparent 100%
+  );
+  --shimmer-opacity: 0.3;
+  --shimmer-blend: color;
+}
+
+/* == Bar == */
+body.share-bear-theme #bar {
+  background: var(--bar-background);
+  border: 1px solid rgb(85 134 176 / 12%);
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff;
+  box-shadow:
+    0 16px 40px -16px rgb(0 0 0 / 20%),
+    0 6px 16px -8px rgb(0 0 0 / 12%),
+    0 0 0 0.5px rgb(255 255 255 / 8%) inset;
+  position: relative;
+}
+
+body.share-bear-theme #bar:hover {
+  box-shadow:
+    0 20px 50px -14px rgb(0 0 0 / 25%),
+    0 8px 20px -8px rgb(0 0 0 / 14%),
+    0 0 0 0.5px rgb(100 136 212 / 20%) inset,
+    0 0 24px -4px rgb(100 136 212 / 15%);
+}
+
+/* == Buttons == */
+body.share-bear-theme .skills-toggle {
+  background: var(--color-pill-bg);
+  color: var(--color-pill-title);
+  -webkit-text-fill-color: var(--color-pill-title) !important;
+}
+
+body.share-bear-theme #upload-button:hover,
+body.share-bear-theme #upload-button.file-attached,
+body.share-bear-theme #voice-input-button:hover,
+body.share-bear-theme #voice-input-button.listening,
+body.share-bear-theme #send-button:hover {
+  background: var(--input-button-color);
+}
+
+/* == Header & Controls == */
+body.share-bear-theme header .title {
+  color: #121212;
+}
+
+body.share-bear-theme #save-pdf-button,
+body.share-bear-theme #new-chat-button,
+body.share-bear-theme #save-chat-option,
+body.share-bear-theme #menu-button {
+  color: #121212;
+  background-color: transparent;
+}
+
+body.share-bear-theme .credit {
+  color: #121212 !important;
+}

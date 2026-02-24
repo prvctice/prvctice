@@ -1,0 +1,486 @@
+/* ==========================================================
+   prvctice UI Kit — Foundation
+   Reset, color system, typography, spacing, base tokens.
+   ========================================================== */
+
+/* --- Reset --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --- Color system --- */
+
+:root {
+  /* Direct mappings from host theme injection */
+  --p-bg: var(--prvctice-background, #1e1e1e);
+  --p-surface: var(--prvctice-surface, #2a2a2a);
+  --p-text: var(--prvctice-text, #e0e0e0);
+  --p-text-secondary: var(--prvctice-text-secondary, #888);
+  --p-primary: var(--prvctice-primary, rgba(255, 255, 255, 0.85));
+  --p-secondary: var(--prvctice-secondary, rgba(255, 255, 255, 0.6));
+  --p-accent: var(--prvctice-accent, rgba(255, 255, 255, 0.5));
+  --p-border: var(--prvctice-border, rgba(255, 255, 255, 0.12));
+
+  /* Extended semantic colors */
+  --p-text-muted: color-mix(in srgb, var(--p-text-secondary) 60%, transparent);
+  --p-surface-raised: color-mix(in srgb, var(--p-surface) 85%, white);
+  --p-surface-sunken: color-mix(in srgb, var(--p-surface) 85%, black);
+  --p-border-subtle: color-mix(in srgb, var(--p-border) 50%, transparent);
+
+  /* Status colors */
+  --p-success: #22c55e;
+  --p-warning: #f59e0b;
+  --p-danger: #ef4444;
+  --p-info: var(--p-accent);
+
+  /* Instrument accent colors — use sparingly on indicators, arcs, displays.
+     NOT for button fills. Pair with glow for the terminal/gauge aesthetic. */
+  --p-accent-blue: #4488ff;
+  --p-accent-amber: #ff6b2b;
+  --p-accent-green: #2e7d42;
+  --p-accent-purple: #a920b5;
+
+  /* --- Typography --- */
+
+  --p-font: 'Gothic A1', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --p-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+
+  --p-text-xs: 11px;
+  --p-text-sm: 13px;
+  --p-text-base: 15px;
+  --p-text-lg: 18px;
+  --p-text-xl: 24px;
+  --p-text-2xl: 32px;
+  --p-text-3xl: 48px;
+  --p-text-4xl: 64px;
+
+  --p-weight-light: 300;
+  --p-weight-regular: 400;
+  --p-weight-medium: 500;
+  --p-weight-semi: 600;
+
+  --p-leading-tight: 1.15;
+  --p-leading-normal: 1.4;
+  --p-leading-relaxed: 1.6;
+
+  /* --- Spacing (4px base) --- */
+
+  --p-1: 4px;
+  --p-2: 8px;
+  --p-3: 12px;
+  --p-4: 16px;
+  --p-5: 20px;
+  --p-6: 24px;
+  --p-7: 28px;
+  --p-8: 32px;
+  --p-9: 36px;
+  --p-10: 40px;
+
+  /* --- Radius --- */
+
+  --p-radius-sm: 6px;
+  --p-radius-md: 8px;
+  --p-radius-lg: 12px;
+  --p-radius-xl: 28px;
+  --p-radius-pill: 999px;
+
+  /* --- Weight extended --- */
+
+  --p-weight-bold: 700;
+
+  /* --- Shadows --- */
+
+  --p-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.15);
+  --p-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --p-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --p-shadow-xl:
+    0 4px 6px rgba(0, 0, 0, 0.1), 0 12px 40px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  --p-shadow-glow: 0 0 20px color-mix(in srgb, var(--p-primary) 25%, transparent);
+
+  /* --- Glass / Frosted --- */
+
+  --p-glass-bg: color-mix(in srgb, var(--p-surface) 60%, transparent);
+  --p-glass-border: color-mix(in srgb, var(--p-border) 60%, transparent);
+  --p-glass-blur: 12px;
+
+  /* --- Motion --- */
+
+  --p-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --p-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --p-ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --p-duration-fast: 150ms;
+  --p-duration: 250ms;
+  --p-duration-slow: 400ms;
+
+  /* --- Widget sizing --- */
+
+  --p-widget-unit: 200px;
+  --p-widget-gap: 12px;
+
+  /* --- Spring easing --- */
+
+  --p-spring-xsnappy: linear(0, 0.11, 0.34, 0.56, 0.74, 0.86, 0.93, 0.97, 0.99, 1);
+  --p-spring-xsnappy-t: 200ms;
+  --p-spring-snappy: linear(0, 0.09, 0.29, 0.52, 0.72, 0.87, 0.97, 1.02, 1.03, 1.02, 1.01, 1);
+  --p-spring-snappy-t: 350ms;
+  --p-spring-standard: linear(
+    0,
+    0.06,
+    0.22,
+    0.44,
+    0.65,
+    0.83,
+    0.95,
+    1.03,
+    1.06,
+    1.06,
+    1.04,
+    1.02,
+    1.01,
+    1
+  );
+  --p-spring-standard-t: 500ms;
+  --p-spring-gentle: linear(
+    0,
+    0.03,
+    0.13,
+    0.28,
+    0.45,
+    0.62,
+    0.78,
+    0.9,
+    0.98,
+    1.04,
+    1.07,
+    1.08,
+    1.07,
+    1.05,
+    1.03,
+    1.01,
+    1
+  );
+  --p-spring-gentle-t: 800ms;
+  --p-spring-bouncy: linear(
+    0,
+    0.05,
+    0.18,
+    0.4,
+    0.63,
+    0.84,
+    1,
+    1.11,
+    1.16,
+    1.15,
+    1.1,
+    1.04,
+    0.99,
+    0.97,
+    0.98,
+    0.99,
+    1,
+    1
+  );
+  --p-spring-bouncy-t: 900ms;
+
+  /* --- Concentric radius --- */
+
+  --p-widget-radius: var(--p-radius-xl);
+  --p-widget-inner-radius: max(0px, calc(var(--p-widget-radius) - var(--p-widget-pad, var(--p-3))));
+}
+
+/* --- Body defaults --- */
+
+body {
+  font-family: var(--p-font);
+  font-weight: var(--p-weight-light);
+  font-size: var(--p-text-base);
+  line-height: var(--p-leading-normal);
+  color: var(--p-text);
+  background: transparent;
+  padding: var(--p-3);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* --- Selection --- */
+
+::selection {
+  background: color-mix(in srgb, var(--p-primary) 30%, transparent);
+  color: var(--p-text);
+}
+
+/* --- Scrollbar (webkit) --- */
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--p-border);
+  border-radius: var(--p-radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--p-text-muted);
+}
+
+/* --- Premium utility classes --- */
+
+.p-glass {
+  background: var(--p-glass-bg);
+  border: 1px solid var(--p-glass-border);
+  backdrop-filter: blur(var(--p-glass-blur));
+  -webkit-backdrop-filter: blur(var(--p-glass-blur));
+}
+
+.p-glow {
+  box-shadow: var(--p-shadow-glow);
+}
+
+/* Accent glow utilities — for indicators, active states, visualizers */
+.p-glow-blue {
+  box-shadow: 0 0 10px rgba(68, 136, 255, 0.3);
+}
+.p-glow-amber {
+  box-shadow: 0 0 10px rgba(255, 107, 43, 0.3);
+}
+.p-glow-green {
+  box-shadow: 0 0 10px rgba(46, 125, 66, 0.25);
+}
+
+.p-fade-in {
+  animation: p-fade-in var(--p-spring-gentle-t) var(--p-spring-gentle) both;
+}
+
+@keyframes p-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.p-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--p-surface-sunken) 25%,
+    var(--p-surface) 50%,
+    var(--p-surface-sunken) 75%
+  );
+  background-size: 200% 100%;
+  animation: p-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes p-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --p-spring-xsnappy: linear(0, 1);
+    --p-spring-xsnappy-t: 0ms;
+    --p-spring-snappy: linear(0, 1);
+    --p-spring-snappy-t: 0ms;
+    --p-spring-standard: linear(0, 1);
+    --p-spring-standard-t: 0ms;
+    --p-spring-gentle: linear(0, 1);
+    --p-spring-gentle-t: 0ms;
+    --p-spring-bouncy: linear(0, 1);
+    --p-spring-bouncy-t: 0ms;
+  }
+}
+
+/* Dashed border utility (instrument-panel aesthetic) */
+.p-dashed {
+  border-style: dashed;
+}
+
+/* Uppercase tracking utility for technical labels */
+.p-label-tech {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--p-text-muted);
+}
+
+/* Monospace number utility */
+.p-mono-value {
+  font-family: var(--p-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* --- Data display meta-class (QUAL-03) --- */
+
+.p-data {
+  font-family: var(--p-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* --- Trend indicators (QUAL-05) --- */
+
+.p-change-positive {
+  color: var(--p-success);
+}
+
+.p-change-positive::before {
+  content: '\2191\00a0';
+}
+
+.p-change-negative {
+  color: var(--p-danger);
+}
+
+.p-change-negative::before {
+  content: '\2193\00a0';
+}
+
+.p-change-neutral {
+  color: var(--p-text-secondary);
+}
+
+.p-change-neutral::before {
+  content: '\2192\00a0';
+}
+
+/* --- Loading skeletons (QUAL-04) --- */
+
+.p-skeleton {
+  border-radius: var(--p-radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--p-surface-sunken) 25%,
+    var(--p-surface) 50%,
+    var(--p-surface-sunken) 75%
+  );
+  background-size: 200% 100%;
+  animation: p-shimmer 1.5s ease-in-out infinite;
+}
+
+.p-skeleton-text {
+  height: 14px;
+  width: 80%;
+  margin-bottom: 8px;
+}
+
+.p-skeleton-text:last-child {
+  width: 60%;
+}
+
+.p-skeleton-circle {
+  border-radius: 50%;
+}
+
+.p-skeleton-value {
+  height: 32px;
+  width: 120px;
+}
+
+/* --- Overflow prevention (QUAL-02) --- */
+
+.p-text-clamp-1,
+.p-text-clamp-2,
+.p-text-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.p-text-clamp-1 {
+  -webkit-line-clamp: 1;
+}
+.p-text-clamp-2 {
+  -webkit-line-clamp: 2;
+}
+.p-text-clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+.p-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.p-overflow-fade {
+  position: relative;
+  overflow: hidden;
+}
+
+.p-overflow-fade::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(transparent, var(--p-bg));
+  pointer-events: none;
+}
+
+.p-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Flex children prevent overflow by default */
+.p-list-item > *,
+.p-stat > * {
+  min-width: 0;
+}
