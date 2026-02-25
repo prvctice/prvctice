@@ -22,15 +22,14 @@ For full setup details (prerequisites, environment variables, Electron developme
 
 ## Code Style
 
-The project follows conventions documented in [.claude/rules/coding-style.md](.claude/rules/coding-style.md). Key expectations:
-
 - **Vue:** Composition API with `<script setup>`. Prefer `ref` over `reactive`. Clean up watchers and listeners.
 - **TypeScript:** Explicit types for public APIs. Use `unknown` over `any`.
 - **Small units:** Functions under 50 lines. Files under 800 lines. Single responsibility.
 - **Immutability:** Create new objects (`{ ...obj, key: newValue }`) instead of mutating state.
 - **Naming:** Descriptive names. Verbs for actions. Self-documenting code over comments.
+- **Console logging:** Use the `debugLog` utility (`web/utils/debugLog.ts`) instead of `console.log`. Direct `console.log` calls are lint errors in frontend code.
 
-Linting is configured in [.eslintrc.cjs](.eslintrc.cjs). Run before committing:
+Linting is configured in [.eslintrc.cjs](.eslintrc.cjs) (ESLint + Prettier + vue3-recommended). Run before committing:
 
 ```bash
 npm run lint
@@ -40,7 +39,7 @@ npm run lint
 
 ## Commit Convention
 
-Commits follow [Conventional Commits](https://www.conventionalcommits.org/), enforced by [commitlint](commitlint.config.cjs) via a husky pre-commit hook.
+Commits follow [Conventional Commits](https://www.conventionalcommits.org/), validated by [commitlint](commitlint.config.cjs) (conventional-commits preset) via a husky pre-commit hook.
 
 Format:
 
@@ -57,8 +56,6 @@ feat: add voice input adapter for gamepad
 fix: prevent duplicate chat messages on reconnect
 refactor: extract provider selection into composable
 ```
-
-See [.claude/rules/git-workflow.md](.claude/rules/git-workflow.md) for the full workflow reference.
 
 ---
 
@@ -81,7 +78,7 @@ What a good PR looks like:
 
 ## Testing
 
-Tests use the Node.js built-in test runner. Full details in [.claude/rules/testing.md](.claude/rules/testing.md).
+Tests use the Node.js built-in test runner (`node:test`).
 
 ```bash
 # Run all tests
@@ -91,7 +88,7 @@ npm test
 node --import tsx --test tests/path/to/test.ts
 ```
 
-**Targets:** 80% coverage overall. 100% for auth, security, and core business logic.
+Tests live in `tests/` mirroring the source layout (adapters, routes, services, unit, e2e, etc.).
 
 **Structure:** Arrange, Act, Assert. Test happy paths, edge cases, and error paths.
 
@@ -111,11 +108,9 @@ The codebase has three primary extension points. Each has a step-by-step guide:
 
 ## Security
 
-Security expectations are documented in [.claude/rules/security.md](.claude/rules/security.md). Key principles:
-
-- **Input validation:** Use zod schemas for all user input
-- **Output sanitization:** Use `{{ }}` template syntax, not `v-html`. When HTML is necessary, use `DOMPurify.sanitize()`
-- **Secrets:** Environment variables only. Never hardcode credentials.
+- **Input validation:** Use zod schemas for all user input.
+- **Output sanitization:** Use `{{ }}` template syntax, not `v-html`. When HTML is necessary, use `DOMPurify.sanitize()`.
+- **Secrets:** Environment variables only. Never hardcode credentials. Keep `.env` out of version control.
 - **Electron:** `contextIsolation: true`, `nodeIntegration: false`. Validate IPC paths.
 
 ---
@@ -128,4 +123,4 @@ The full documentation index is in the [README](README.md#documentation).
 
 ---
 
-_Last verified: 2026-02-08_
+_Last verified: 2026-02-24_
