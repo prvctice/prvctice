@@ -19,8 +19,8 @@ Prvctice is designed as a **personal productivity tool**. The security model ass
 
 ### API Keys
 
-- API keys are stored in your browser's session storage
-- Keys are sent only to their respective provider endpoints (OpenAI, Anthropic, etc.)
+- API keys are stored in your browser's IndexedDB (with localStorage fallback for legacy keys)
+- Keys are sent only to their respective provider endpoints (Anthropic, Gemini, OpenRouter, LM Studio)
 - Keys are never logged or transmitted to Prvctice servers
 - For self-hosted deployments, keys can also be set via environment variables
 
@@ -29,13 +29,13 @@ Prvctice is designed as a **personal productivity tool**. The security model ass
 - Context isolation is enabled
 - Node integration is disabled in renderer
 - Preload scripts use contextBridge for safe IPC
-- Auto-updates are signed and verified (SHA512)
+- Auto-updates use `electron-updater` with signature verification
 
 ### Web App
 
 - Helmet.js security headers enabled
 - Rate limiting on API endpoints
-- CORS configured for same-origin by default
+- CORS configured to allow same-origin and localhost origins, plus a configurable allowlist
 - CSP policy in place (note: uses `unsafe-inline` for compatibility; nonce-based CSP planned for future)
 
 ## Known Advisories
@@ -78,4 +78,4 @@ We appreciate security researchers who help keep Prvctice safe. Contributors who
 
 ---
 
-_Last verified: 2026-02-08_
+_Last verified: 2026-02-25_
